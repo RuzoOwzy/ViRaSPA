@@ -1,10 +1,6 @@
 (function (Viraspa) {
-  class AboutPage extends Viraspa.core.Page {
-    async onLoad() {
-      const { template, model } = await Viraspa.core.pageLoader.fetchPage("pages/about/about");
-      this.renderTemplate(template, model);
-    }
-  }
+  // Uses Page's default onLoad: renders pages/about/about.html/.model.json/.css.
+  class AboutPage extends Viraspa.core.Page {}
 
   Viraspa.pages = Viraspa.pages || {};
   Viraspa.pages.about = AboutPage;

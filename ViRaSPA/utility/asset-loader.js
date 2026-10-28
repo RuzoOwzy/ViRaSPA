@@ -43,8 +43,11 @@
     return res.text();
   }
 
-  async function fetchJson(path) {
-    const res = await fetch(Viraspa.core.v(path));
+  // `fresh: true` bypasses the browser cache and the release token - for a
+  // file edited on the server outside of a release (e.g. per-installation
+  // settings read by init code).
+  async function fetchJson(path, { fresh = false } = {}) {
+    const res = fresh ? await fetch(path, { cache: "no-store" }) : await fetch(Viraspa.core.v(path));
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
     return res.json();
   }

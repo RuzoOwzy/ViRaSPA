@@ -1,7 +1,31 @@
+# Dependencies and build output
 node_modules/
 dist/
-.DS_Store
-Thumbs.db
+
+# Environment files (may hold secrets)
+.env
+.env.*
+
+# Logs and caches
 *.log
+npm-debug.log*
+coverage/
+.cache/
+
+# Temporary and editor swap files
+*.tmp
+*.swp
+*~
+
+# Editors and IDEs (jsconfig.json is tracked on purpose)
 .vscode/
 .idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Claude Code per-user local settings
+.claude/settings.local.json

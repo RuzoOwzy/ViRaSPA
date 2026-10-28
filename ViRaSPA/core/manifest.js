@@ -23,6 +23,10 @@ window.Viraspa.manifest = {
       name: "services",
       scripts: ["services/databinding/data-binding-service.js", "services/communication/http-service.js"],
     },
+    // Project configuration: endpoints first, since init code may change
+    // their base URL.
+    { name: "config", scripts: ["config/endpoints.js"] },
+    { name: "config-init", scripts: ["config/init.js"] },
     {
       name: "shared-components",
       scripts: ["components/nav-bar/nav-bar.js", "components/footer/footer.js", "components/card/card.js"],

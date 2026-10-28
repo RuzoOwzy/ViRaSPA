@@ -1,26 +1,24 @@
 (function (Viraspa) {
-  // Not a navigable route - no path, so it's never matched by a link click
-  // or listed in Viraspa.routes - just the view shown when nothing matches.
-  const NOT_FOUND_ROUTE = {
-    path: null,
-    name: "not-found",
-    title: "ViRaSPA — Not Found",
-    script: "pages/not-found/not-found.js",
-  };
-
-  function resolvePath() {
-    return location.pathname || "/";
+  // Lowercase, and no trailing slash (except the root "/" itself), so
+  // "/About/" and "/about" are the same route.
+  function normalizePath(path) {
+    const trimmed = path.length > 1 ? path.replace(/\/+$/, "") : path;
+    return (trimmed || "/").toLowerCase();
   }
 
   function matchRoute(path) {
-    return Viraspa.routes.find((route) => route.path === path);
+    return Viraspa.routes.find((route) => normalizePath(route.path) === path);
   }
 
   async function loadPage(route) {
     document.title = route.title;
 
-    await Viraspa.utility.assetLoader.loadScript(route.script);
+    const basePath = Viraspa.core.pageLoader.basePath(route.page);
+    await Viraspa.utility.assetLoader.loadScript(`${basePath}.js`);
     const PageClass = Viraspa.pages[route.name];
+    if (!PageClass) {
+      throw new Error(`${basePath}.js loaded, but it didn't register Viraspa.pages["${route.name}"] - the page's class must be registered under its route's name.`);
+    }
     const container = Viraspa.utility.dom.qs("#page-root");
     const page = new PageClass(container, route);
 
@@ -44,21 +42,43 @@
   };
 
   async function loadRoute() {
-    const route = matchRoute(resolvePath()) || NOT_FOUND_ROUTE;
+    const path = normalizePath(location.pathname);
+    const matched = matchRoute(path);
+
+    // Show the matched route's own spelling in the address bar (e.g.
+    // "/About/" becomes "/about"), without adding a history entry. A wrong
+    // URL is left as typed, so the user can see what didn't match.
+    if (matched && location.pathname !== path) {
+      history.replaceState(history.state, "", path + location.search + location.hash);
+    }
+
+    const route = matched || Viraspa.notFoundRoute;
 
     Viraspa.core.emit("route:beforeGuard", { route });
     const allowed = await Viraspa.core.guard(route);
     Viraspa.core.emit("route:onGuard", { route, allowed });
     Viraspa.core.emit("route:afterGuard", { route, allowed });
 
-    await loadPage(allowed ? route : NOT_FOUND_ROUTE);
+    const target = allowed ? route : Viraspa.notFoundRoute;
+    try {
+      await loadPage(target);
+    } catch (err) {
+      // A page folder that doesn't follow the naming convention would
+      // otherwise leave a silent blank page.
+      console.error(`Could not load the "${target.name}" page from "${target.page}":`, err);
+      if (target === Viraspa.notFoundRoute) {
+        Viraspa.utility.dom.qs("#page-root").textContent = "Page could not be loaded.";
+      } else {
+        await loadPage(Viraspa.notFoundRoute);
+      }
+    }
   }
 
   // Navigates like a normal link (real URL, Back/Forward both work) but
   // without a full page reload - pushes the new URL, then loads the page
   // the same way the initial load / popstate path does.
   function navigate(path) {
-    if (path === location.pathname) return;
+    if (normalizePath(path) === normalizePath(location.pathname)) return;
     history.pushState(null, "", path);
     loadRoute();
   }
@@ -72,7 +92,7 @@
       return false;
     }
     if (link.origin !== location.origin) return false;
-    return Viraspa.routes.some((route) => route.path === link.pathname);
+    return Boolean(matchRoute(normalizePath(link.pathname)));
   }
 
   function onDocumentClick(event) {

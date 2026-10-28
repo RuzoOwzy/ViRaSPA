@@ -1,8 +1,7 @@
 (function (Viraspa) {
   class ContactPage extends Viraspa.core.Page {
     async onLoad() {
-      const { template, model } = await Viraspa.core.pageLoader.fetchPage("pages/contact/contact");
-      this.renderTemplate(template, model);
+      await super.onLoad();
 
       $("#contact-form", this.container).on("submit", (event) => this.onSubmit(event));
     }
@@ -37,10 +36,9 @@
 
       $status.text("Sending...").removeClass("is-error is-success");
 
-      const { method, endpoint } = this.route.api;
       Viraspa.core.emit("page:beforeRequest", { page: this, data });
       try {
-        const result = await Viraspa.services.communication.request(method, endpoint, data);
+        const result = await Viraspa.services.communication.call(Viraspa.endpoints.posts.create, { body: data });
         Viraspa.core.emit("page:onRequest", { page: this, result });
         $status.text(`Sent! The sample API echoed back id #${result.id}.`).addClass("is-success");
       } catch (err) {

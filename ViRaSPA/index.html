@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Every relative path (scripts, styles, fetched page files) resolves
+       from the site root, whatever the URL depth - so /about/team still
+       finds core/version.js. If the app is served from a sub-folder,
+       change this to that folder, e.g. "/my-app/". -->
+  <base href="/">
   <title>ViRaSPA</title>
 </head>
 <body>

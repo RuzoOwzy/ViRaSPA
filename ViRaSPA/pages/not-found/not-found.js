@@ -1,10 +1,6 @@
 (function (Viraspa) {
-  class NotFoundPage extends Viraspa.core.Page {
-    async onLoad() {
-      const { template, model } = await Viraspa.core.pageLoader.fetchPage("pages/not-found/not-found");
-      this.renderTemplate(template, model);
-    }
-  }
+  // Uses Page's default onLoad: renders pages/not-found/not-found.html/.model.json/.css.
+  class NotFoundPage extends Viraspa.core.Page {}
 
   Viraspa.pages = Viraspa.pages || {};
   Viraspa.pages["not-found"] = NotFoundPage;

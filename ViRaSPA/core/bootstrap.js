@@ -17,6 +17,7 @@
       await loadGroup(group);
     }
 
+    await Viraspa.core.runInit();
     Viraspa.core.emit("app:init");
     await Viraspa.core.loadLayout();
     Viraspa.core.initRouter();
