@@ -65,12 +65,44 @@ The core framework emits `Before` / `On` / `After` events for:
 - **JS identifiers**: `PascalCase` for classes, `camelCase` for functions, variables and properties.
 - **Namespace**: code uses `window.Viraspa`. The stylized name **ViRaSPA** is used only in text people see.
 
+## Repository layout
+
+```
+ViRaSPA/          <- the framework itself (served folder)
+  index.html
+  core/           <- kernel, lifecycle, loaders, router, framework.js, version.js
+  services/       <- data-binding and communication services
+  routes/         <- routes.js
+  pages/          <- sample pages
+  components/     <- sample components
+  utility/        <- generic helpers
+  assets/, lib/   <- CSS, images, opt-in libraries (jQuery)
+node-server.js    <- static dev server with SPA fallback
+Documents/        <- developer documentation, release notes, design model
+```
+
 ## Running locally
 
-ViRaSPA needs a static server, not a `file://` double-click, because pages fetch their `.html` and `.model.json` files. The planned dev server, `node-server.js`, serves the app and falls back to `index.html` for client-side routes.
+ViRaSPA needs a static server, not a `file://` double-click, because pages fetch their `.html` and `.model.json` files. With [Node.js](https://nodejs.org/) installed, run:
+
+```bash
+node node-server.js
+```
+
+Then open http://localhost:8027/ (set the `PORT` environment variable to use another port). The server falls back to `index.html` for client-side routes.
+
+## Versions and using ViRaSPA in a project
+
+This repository is where the framework is developed. Each release has an `x.x.x` version and a release date, stored in [ViRaSPA/core/framework.js](ViRaSPA/core/framework.js) and described in [Documents/release-notes.md](Documents/release-notes.md). At runtime they are available as `Viraspa.framework` and logged to the browser console at boot.
+
+A project takes a copy of a specific release's `ViRaSPA/` folder and builds or customises on top of it. In that project:
+
+- **Don't edit** `core/framework.js`. It records which framework release the project is based on.
+- **Do edit** `core/version.js`, which is the project's own release version used for cache-busting, along with routes, pages, components and services.
 
 ## Documentation
 
-The full framework model (a working draft, open to improvement) is in
-[Documents/Modeling my Own Custom SPA Web Development Frontend Framework.txt](Documents/Modeling%20my%20Own%20Custom%20SPA%20Web%20Development%20Frontend%20Framework.txt).
-Once the model is finalised, it will be turned into a Markdown guide for developers and AI agents.
+See [Documents/](Documents/README.md):
+
+- [Release notes](Documents/release-notes.md)
+- [Framework design model](Documents/Modeling%20my%20Own%20Custom%20SPA%20Web%20Development%20Frontend%20Framework.txt) (a working draft, open to improvement). Once it is finalised, it will become a Markdown guide for developers and AI agents.

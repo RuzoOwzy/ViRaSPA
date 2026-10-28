@@ -1,0 +1,76 @@
+/* Lean base/reset starter, in the spirit of EliteWeb's and ctc2-web-backend's
+   General.css - trimmed to what a small framework sample needs. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #152420;
+  background: #f4f7f5;
+}
+
+a {
+  color: #0f6e48;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 6px;
+  background: #1a9c6b;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: #0f6e48;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-field input,
+.form-field textarea {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #d3ddd8;
+  border-radius: 6px;
+}
+
+.text-muted {
+  color: #58685f;
+}
+
+.hidden {
+  display: none !important;
+}

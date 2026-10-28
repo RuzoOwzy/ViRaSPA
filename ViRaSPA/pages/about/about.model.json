@@ -1,0 +1,7 @@
+{
+  "title": "About ViRaSPA",
+  "intro": "ViRaSPA is a minimal, build-free single-page application framework built from vanilla HTML, CSS, JavaScript and jQuery.",
+  "point1": "No build step - plain files served by a small Node.js static server.",
+  "point2": "Page/component lifecycle events, path-based routing and a responsive grid out of the box.",
+  "point3": "Extend it with your own services, components and styling libraries as needed."
+}

@@ -1,0 +1,30 @@
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1.25rem;
+  background: #0f6e48;
+}
+
+.nav-bar__brand {
+  color: #fff;
+  font-weight: 700;
+  margin-right: 1rem;
+}
+
+.nav-bar__link {
+  color: #e3f5ec !important;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+}
+
+.nav-bar__link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+
+.nav-bar__link--active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff !important;
+  font-weight: 600;
+}

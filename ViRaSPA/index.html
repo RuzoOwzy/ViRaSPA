@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViRaSPA</title>
+</head>
+<body>
+  <div id="app">
+    <div id="nav-slot"></div>
+    <main id="page-root"></main>
+    <div id="footer-slot"></div>
+  </div>
+
+  <script>window.Viraspa = window.Viraspa || {};</script>
+  <link rel="stylesheet" href="assets/css/general.css">
+
+  <!-- Minimal kernel: just enough to let bootstrap.js load everything else
+       (the core framework, services, shared components, routes) in the
+       background, grouped. No jQuery here - the core framework has no
+       dependency on it; see the explicit includes below. -->
+  <script src="core/framework.js"></script>
+  <script src="core/version.js"></script>
+  <script src="utility/dom.js"></script>
+  <script src="utility/asset-loader.js"></script>
+  <script src="core/events.js"></script>
+  <script src="core/manifest.js"></script>
+  <script src="core/bootstrap.js"></script>
+
+  <!-- Explicit includes: add your own files, or an opt-in library, here so
+       it stays a visible, physical reference rather than a background one.
+       jQuery (+ its extensions, + the responsive grid built on top of it)
+       is included this way as a worked example of that pattern, not
+       because the framework requires it - the core framework and this
+       page's own routing/lifecycle/loading mechanism never call it. The
+       sample nav-bar and contact-form pages do use it, the way a
+       developer's own project-specific code would after adding a library
+       here; remove these three if your project doesn't want jQuery. -->
+  <link rel="stylesheet" href="assets/css/x-responsive.css">
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/jquery/jquery-extensions.js"></script>
+  <script src="assets/js/x-responsive.js"></script>
+</body>
+</html>

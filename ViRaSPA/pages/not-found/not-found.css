@@ -1,0 +1,10 @@
+.page-not-found {
+  max-width: 720px;
+  padding: 1.5rem 1.25rem 3rem;
+  text-align: center;
+}
+
+.page-not-found h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}

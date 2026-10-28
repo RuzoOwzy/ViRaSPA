@@ -1,0 +1,21 @@
+.page-contact {
+  max-width: 480px;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.page-contact h1 {
+  font-size: 1.75rem;
+}
+
+#contact-status {
+  min-height: 1.2rem;
+  font-size: 0.9rem;
+}
+
+#contact-status.is-error {
+  color: #c0392b;
+}
+
+#contact-status.is-success {
+  color: #0f6e48;
+}
