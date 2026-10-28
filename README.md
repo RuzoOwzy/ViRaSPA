@@ -76,7 +76,7 @@ ViRaSPA/          <- the framework itself (served folder)
   pages/          <- sample pages
   components/     <- sample components
   utility/        <- generic helpers
-  assets/, lib/   <- CSS, images, opt-in libraries (jQuery)
+  assets/, lib/   <- CSS, images, opt-in libraries
 node-server.js    <- static dev server with SPA fallback
 Documents/        <- developer documentation, release notes, design model
 ```

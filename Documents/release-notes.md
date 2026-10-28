@@ -26,8 +26,8 @@ from the items listed under "Added in this repository".
 - Cache-busting through the project version in `core/version.js`.
 - Sample pages (home, about, contact, not-found) and components (nav-bar,
   footer, card).
-- jQuery, its extensions and the x-responsive grid as an opt-in explicit
-  include in `index.html`.
+- An "Explicit includes" section in `index.html` for opt-in libraries and
+  the x-responsive grid.
 - `node-server.js` static dev server with an SPA fallback.
 
 ### Added in this repository
