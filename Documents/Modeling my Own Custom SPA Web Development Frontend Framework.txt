@@ -1,0 +1,359 @@
+THIS DOCUMENT SHOULD JUST BE TREATED AS FIRST/INITIAL DRAFT TO ACHIEVE THE PERFECT CUSTOM FRAMEWORK. SUGGEST IMPROVEMENT WHERE THERE IS DOUBT.
+
+- Much has been written after understand how Angular is during coding and output and trying to avoid the process of building(typescript to HTML, CSS and Javascript) and direct be writting Vanila HTML+CSS+JAVASCRIPT.
+
+- Upon perfecting the modeling of this framework and after confirming the updates of the model, a final MD file on how this custom framework is built should be produced and it will be later used to understand the framework, update it and also used by AI agent.
+
+- The name of this framework should be "ViRaSPA" or you can suggest me another better name from historical sources of knowing me.
+
+  [Adopted: the framework's code identifier (JS namespace window.Viraspa, and
+  any future code-side naming) uses the plain, single-word form "Viraspa" -
+  no mixed-caps acronym styling in code. The stylized "ViRaSPA" is reserved
+  for what's actually shown to a person (page titles, nav brand, footer) -
+  see section P below. It still lives inside the VSales-Frontend-Web repo and
+  its VSales/ folder for now - moving it to its own repo comes later, once
+  the minimal framework is agreed on, per the note at the top of this file.]
+==============================================================================================================
+
+The page development involves the following:
+
+A: HTML and CSS Templating
+
+   - Page specific html and CSS and JS can be grouped in folder which has page name and all can obey the name but having different extension.
+
+        - Data binding models json should also be defined in the page folder.
+
+   - Component specific html and CSS and JS which will folder foldering structure like above.
+
+           - Data binding models json should also be defined in the component folder.
+
+ 
+
+B: Defining a core framework JS file: to wire everything and gets including explicitly into the single page(index.html).
+
+    - DEFINING EVENTS:
+
+          - Application Init event( First time the application(the single page) is loaded into the browser).
+
+           - Page BeforeLoad, OnLoad, AfterLoad.
+
+           - Page BeforeDataBinding. OnDataBinding, AfterDataBinding.
+
+           - Page BeforeValidation, OnValidation, AfterValidation.
+
+           - Page BeforeRequest, OnRequest, AfterRequest. Request is HTTP request like Ajax/Fetch.
+
+           - Component BeforeLoad, OnLoad, AfterLoad.
+
+           - Component BeforeDataBinding. OnDataBinding, AfterDataBinding.
+
+           - Component BeforeValidation, OnValidation, AfterValidation.
+
+           - Component BeforeRequest, OnRequest, AfterRequest.
+
+ 
+
+      - HANDLING REQUEST(handling outgoing data and HTTP Statuses)
+
+           - Calling the right service for the page/component.
+
+ 
+
+      - HANDLING RESPONSE(handling coming data and HTTP Statuses)
+
+            - Calling the right service for the page/component.
+
+ 
+
+C: DEFINING EXTERNAL CSS/JS files to be used anywhere in a special way to still avoid spilling the files on the whole application even at places/pages where they are not called/needed.
+
+ 
+
+D: DEFINING SERVICES: JS files that will be wired by core js.
+
+    D1: DATA BINDING SERVICES: There will be page data binding and general data binding:
+
+            - Handling of page/component outgoing request by reading the values from page/component html elements and binding to the page model and call the corresponding communication service and provide the data model.
+
+             - Handling of page/component incoming response by reading the response data and bind the data to the model and call the corresponding html element data binding service.
+
+ 
+
+      D2: COMMUNICATION SERVICS
+
+             - Execution Ajax/Fetch/WebSocket: 
+
+                   - Takes the page model and bind the data to the API data model and execute the request.
+
+             - Handle the Ajax/Fetch/WebSocket response:
+
+                     - Read the data and bind them to the corresponding page data model and call the corresponding page data binding service and provide the page model.
+
+   
+
+   
+
+E: PAGE SETUP and ROUTING on javascript routes js file which will be called the core framework JS file:
+
+    - Listing page, their routes and their response handling service and request handling service and METHOD.
+
+ 
+
+F: UTILITY : A folder containing generic JS classes and files that are wired by core JS and only made available at places were their called not spilling their code everywhere.
+
+G: Page(Virtual Pages)/Components should load on demand from backend. Don't load everything at first, only load things from server, after they are needed and persist them.
+
+ 
+
+ 
+
+A new ES6 Js component export and import style will be forced to be used.
+
+   [Current build note: the first working build instead uses classic (non-module)
+   scripts attaching to a single `window.Viraspa` namespace, because it was first
+   built to run from a raw file:// double-click, where Chrome blocks ES module
+   imports between local files. A static server (node-server.js) is now required
+   anyway, for the separate .html/.model.json files - so real ES modules are
+   technically usable again. Not switched back yet; worth revisiting.]
+
+
+
+A component can not exists on its own, it has to be withing a page to start working and its events propagate to page events and also inherits setups set on the page, so if not specific property has been set on the component itself, the page's one take precedence.
+
+
+The framework should allow devs to be able to group multiple services to one service for single page/component, so that that group service all exposes data needed by that page/component. similar to graph API but done on the frontend side for backend that don't provide graph API.
+
+
+
+H: SCRIPT/STYLE LOADING STRATEGY (added after first build)
+
+   - index.html stays minimal: a small kernel (version.js, dom.js, asset-loader.js,
+     events.js) loaded directly via plain <script> tags - just enough for the
+     loader itself to work - then one <script src="core/bootstrap.js"> does
+     everything else.
+
+   - core/manifest.js lists the framework's own internal files, grouped (core,
+     services, shared-components, routes). core/bootstrap.js reads it and loads
+     each group in the background, group by group, scripts within a group
+     together - this is the "may load several files in the background" idea,
+     so index.html doesn't carry one <script> tag per internal file.
+
+   - index.html also has its own "Explicit includes" section: a developer adds
+     their own extra file, or an opt-in library (Tailwind, Bootstrap, etc.), there
+     as its own visible <script>/<link> tag - a deliberate alternative to the
+     background/manifest loading, for anything a developer wants to be able to
+     see and audit directly in index.html rather than discover via the manifest.
+
+     jQuery is the one worked example actually sitting there (jQuery itself,
+     lib/jquery/jquery-extensions.js, and x-responsive.css/.js, which is built
+     on top of it) - added after the first build, once it became clear jQuery
+     had drifted into looking like a core dependency by living in
+     core/manifest.js's old "prerequisites" list, loaded automatically before
+     anything else. It isn't one: core/manifest.js's groups, core/bootstrap.js,
+     and the rest of the core framework (router, page/component lifecycle,
+     loaders) never call jQuery - only the sample nav-bar/contact-form code
+     and x-responsive.js do, the same way a developer's own project code
+     would after adding a library here. Removing those three lines removes
+     jQuery (and x-responsive with it) cleanly; nothing in core breaks.
+
+   - Page/component on-demand loading (see G above) goes through the same idea:
+     core/page-loader.js's fetchPage/fetchComponent fetch a page or component's
+     .html + .model.json together and swap in its .css, so a page's onLoad is one
+     call instead of three separate fetches.
+
+   - CACHE-BUSTING: core/version.js holds one version string, bumped by hand on
+     release. Viraspa.core.v(url) appends it as ?v=<version> to every URL the
+     loader fetches, so a browser doesn't keep serving an old cached copy after a
+     release. A developer's own hand-written tags in the "explicit includes"
+     section should do the same via Viraspa.core.v(...) if they want the same
+     protection - it isn't automatic for those (including jQuery's own tags),
+     since they're outside the loader.
+
+
+I: STYLING STRATEGY
+
+   - Default/sample CSS is deliberately NOT a full UI framework (Tailwind,
+     Bootstrap, etc.) - it is the same kind of sample CSS EliteWeb and
+     ctc2-web-backend ship with: a lean 'general.css' (reset + a handful of base/
+     utility classes; loaded unconditionally, no library dependency) plus
+     'x-responsive.css'/'x-responsive.js', ported from ctc2-web-backend's
+     XResponsive.css/.js, for actual responsiveness (a 12-column mobile-first
+     grid: .x-container/.x-section/.x-row/.x-col, with .xs-1.../sm-1.../md-1.../
+     lg-1.../xl-1... breakpoint-width classes). x-responsive.js runs on top of
+     jQuery, so it's declared alongside jQuery in index.html's "Explicit
+     includes" (see H) rather than loaded unconditionally like general.css -
+     same behavior in this sample app, just not framed as a core dependency.
+
+   - Components bring their own CSS (co-located in their own folder) - a shared
+     'components.css' like ctc2-web-backend's is NOT part of this framework, since
+     components here are each self-contained by design.
+
+   - Tailwind, Bootstrap, or any other external CSS/JS framework are opt-in
+     extensions a developer chooses to add via index.html's "Explicit includes"
+     section (see H) - never loaded by default, and nothing beyond what's
+     explicitly asked for gets included pre-emptively.
+
+
+J: NAMING CONVENTION
+
+   - Every folder and file that is part of a URL (i.e. everything served out of
+     the VSales/ folder, any extension) uses kebab-case - no switching convention
+     because of the file extension (e.g. a library's .js and .css file share the
+     same name). Examples: pages/home/home.js, components/nav-bar/nav-bar.css,
+     services/communication/http-service.js.
+
+   - JS-internal identifiers are unaffected by the above and keep normal JS
+     convention: PascalCase for classes (Page, Component, NavBar, HomePage),
+     camelCase for functions/variables/object properties.
+
+   - Anything ported/migrated from another project (EliteWeb, ctc2-web-backend)
+     gets renamed to this same convention too - no special-casing for source
+     files just because they came from elsewhere. E.g. XResponsive's '.XR'/'.XC'
+     became '.x-row'/'.x-col'; its breakpoint classes ('XS'/'SM'/'MD'/'LG'/'XL')
+     only keep an 'x'/'X' where it's literally part of the name (eXtra Small/
+     eXtra Large) - 'SM'/'MD'/'LG' never get an 'x-' prefix, since there's no
+     "extra" there.
+
+
+K: SELECTIVE IMPORTATION (added after first build)
+
+   - Milestone 1's goal is a minimal, understandable framework sample - not a
+     full port of everything useful sitting in EliteWeb/ctc2-web-backend. When
+     pulling in something from those projects, pull in only the specific piece
+     actually needed for the milestone at hand, not the whole file/library it
+     lives in (example: ctc2-web-backend's OwzyComponents.js has a large
+     component system; only its small, self-contained cssVar/cssX jQuery
+     extensions were needed to make XResponsive.js work, so only those were
+     ported, into their own lib/jquery/jquery-extensions.js - not the rest of
+     that file's component system, which is a separate, later task).
+
+   - Before porting something "because it might be needed", check whether it
+     actually is (e.g. confirmed General.js contributes nothing to XResponsive.js
+     working, so none of it was ported this round). Apply this same judgement
+     anywhere else it comes up, not just where it's been called out explicitly.
+
+
+L: DEV SERVER NAMING (added after first build)
+
+   - The static dev server is named 'node-server.js' (not 'serve.js') so its
+     name itself says what it is: a Node.js program that stands up an HTTP
+     server to serve the app - not a build/transform step, not part of the
+     app's own code.
+
+
+M: ROUTING STRATEGY (added after first build - supersedes the hash-based
+   routing the first build used)
+
+   - Routes are path-based via the History API, not hash-based. A route's
+     URL looks like a normal page URL (e.g. '/about'), with no '#' - hovering
+     a nav link shows that real URL, same as a server-rendered site would.
+
+   - core/router.js resolves the current route from location.pathname (not
+     location.hash), and listens for the browser's native 'popstate' event
+     (fires on Back/Forward) instead of 'hashchange'.
+
+   - Clicking an internal route link is intercepted (preventDefault) and
+     handled via Viraspa.core.navigate(path): history.pushState() to the new
+     URL, then the same page-load logic the initial load/popstate path uses
+     - so navigation is a background load (the page's .html/.model.json/.css
+     fetched the same way page-loader.js always fetched them), not a full
+     browser page reload. Modifier-clicks, target="_blank", download links,
+     rel="external" links, and any link whose href isn't one of the app's own
+     routes are left alone and navigate normally.
+
+   - Consequence for the dev server: with hash routing the browser never
+     actually requested '/about' from the server (only the hash fragment
+     changed, client-side). With path-based routing, a hard refresh, a
+     bookmark, or a shared link DOES make the browser request '/about' for
+     real over HTTP. node-server.js handles this with an SPA fallback: a
+     requested path with no file extension that doesn't match a real file
+     is treated as a client route and gets index.html back (so the client
+     router takes over from location.pathname); a path WITH an extension
+     that's missing still 404s, so genuinely missing assets are still
+     reported as missing.
+
+
+N: ROUTE-DRIVEN HTTP METHOD (added after first build)
+
+   - A route's `api.method` ("GET"/"POST") now actually drives the call,
+     instead of being declared but ignored. services/communication/
+     http-service.js exposes one generic `request(method, url, body)`;
+     page code reads `const { method, endpoint } = this.route.api;` and calls
+     `Viraspa.services.communication.request(method, endpoint, data)` - it no
+     longer hardcodes .get()/.post() itself, so routes.js's `method` field
+     and the page's actual behavior can't drift apart.
+
+
+O: ROUTE-NOT-FOUND HANDLING (added after first build)
+
+   - core/router.js's matchRoute no longer falls back to the first route
+     (Home) when nothing matches location.pathname - it returns a dedicated,
+     non-navigable NOT_FOUND_ROUTE (no path, so it's never a click target and
+     never listed in routes.js) that renders pages/not-found/, a normal page
+     folder (.html/.css/.js/.model.json) like any other.
+
+   - This is a visual-only 404: the actual HTTP response is still 200,
+     because node-server.js's SPA fallback (section M) always hands back
+     index.html for an unmatched extension-less path by design, so the
+     server itself can't distinguish a valid app route from a typo - only
+     the client router can, once it has routes.js loaded. This matches how
+     client-routed SPAs normally behave (React Router, Vue Router, etc).
+
+
+P: VSALES -> VIRASPA REBRANDING (added after first build)
+
+   - window.VSales became window.Viraspa across every framework JS file,
+     and visible brand/sample text (page titles, nav brand, footer, the
+     About/Contact sample copy) became "ViRaSPA", since this folder is the
+     standalone framework, not VSales-specific content - see the adoption
+     note after this document's title suggestion, above.
+
+   - Deliberately NOT renamed yet: the VSales/ folder itself (stays as the
+     served folder name until the framework moves to its own repository),
+     and anything describing the real VSales product rather than the
+     framework (README.md, the migration-plan doc).
+
+
+Q: PERSISTENT LAYOUT / APP SHELL (added after first build - fixes a
+   navigation flicker and redundant nav/footer refetching the first build had)
+
+   - The first build had each page's own .html declare its own nav-slot/
+     footer-slot and remount NavBar/Footer itself on every onLoad - so every
+     navigation destroyed and rebuilt the header/footer (visible flicker)
+     and refetched their .html/.model.json/.css even though nothing in them
+     had changed.
+
+   - Fixed with a persistent shell: index.html now has permanent #nav-slot
+     and #footer-slot elements OUTSIDE #page-root. core/layout.js's
+     loadLayout() mounts NavBar and Footer into them ONCE, at boot (emits
+     layout:beforeLoad/onLoad/afterLoad), before the router starts. Page
+     .html files no longer declare nav-slot/footer-slot or mount them -
+     only #page-root's content is swapped per navigation.
+
+   - NavBar no longer takes an `active` prop set once at mount (it isn't
+     re-mounted per page anymore); instead it listens for the router's
+     `page:afterLoad` event and re-highlights the matching nav link on every
+     navigation.
+
+   - This is a single shared shell for the whole app, not yet multiple
+     swappable layouts (e.g. a different shell for public vs private pages)
+     - that's a later extension once real access control (section R) is
+     built out, if still wanted.
+
+
+R: PUBLIC/PRIVATE ROUTE ACCESS - DECLARATIVE STUB ONLY (added after first
+   build)
+
+   - Each route in routes.js can carry `access: "public"|"private"`
+     (all three sample routes are "public" today). core/router.js emits
+     route:beforeGuard/onGuard/afterGuard around a pluggable
+     `Viraspa.core.guard(route)` function before loading any page.
+
+   - The default guard always returns true (allows everything) regardless
+     of `access` - this milestone only scaffolds the mechanism and its
+     lifecycle events; it does not implement real authentication. A
+     developer wiring real access control overrides `Viraspa.core.guard` to
+     actually read `route.access` (and whatever session/login state they
+     have) and return false to deny - the router already treats a denied
+     route the same as route-not-found (section O) as a placeholder, pending
+     a real "access denied"/login page when that's built.
