@@ -1,0 +1,37 @@
+.page-login {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1.25rem;
+}
+
+.login-panel {
+  flex: 0 1 24rem;
+  padding: 1.75rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius-large);
+  background: var(--vs-color-surface);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.login-logo {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.demo-hint {
+  flex: 0 1 22rem;
+}
+
+.demo-hint ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.demo-hint code {
+  padding: 0 0.2rem;
+  border-radius: 4px;
+  background: #e6efea;
+}

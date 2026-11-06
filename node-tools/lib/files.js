@@ -101,10 +101,43 @@ function replaceFolder(destination, files) {
     fs.writeFileSync(target, data);
   }
   fs.rmSync(old, { recursive: true, force: true });
-  if (fs.existsSync(destination)) fs.renameSync(destination, old);
   fs.mkdirSync(path.dirname(destination), { recursive: true });
-  fs.renameSync(staging, destination);
-  fs.rmSync(old, { recursive: true, force: true });
+  try {
+    if (fs.existsSync(destination)) renameWithRetry(destination, old);
+    renameWithRetry(staging, destination);
+    fs.rmSync(old, { recursive: true, force: true });
+  } catch (err) {
+    // Windows refuses to rename a folder something holds open (a running
+    // server, Explorer, an editor): copy over it in place instead.
+    if (!["EPERM", "EBUSY", "EACCES"].includes(err.code)) throw err;
+    if (!fs.existsSync(destination) && fs.existsSync(old)) fs.renameSync(old, destination);
+    overwriteFolder(destination, files);
+    fs.rmSync(staging, { recursive: true, force: true });
+  }
+}
+
+function renameWithRetry(from, to, attempts = 5) {
+  for (let i = 1; ; i++) {
+    try {
+      fs.renameSync(from, to);
+      return;
+    } catch (err) {
+      if (i >= attempts || !["EPERM", "EBUSY", "EACCES"].includes(err.code)) throw err;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 150 * i); // short pause
+    }
+  }
+}
+
+// Makes `folder` hold exactly `files` by writing them in place and deleting the rest.
+function overwriteFolder(folder, files) {
+  for (const [rel, data] of Object.entries(files)) {
+    const target = path.join(folder, ...rel.split("/"));
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, data);
+  }
+  for (const rel of listFiles(folder)) {
+    if (!Object.prototype.hasOwnProperty.call(files, rel)) fs.rmSync(path.join(folder, ...rel.split("/")), { force: true });
+  }
 }
 
 // ---- zip ------------------------------------------------------------------
@@ -146,7 +179,53 @@ function readZip(file) {
   return files;
 }
 
+// Writes { "path/in/zip": Buffer } as a .zip (deflated) and returns it.
+function writeZip(entries) {
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const [name, data] of Object.entries(entries)) {
+    const nameBuf = Buffer.from(name, "utf8");
+    const deflated = zlib.deflateRawSync(data);
+    const useDeflate = deflated.length < data.length;
+    const body = useDeflate ? deflated : data;
+    const crc = zlib.crc32(data) >>> 0;
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0x0800, 6); // UTF-8 names
+    local.writeUInt16LE(useDeflate ? 8 : 0, 8);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(body.length, 18);
+    local.writeUInt32LE(data.length, 22);
+    local.writeUInt16LE(nameBuf.length, 26);
+    locals.push(local, nameBuf, body);
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(useDeflate ? 8 : 0, 10);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(body.length, 20);
+    central.writeUInt32LE(data.length, 24);
+    central.writeUInt16LE(nameBuf.length, 28);
+    central.writeUInt32LE(offset, 42);
+    centrals.push(central, nameBuf);
+    offset += 30 + nameBuf.length + body.length;
+  }
+  const centralSize = centrals.reduce((n, b) => n + b.length, 0);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(Object.keys(entries).length, 8);
+  end.writeUInt16LE(Object.keys(entries).length, 10);
+  end.writeUInt32LE(centralSize, 12);
+  end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, ...centrals, end]);
+}
+
 module.exports = {
+  writeZip,
   parseJson,
   readJson,
   toPosix,
@@ -158,5 +237,7 @@ module.exports = {
   globToRegExp,
   matchesAny,
   replaceFolder,
+  overwriteFolder,
+  renameWithRetry,
   readZip,
 };

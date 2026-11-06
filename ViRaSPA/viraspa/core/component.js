@@ -117,6 +117,7 @@
       if (this.isolation !== "full") this._fillSlots();
       // Autoload components used inside (vs-icon...); `ready` waits for them.
       this._childrenLoaded = Viraspa.core.components.scan(this.componentRoot);
+      Viraspa.session.applyPrivileges(this.componentRoot);
       emit("componentAfterDataBinding", { component: this }, this);
       return this.html;
     }

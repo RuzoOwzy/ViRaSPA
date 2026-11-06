@@ -1,0 +1,100 @@
+<div class="page-features">
+  <h1>{{title}}</h1>
+  <p class="text-muted">{{intro}}</p>
+
+  <nav class="features-toc" aria-label="On this page">
+    <a href="/features#pages">Pages and Routing</a>
+    <a href="/features#components">Components</a>
+    <a href="/features#session">Session and Privileges</a>
+    <a href="/features#feedback">Busy and Messages</a>
+    <a href="/features#head">Head Information and SEO</a>
+    <a href="/features#loading">Loading and Caching</a>
+    <a href="/features#tools">Node Tools</a>
+  </nav>
+
+  <section id="pages">
+    <h2>Pages and Routing</h2>
+    <ul class="feature-list">
+      <li><strong>Page folders</strong> — <code>.html</code>, <code>.css</code>, <code>.js</code> and <code>.model.json</code> found by naming convention. Every page on this site is one.</li>
+      <li><strong>History API routing</strong> — real addresses, Back/Forward, refresh, bookmarks, case-insensitive matching. Try a <a href="/no-such-page">page that doesn't exist</a>.</li>
+      <li><strong>No flicker</strong> — a page's styles load before it shows; the last click wins.</li>
+      <li><strong>Keep-alive pages</strong> — <a href="/">Home</a> keeps its state when you leave and comes back instantly.</li>
+      <li><strong>Plain native pages</strong> — <a href="/plain-native">a page written in plain HTML, CSS and JS</a>, with no framework calls.</li>
+      <li><strong>Two layouts</strong> — this page has <code>layout: "inherit"</code>: it keeps the website layout or the app layout, whichever you came from.</li>
+      <li><strong>Focus and scroll</strong> — focus moves to each new page's heading; Back restores the scroll position.</li>
+    </ul>
+  </section>
+
+  <section id="components">
+    <h2>Components</h2>
+    <ul class="feature-list">
+      <li><strong>Three isolation modes</strong> — full (Shadow DOM), scoped and none. <a href="/about">See them on About</a>.</li>
+      <li><strong>Core components</strong> — <code>vs-header</code>, <code>vs-menu</code>, <code>vs-sidebar</code>, <code>vs-user-menu</code>, <code>vs-brand</code>, <code>vs-footer</code>, <code>vs-icon</code>, <code>vs-busy-indicator</code>, <code>vs-toast</code>; they load by themselves when used.</li>
+      <li><strong>Official components</strong> — installed one by one from ViRaSPA-Components: <code>vs-card</code>, <code>vs-stat-tile</code>, <code>vs-login-form</code> (<a href="/login">Sign In</a>, <a href="/dashboard">Dashboard</a>).</li>
+      <li><strong>Icons</strong> — self-hosted Font Awesome and Lucide, a character, an SVG file or an image:
+        <span class="icon-row">
+          <vs-icon icon="lucide:rocket" label="Lucide rocket"></vs-icon>
+          <vs-icon icon="fontawesome:heart" label="Font Awesome heart"></vs-icon>
+          <vs-icon icon="fontawesome:github:brands" label="GitHub"></vs-icon>
+          <vs-icon icon="char:★" label="Star"></vs-icon>
+          <vs-icon icon="svg:app/assets/icons/favicon.svg" label="ViRaSPA logo"></vs-icon>
+        </span>
+      </li>
+      <li><strong>Native components</strong> — plain <code>customElements.define</code>, no framework base class:
+        <native-counter label="Count"></native-counter>
+      </li>
+      <li><strong>Extensions</strong> — third-party bundles with their own tag prefix, checked for framework version and reserved names.</li>
+    </ul>
+  </section>
+
+  <section id="session">
+    <h2>Session and Privileges</h2>
+    <ul class="feature-list">
+      <li><strong>Sign in and out</strong> — your adapter talks to your backend; the framework stores the session and keeps tabs in step.</li>
+      <li><strong>Private routes</strong> — <a href="/dashboard">Dashboard</a> asks you to sign in first, then brings you back.</li>
+      <li><strong>Privileges</strong> — routes, menus and elements follow them. <a href="/users">Users</a> and <a href="/settings">Settings</a> differ for the two demo accounts.</li>
+      <li><strong>Automatic behaviours you can switch off</strong> — sign-out on a 401 answer, expiry, attaching the token.</li>
+    </ul>
+    <p class="privilege-demo" data-visible-when="signed-out">You are not signed in: <a href="/login">sign in</a> to see the private pages.</p>
+    <p class="privilege-demo" data-visible-when="signed-in">You are signed in.</p>
+    <p class="privilege-demo" data-privilege-required="settings.edit">This line is shown only to users with the <code>settings.edit</code> privilege.</p>
+  </section>
+
+  <section id="feedback">
+    <h2>Busy and Messages</h2>
+    <p>
+      <button type="button" class="btn demo-busy">Run Something Slow</button>
+      <button type="button" class="btn btn-secondary demo-toast">Show a Message</button>
+    </p>
+  </section>
+
+  <section id="head">
+    <h2>Head Information and SEO</h2>
+    <ul class="feature-list">
+      <li><strong>Per-page head</strong> — title, description, preview image and canonical address change with each page (look at this tab's title).</li>
+      <li><strong>Prerendering</strong> — <code>node node-tools/prerender.js</code> writes ready-made copies of public pages for search engines and link previews.</li>
+      <li><strong>Real 404s</strong> — servers answer unknown addresses with status 404, from the list of known routes.</li>
+    </ul>
+  </section>
+
+  <section id="loading">
+    <h2>Loading and Caching</h2>
+    <ul class="feature-list">
+      <li><strong>No build step</strong> — the files you write are the files the browser runs.</li>
+      <li><strong>Cache strategies</strong> — release, custom, auto or revalidate tokens, so browsers never use stale files.</li>
+      <li><strong>Browser check</strong> — a clear message instead of a blank page on an old browser or with JavaScript off.</li>
+    </ul>
+  </section>
+
+  <section id="tools">
+    <h2>Node Tools</h2>
+    <ul class="feature-list">
+      <li><code>serve.js</code> — the development server.</li>
+      <li><code>install.js</code> — install, pin, restore and verify the framework, components, extensions and libraries.</li>
+      <li><code>prerender.js</code> — ready-made public pages.</li>
+      <li><code>deploy.js</code> — copy a release to a server folder safely, with environments and rollback.</li>
+      <li><code>create-project.js</code>, <code>clean-sample.js</code>, <code>stamp.js</code> — start, tidy and publish.</li>
+    </ul>
+    <p class="text-muted">Every tool explains itself: <code>node node-tools/help.js</code>.</p>
+  </section>
+</div>

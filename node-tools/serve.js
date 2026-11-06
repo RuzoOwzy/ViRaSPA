@@ -16,11 +16,14 @@ const tool = defineTool({
     "Serves files as they are, with:",
     "  - the SPA fallback: a path without a file extension gets index.html, so the router can show the page;",
     "  - prerendered pages: /about is answered from prerendered/about/index.html when that file exists;",
+    "  - real 404s: with prerendered/routes.json present, unknown addresses get index.html with status 404;",
     "  - Cache-Control: no-cache plus ETags, so the browser always gets your latest edits cheaply;",
     "  - app/project-viraspa.json and dot-files are never served (they may hold local paths).",
   ].join("\n"),
   usage: "node node-tools/serve.js [flags]",
   configSection: "devServer",
+  // --site-folder may also point at a deployed release (which has no project file).
+  allowWithoutProject: true,
   options: [
     { key: "port", type: "number", default: 8027, env: "PORT", description: "The port to listen on." },
     {
@@ -75,8 +78,26 @@ const MIME = {
 
 const NEVER_SERVED = [/(^|\/)\./, /^\/app\/project-viraspa\.json$/i];
 
-function createServer({ siteFolder, logRequests }) {
+function createServer({ siteFolder, logRequests, usePrerendered = true }) {
   const root = path.resolve(siteFolder);
+
+  // prerendered/routes.json (written by prerender.js) lists the app's known
+  // routes: other extensionless paths get index.html with a 404 status, so
+  // search engines don't index addresses that don't exist.
+  function knownRoutes() {
+    if (!usePrerendered) return null;
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(root, "prerendered", "routes.json"), "utf8"));
+      return new Set((data.routes || []).map(normalizeRoute));
+    } catch {
+      return null;
+    }
+  }
+
+  function normalizeRoute(p) {
+    const trimmed = p.length > 1 ? p.replace(/\/+$/, "") : p;
+    return (trimmed || "/").toLowerCase();
+  }
 
   // Resolves a URL path inside the site folder; null if it would escape it.
   function resolveInside(urlPath) {
@@ -93,7 +114,7 @@ function createServer({ siteFolder, logRequests }) {
     }
   }
 
-  function sendFile(req, res, file, stat) {
+  function sendFile(req, res, file, stat, status = 200) {
     const etag = `"${stat.size.toString(16)}-${Math.floor(stat.mtimeMs).toString(16)}"`;
     const headers = {
       "Content-Type": MIME[path.extname(file).toLowerCase()] || "application/octet-stream",
@@ -102,16 +123,16 @@ function createServer({ siteFolder, logRequests }) {
       "Last-Modified": stat.mtime.toUTCString(),
       "X-Content-Type-Options": "nosniff",
     };
-    if (req.headers["if-none-match"] === etag) {
+    if (status === 200 && req.headers["if-none-match"] === etag) {
       res.writeHead(304, headers);
       res.end();
       return 304;
     }
     headers["Content-Length"] = stat.size;
-    res.writeHead(200, headers);
+    res.writeHead(status, headers);
     if (req.method === "HEAD") res.end();
     else fs.createReadStream(file).pipe(res);
-    return 200;
+    return status;
   }
 
   function sendText(res, status, text) {
@@ -135,23 +156,29 @@ function createServer({ siteFolder, logRequests }) {
     if (urlPath.includes("\0")) return sendText(res, 400, "Bad request");
     if (NEVER_SERVED.some((pattern) => pattern.test(urlPath))) return sendText(res, 404, `Not found: ${urlPath}`);
 
+    const isPage = path.extname(urlPath) === "";
+    // A route such as /about (or /): a prerendered copy if there is one.
+    if (isPage && usePrerendered) {
+      const prerendered = resolveInside(path.posix.join("/prerendered", urlPath, "index.html"));
+      const prerenderedStat = prerendered && statFile(prerendered);
+      if (prerenderedStat) return sendFile(req, res, prerendered, prerenderedStat);
+    }
+
     const target = resolveInside(urlPath === "/" ? "/index.html" : urlPath);
     if (!target) return sendText(res, 403, "Forbidden");
 
     const stat = statFile(target);
     if (stat) return sendFile(req, res, target, stat);
 
-    if (path.extname(urlPath) === "") {
-      // A route such as /about: a prerendered copy if there is one, else
-      // index.html for the client-side router. (A missing file WITH an
-      // extension is a genuinely missing asset, so that still 404s.)
-      const prerendered = resolveInside(path.posix.join("/prerendered", urlPath, "index.html"));
-      const prerenderedStat = prerendered && statFile(prerendered);
-      if (prerenderedStat) return sendFile(req, res, prerendered, prerenderedStat);
-
+    if (isPage) {
+      // index.html for the client-side router - with status 404 when the
+      // known-routes list says the address doesn't exist. (A missing file
+      // WITH an extension is a genuinely missing asset: plain 404.)
       const index = path.join(root, "index.html");
       const indexStat = statFile(index);
-      if (indexStat) return sendFile(req, res, index, indexStat);
+      const known = knownRoutes();
+      const status = known && !known.has(normalizeRoute(urlPath)) ? 404 : 200;
+      if (indexStat) return sendFile(req, res, index, indexStat, status);
     }
     return sendText(res, 404, `Not found: ${urlPath}`);
   }

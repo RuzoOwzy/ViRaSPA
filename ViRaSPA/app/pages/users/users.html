@@ -1,0 +1,18 @@
+<div class="app-page page-users">
+  <div class="page-toolbar">
+    <h1>{{title}}</h1>
+    <!-- Only users with the users.create privilege see this button. -->
+    <button type="button" class="btn add-user" data-privilege-required="users.create">
+      <vs-icon icon="lucide:user-plus"></vs-icon> {{addLabel}}
+    </button>
+  </div>
+  <p class="text-muted">{{intro}}</p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Company</th><th><span class="vs-visually-hidden">Actions</span></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>

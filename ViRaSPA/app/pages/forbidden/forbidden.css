@@ -1,0 +1,11 @@
+.page-forbidden {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.forbidden-icon {
+  font-size: 3rem;
+  color: var(--vs-color-danger);
+}

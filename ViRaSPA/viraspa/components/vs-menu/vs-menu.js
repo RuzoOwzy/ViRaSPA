@@ -11,7 +11,9 @@
   //
   // From routes: every route with `nav` whose nav.menus includes this
   // menu's name ("main" when nav.menus is missing), in nav.order then route
-  // order. nav: { label, icon, menus: ["main", "side"], order }.
+  // order, leaving out routes the current user can't open.
+  // nav: { label, icon, menus: ["main", "side"], order, divider: "before" },
+  // or a list of such entries.
   //
   // Attributes:
   //   orientation  "horizontal" (default) | "vertical"
@@ -46,16 +48,27 @@
     }
 
     routeItems(menuName) {
+      // A route's nav may be one entry or a list (to appear differently in
+      // different menus, e.g. "Home" in the public menu, "Website" in the side menu).
       return (Viraspa.routes || [])
-        .map((route, index) => ({ route, index }))
-        .filter(({ route }) => route.nav && (route.nav.menus || ["main"]).includes(menuName))
-        .sort((a, b) => (a.route.nav.order ?? a.index) - (b.route.nav.order ?? b.index))
-        .map(({ route }) => ({ label: route.nav.label, href: route.path, icon: route.nav.icon }));
+        .flatMap((route, index) => [].concat(route.nav || []).map((nav) => ({ route, nav, index })))
+        .filter(({ nav }) => (nav.menus || ["main"]).includes(menuName))
+        // Routes the current user can't open (private, missing privileges) are left out.
+        .filter(({ route }) => Viraspa.session.canAccess(route))
+        .sort((a, b) => (a.nav.order ?? a.index) - (b.nav.order ?? b.index))
+        .flatMap(({ route, nav }) => {
+          const item = { label: nav.label, href: route.path, icon: nav.icon };
+          return nav.divider === "before" ? [{ divider: true }, item] : [item];
+        });
     }
 
     prepareModel(model) {
       const escapeHtml = Viraspa.utility.dom.escapeHtml;
-      const items = this._items || this.routeItems(model.menu || "main");
+      // Dividers only between items: none first, last or twice in a row
+      // (e.g. when the items above one are hidden for this user).
+      const items = (this._items || this.routeItems(model.menu || "main")).filter(
+        (item, i, all) => !item.divider || (i > 0 && i < all.length - 1 && !all[i - 1].divider && all.slice(0, i).some((x) => !x.divider))
+      );
       model.orientation = model.orientation === "vertical" ? "vertical" : "horizontal";
       model.itemsHtml = items
         .map((item) => {
@@ -75,6 +88,10 @@
     async afterLoad() {
       this._onRouteChanged = () => this.highlightActive();
       document.addEventListener("viraspa:routeChanged", this._onRouteChanged);
+      // Signing in or out changes which routes are listed.
+      document.addEventListener("viraspa:sessionChanged", () => {
+        if (!this._items && this.isConnected) this.render();
+      });
       this.componentRoot.addEventListener("click", (event) => this.onClick(event));
       // The folded (small-screen) menu closes on a click elsewhere or Escape.
       document.addEventListener("click", (event) => {

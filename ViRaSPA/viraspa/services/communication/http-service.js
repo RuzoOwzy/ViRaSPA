@@ -8,15 +8,30 @@
 
   // `signal` (optional): an AbortSignal, e.g. a page's `this.signal`, so the
   // request is cancelled when the user navigates away.
-  async function request(method, url, body, { signal } = {}) {
+  // The session (when signed in) adds its token to calls to the endpoints'
+  // base URL and hears about 401 answers - see Viraspa.session.configure.
+  async function request(method, url, body, { signal, headers: extraHeaders } = {}) {
+    const headers = { ...(extraHeaders || {}) };
+    if (body) headers["Content-Type"] = "application/json";
+    const session = Viraspa.session;
+    const authorization = session && session.authorizationHeader(url);
+    if (authorization && !headers.Authorization) headers.Authorization = authorization;
+
     const res = await fetch(url, {
       method,
-      headers: body ? { "Content-Type": "application/json" } : undefined,
+      headers,
       body: body ? JSON.stringify(body) : undefined,
       signal,
     });
-    if (!res.ok) throw new Error(`${method} ${url} failed: ${res.status}`);
-    return res.json();
+    if (session) session.responseSeen(url, res.status);
+    if (!res.ok) {
+      const error = new Error(`${method} ${url} failed: ${res.status}`);
+      error.status = res.status;
+      throw error;
+    }
+    if (res.status === 204) return null;
+    const type = res.headers.get("Content-Type") || "";
+    return type.includes("json") ? res.json() : res.text();
   }
 
   // Accepts only an absolute http(s) URL; drops any trailing slash.
@@ -74,8 +89,8 @@
 
   // Calls a Viraspa.endpoints entry: its method, the current base URL + its
   // path, with optional path params, query values, JSON body and AbortSignal.
-  function call(endpoint, { params, query, body, signal } = {}) {
-    return request(endpoint.method, buildUrl(endpoint, params, query), body, { signal });
+  function call(endpoint, { params, query, body, signal, headers } = {}) {
+    return request(endpoint.method, buildUrl(endpoint, params, query), body, { signal, headers });
   }
 
   Viraspa.services = Viraspa.services || {};

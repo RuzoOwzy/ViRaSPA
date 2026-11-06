@@ -1,0 +1,5 @@
+{
+  "title": "Users",
+  "addLabel": "Add User",
+  "intro": "Loaded from a public demo API. The Add and Edit buttons follow your privileges: the viewer account sees no Add button and disabled Edit buttons."
+}

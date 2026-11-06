@@ -1,0 +1,25 @@
+<div class="app-page page-settings">
+  <h1>{{title}}</h1>
+  <p class="text-muted">{{intro}}</p>
+  <app-note class="readonly-note" heading="{{readonlyTitle}}" hidden>{{readonlyText}}</app-note>
+
+  <form class="settings-form">
+    <!-- Without settings.edit, everything inside becomes read-only. -->
+    <fieldset data-privilege-required="settings.edit" data-privilege-denied="readonly">
+      <div class="form-field">
+        <label for="settings-company">Company Name</label>
+        <input id="settings-company" name="company" type="text">
+      </div>
+      <div class="form-field">
+        <label for="settings-currency">Currency</label>
+        <select id="settings-currency" name="currency">
+          <option value="TZS">TZS - Tanzanian Shilling</option>
+          <option value="KES">KES - Kenyan Shilling</option>
+          <option value="USD">USD - US Dollar</option>
+        </select>
+      </div>
+      <label class="check"><input type="checkbox" name="notifications"> Email Notifications</label>
+    </fieldset>
+    <button type="submit" class="btn" data-privilege-required="settings.edit">Save Changes</button>
+  </form>
+</div>

@@ -67,6 +67,17 @@
         "LICENSE"
       ],
       "checksum": "sha256-81296b5b53dc2edbd157b9a685114a9986dad2900e1f5d11b81e581afeaa61b6"
+    },
+    {
+      "name": "chartjs",
+      "version": "4.6.1",
+      "downloadSource": "npm",
+      "package": "chart.js",
+      "packageFolder": "dist",
+      "include": [
+        "chart.umd.min.js"
+      ],
+      "checksum": "sha256-e33720691a67f4b494e322761a565d561e6f5e81650e5c11a7d9a16006536510"
     }
   ],
   "install": {
@@ -74,5 +85,43 @@
   },
   "devServer": {
     "port": 8027
+  },
+  "prerender": {
+    "outputFolder": "prerendered",
+    "liveSiteAddress": "",
+    "renderLevel": "headTagsOnly"
+  },
+  "deploy": {
+    "targets": [
+      {
+        "name": "local-staging",
+        "destination": "releases/staging",
+        "serverType": "iis",
+        "environment": "staging",
+        "keepPrevious": 2
+      },
+      {
+        "name": "local-production",
+        "destination": "releases/production",
+        "serverType": "apache",
+        "environment": "production",
+        "keepPrevious": 2
+      }
+    ],
+    "environments": [
+      {
+        "name": "staging",
+        "settings": {
+          "apiBaseAddress": "https://jsonplaceholder.typicode.com"
+        }
+      },
+      {
+        "name": "production",
+        "settings": {
+          "apiBaseAddress": "https://jsonplaceholder.typicode.com"
+        }
+      }
+    ],
+    "exclude": []
   }
 }

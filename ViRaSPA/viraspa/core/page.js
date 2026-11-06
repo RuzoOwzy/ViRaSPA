@@ -6,9 +6,10 @@
   // Pages work with the normal `document` (no Shadow DOM): page CSS is
   // switched on only while the page is shown.
   class Page {
-    constructor(container, route, { signal, display } = {}) {
+    constructor(container, route, { signal, display, setHead } = {}) {
       this.container = container;
       this.route = route;
+      this._setHead = setHead || (() => {});
       // Aborted when the user leaves this page (or a newer navigation wins
       // before it is shown) - pass it to fetch/call to cancel requests.
       this.signal = signal;
@@ -39,8 +40,20 @@
       emit("pageOnDataBinding", { page: this, model });
       this.container.innerHTML = html;
       Viraspa.core.components.scan(this.container); // autoload components used in the page
+      Viraspa.session.applyPrivileges(this.container); // data-privilege-required...
       emit("pageAfterDataBinding", { page: this });
       return html;
+    }
+
+    // Fills the {{placeholders}} in the route's head information, e.g.
+    // head: { title: "{{name}} on VibeNet" } + this.setHeadData({ name }).
+    setHeadData(data) {
+      this._setHead(data, undefined);
+    }
+
+    // Replaces head values outright: this.setHead({ title, description, image }).
+    setHead(values) {
+      this._setHead(undefined, values);
     }
 
     // Shows this page (replacing the previous one) once its stylesheet has

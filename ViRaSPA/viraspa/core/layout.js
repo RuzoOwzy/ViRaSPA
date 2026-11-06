@@ -25,6 +25,7 @@
     }
     await Viraspa.core.components.scan(document.body);
     Viraspa.core.components.watch();
+    Viraspa.session.applyPrivileges(document.body);
     emit("layoutOnLoad");
 
     // Wait for the shell's components, and for components they render in

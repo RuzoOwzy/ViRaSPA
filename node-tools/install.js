@@ -341,4 +341,11 @@ if (require.main === module) {
   });
 }
 
-module.exports = { tool };
+// For other tools (deploy.js): which pinned items are not installed as pinned.
+function problems(siteFolder, project) {
+  return pinned(project)
+    .map(({ kind, entry }) => ({ kind, entry, state: installedState(siteFolder, kind, entry) }))
+    .filter((item) => item.state !== "ok");
+}
+
+module.exports = { tool, restore, problems };

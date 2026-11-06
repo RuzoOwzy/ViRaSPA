@@ -1,0 +1,42 @@
+.page-features {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.features-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin: 1rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.page-features section {
+  margin-top: 1.75rem;
+}
+
+.feature-list {
+  padding-left: 1.1rem;
+  line-height: 1.7;
+}
+
+.page-features code {
+  padding: 0 0.25rem;
+  border-radius: 4px;
+  background: #e6efea;
+}
+
+.icon-row {
+  display: inline-flex;
+  gap: 0.6rem;
+  margin-left: 0.25rem;
+  font-size: 1.3rem;
+  vertical-align: middle;
+}
+
+.privilege-demo {
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--vs-color-primary);
+  background: #e8f5ee;
+}

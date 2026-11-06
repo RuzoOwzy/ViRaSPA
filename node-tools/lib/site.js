@@ -25,9 +25,11 @@ function childFolders(folder) {
 }
 
 // Returns the absolute site folder, or throws an Error with advice.
-function findSiteFolder(explicit) {
+function findSiteFolder(explicit, { allowWithoutProject = false } = {}) {
   if (explicit) {
     const folder = path.resolve(explicit);
+    // A deployed release has no project file (deploy.js leaves it out).
+    if (allowWithoutProject && fs.existsSync(path.join(folder, "index.html"))) return folder;
     if (!isSiteFolder(folder)) {
       throw new Error(`"${folder}" is not a ViRaSPA site folder: it has no ${PROJECT_FILE}.`);
     }

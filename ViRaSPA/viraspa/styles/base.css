@@ -83,7 +83,8 @@ button {
   outline: none;
 }
 
-[hidden] {
+[hidden],
+[data-layout-hidden] {
   display: none !important;
 }
 
@@ -124,6 +125,28 @@ button {
 
 .hidden {
   display: none !important;
+}
+
+/* Viraspa.busy.run without a target: a small indicator at the top. */
+vs-busy-indicator[data-vs-global-busy][visible] {
+  position: fixed;
+  left: 50%;
+  top: var(--vs-space-3);
+  transform: translateX(-50%);
+  z-index: 90;
+  padding: var(--vs-space-2) var(--vs-space-4);
+  border-radius: 999px;
+  background: var(--vs-color-surface);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Elements a missing privilege disabled or made read-only. */
+.vs-denied {
+  opacity: 0.6;
+}
+
+a.vs-denied {
+  pointer-events: none;
 }
 
 /* Hidden on screen, still read by screen readers. */

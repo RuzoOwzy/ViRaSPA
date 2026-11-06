@@ -14,8 +14,8 @@ After M5, the implemented and not-implemented items are reviewed, and the leftov
 | Milestone | Plan | Status |
 | --- | --- | --- |
 | M1 · Foundation | [M1-foundation.md](M1-foundation.md) | Done ([report](M1-verification-report.md)) |
-| M2 · Components and distribution | [M2-components-and-distribution.md](M2-components-and-distribution.md) | In verification ([report](M2-verification-report.md)) |
-| M3 · App features | [M3-app-features.md](M3-app-features.md) | Planned |
+| M2 · Components and distribution | [M2-components-and-distribution.md](M2-components-and-distribution.md) | Done ([report](M2-verification-report.md)) |
+| M3 · App features | [M3-app-features.md](M3-app-features.md) | In verification ([report](M3-verification-report.md)) |
 | M4 · Reactivity, i18n, testing | [M4-reactivity-i18n-testing.md](M4-reactivity-i18n-testing.md) | Planned |
 | M5 · Benchmark and review | [M5-benchmark-and-review.md](M5-benchmark-and-review.md) | Planned |
 

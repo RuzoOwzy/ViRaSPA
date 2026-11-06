@@ -1,0 +1,18 @@
+<div class="app-page page-dashboard">
+  <h1>{{title}}</h1>
+  <p class="text-muted">Welcome back, {{userName}}. {{intro}}</p>
+
+  <div class="tiles">
+    <vs-stat-tile label="Sales Today" value="TZS 1,250,000" icon="lucide:banknote" trend="up" trend-text="+12% vs yesterday"></vs-stat-tile>
+    <vs-stat-tile label="Invoices" value="48" icon="lucide:receipt" trend="up" trend-text="+5 this week"></vs-stat-tile>
+    <vs-stat-tile label="Customers" value="1,032" icon="lucide:users" trend="flat" trend-text="no change"></vs-stat-tile>
+    <vs-stat-tile label="Overdue" value="TZS 310,000" icon="lucide:clock-alert" trend="down" trend-text="-8% vs last month"></vs-stat-tile>
+  </div>
+
+  <section class="chart-card">
+    <h2>{{chartTitle}}</h2>
+    <div class="chart-box">
+      <canvas id="sales-chart" role="img" aria-label="{{chartTitle}}"></canvas>
+    </div>
+  </section>
+</div>

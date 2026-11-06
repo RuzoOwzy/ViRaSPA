@@ -24,14 +24,25 @@
     </div>
   </noscript>
 
-  <!-- The app shell: built once. Only #page-root changes per route. -->
+  <!-- The app shell, built once. Two layouts share it: elements marked
+       data-layout-only show only in those layouts (a route's `layout`
+       chooses: "public", "private" or "inherit"). Only #page-root changes
+       per route; data-visible-when follows the session. -->
   <div id="app">
     <vs-header sticky>
       <vs-brand slot="brand" name="ViRaSPA" logo="app/assets/icons/favicon.svg"></vs-brand>
-      <vs-menu menu="main"></vs-menu>
+      <vs-menu menu="main" data-layout-only="public"></vs-menu>
+      <a slot="end" href="/login" class="header-action" data-layout-only="public" data-visible-when="signed-out">Sign In</a>
+      <a slot="end" href="/dashboard" class="header-action" data-layout-only="public" data-visible-when="signed-in">Dashboard</a>
+      <vs-user-menu slot="end" source="session" data-visible-when="signed-in"></vs-user-menu>
     </vs-header>
-    <main id="page-root"></main>
-    <vs-footer>ViRaSPA — a no-build SPA framework in plain HTML, CSS and JavaScript · © 2026</vs-footer>
+    <div class="app-body">
+      <vs-sidebar collapsible data-layout-only="private">
+        <vs-menu orientation="vertical" menu="side" label="App"></vs-menu>
+      </vs-sidebar>
+      <main id="page-root"></main>
+    </div>
+    <vs-footer data-layout-only="public">ViRaSPA — a no-build SPA framework in plain HTML, CSS and JavaScript · © 2026</vs-footer>
   </div>
 
   <!-- Project settings, read before anything else loads. This file must be
@@ -46,7 +57,7 @@
   <script>
     window.Viraspa = {
       settings: {
-        app: { name: "ViRaSPA Sample", version: "0.2.0", releaseDate: "2026-11-06T12:00:00" },
+        app: { name: "ViRaSPA Sample", version: "0.2.0", releaseDate: "2026-11-07T12:00:00" },
         cache: { strategy: "release", token: "" },
         pageCache: { maxPages: 5 },
       },
@@ -61,7 +72,8 @@
   <!-- Explicit includes: libraries the project opts into, as visible
        references. Keep each library in a versioned folder, so a new version
        is a new URL and needs no cache token. jQuery is included as a worked
-       example (the sample contact page uses it); the framework never calls it. -->
+       example (the sample contact page uses it); the framework never calls it.
+       (Chart.js is loaded only by the Dashboard page, when it is opened.) -->
   <script src="lib/jquery/4.0.0/jquery.min.js"></script>
 </body>
 </html>

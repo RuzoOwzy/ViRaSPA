@@ -1,0 +1,8 @@
+{
+  "title": "Dashboard",
+  "intro": "These figures are sample data.",
+  "chartTitle": "Monthly sales (TZS millions)",
+  "months": ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov"],
+  "sales": [18.2, 21.5, 19.8, 24.1, 26.7, 28.3],
+  "target": [20, 20, 22, 22, 25, 25]
+}

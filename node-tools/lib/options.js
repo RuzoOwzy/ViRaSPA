@@ -153,8 +153,8 @@ function defineTool(definition) {
     let project = null;
     let siteError = null;
     try {
-      siteFolder = site.findSiteFolder(siteFolderFlag);
-      project = site.readProjectFile(siteFolder);
+      siteFolder = site.findSiteFolder(siteFolderFlag, { allowWithoutProject: Boolean(tool.allowWithoutProject) });
+      project = tool.allowWithoutProject && !site.isSiteFolder(siteFolder) ? {} : site.readProjectFile(siteFolder);
     } catch (err) {
       siteError = err;
     }

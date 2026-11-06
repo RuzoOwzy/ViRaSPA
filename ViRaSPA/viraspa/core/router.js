@@ -32,15 +32,45 @@
     return navId !== navCounter;
   }
 
-  // Default guard: always allows. A route's `access` ("public"/"private")
-  // is declared metadata until a project sets real logic with
-  // Viraspa.core.setGuard(async (route) => true | false).
-  let guard = async () => true;
+  // The guard decides whether a route may open. It returns true (open),
+  // false (show the not-found page) or a path to go to instead (e.g. the
+  // login page). The default is Viraspa.session.guard: routes with
+  // access "private" or `requires` need a signed-in user with those
+  // privileges. Replace it with Viraspa.core.setGuard(async (route) => ...).
+  let guard = (route) => Viraspa.session.guard(route);
   Viraspa.core.setGuard = function (fn) {
-    if (typeof fn !== "function") throw new Error("setGuard needs a function (route) => boolean.");
+    if (typeof fn !== "function") throw new Error("setGuard needs a function (route) => true | false | path.");
     guard = fn;
   };
   Viraspa.core.guard = (route) => guard(route);
+
+  // ---- layouts ("shells") ------------------------------------------------
+  // index.html can hold several shells around one #page-root. Elements
+  // marked data-layout-only="private" (space-separated names) show only
+  // while the current route's layout is one of them. A route's `layout` is a
+  // name, or "inherit" (default) to keep the current one; the first page
+  // without one gets "private" if it is private, else "public".
+  let currentLayout = null;
+
+  function setLayout(name) {
+    if (!name || name === currentLayout) return;
+    currentLayout = name;
+    document.documentElement.dataset.layout = name;
+    // Its own attribute (not `hidden`), so it never clashes with privilege
+    // checks that hide the same element.
+    for (const el of document.querySelectorAll("[data-layout-only]")) {
+      el.toggleAttribute("data-layout-hidden", !el.getAttribute("data-layout-only").split(/\s+/).includes(name));
+    }
+    emit("layoutChanged", { layout: name });
+  }
+
+  function layoutFor(route) {
+    if (route.layout && route.layout !== "inherit") return route.layout;
+    return currentLayout || (route.access === "private" || route.requires ? "private" : "public");
+  }
+
+  Viraspa.core.setLayout = setLayout;
+  Viraspa.core.currentLayout = () => currentLayout;
 
   function createPageElement(route) {
     const element = document.createElement("div");
@@ -119,6 +149,7 @@
   // is already loaded, so the new page never shows unstyled.
   function swapTo(entry, fromHistory, { announce = true } = {}) {
     const previous = current;
+    setLayout(layoutFor(entry.route));
     Viraspa.utility.assetLoader.setStyleActive(entry.styleLink, true);
     if (previous && previous !== entry) {
       if (previous.styleLink === entry.styleLink) previous.styleLink = null;
@@ -132,7 +163,7 @@
     current = entry;
     if (pending === entry) pending = null;
     if (entry.keepAlive) keep(entry);
-    if (entry.route.title) document.title = entry.route.title;
+    Viraspa.head.apply(entry.route, entry.headData, entry.headOverrides);
     shownKey = currentKey();
 
     restoreScroll(fromHistory);
@@ -181,6 +212,7 @@
       if (isStale(navId)) return;
       entry.element.innerHTML = template;
       Viraspa.core.components.scan(entry.element);
+      Viraspa.session.applyPrivileges(entry.element);
       swapTo(entry, fromHistory, { announce: false });
       // The script runs once (on the first visit); it listens for the
       // viraspa:pageCreated / pageShown events to set up each page instance.
@@ -201,7 +233,13 @@
       if (isStale(navId) || entry.shown) return;
       swapTo(entry, fromHistory);
     };
-    const page = new PageClass(entry.element, route, { signal: entry.controller.signal, display });
+    // Head information the page sets later (e.g. once its data arrived).
+    const setHead = (data, overrides) => {
+      if (data !== undefined) entry.headData = { ...(entry.headData || {}), ...data };
+      if (overrides !== undefined) entry.headOverrides = { ...(entry.headOverrides || {}), ...overrides };
+      if (current === entry) Viraspa.head.apply(entry.route, entry.headData, entry.headOverrides);
+    };
+    const page = new PageClass(entry.element, route, { signal: entry.controller.signal, display, setHead });
     entry.page = page;
 
     emit("pageBeforeLoad", { route, page });
@@ -244,12 +282,27 @@
     const route = matched || Viraspa.notFoundRoute;
 
     emit("routeBeforeGuard", { route });
-    const allowed = await Viraspa.core.guard(route);
+    let allowed;
+    try {
+      allowed = await Viraspa.core.guard(route);
+    } catch (err) {
+      console.error("The route guard failed; the page is not shown:", err);
+      allowed = false;
+    }
     emit("routeOnGuard", { route, allowed });
     emit("routeAfterGuard", { route, allowed });
     if (isStale(navId)) return;
 
-    const target = allowed ? route : Viraspa.notFoundRoute;
+    // A path: go there instead (e.g. the login page), replacing this entry.
+    // A path pointing back at this same page counts as "not allowed".
+    if (typeof allowed === "string") {
+      if (normalizePath(new URL(allowed, document.baseURI).pathname) !== path) {
+        history.replaceState({ vsKey: currentKey() || newKey() }, "", allowed);
+        return loadRoute();
+      }
+    }
+
+    const target = allowed && typeof allowed !== "string" ? route : Viraspa.notFoundRoute;
     try {
       await showRoute(target, navId, fromHistory);
     } catch (err) {
@@ -300,9 +353,46 @@
     navigate(link.pathname + link.search + link.hash);
   }
 
+  // Signing out drops kept-alive private pages, so no private data stays in
+  // the page after the session ends.
+  document.addEventListener("viraspa:sessionChanged", (event) => {
+    if (event.detail.signedIn) return;
+    for (const [name, entry] of kept) {
+      if (entry !== current && (entry.route.access === "private" || entry.route.requires)) {
+        kept.delete(name);
+        remove(entry);
+      }
+    }
+  });
+
   Viraspa.core.navigate = navigate;
   Viraspa.core.normalizePath = normalizePath;
+  // A prerendered copy (node-tools/prerender.js, renderLevel fullPage) arrives
+  // with the page's content already inside #page-root. It stays on screen
+  // until the app's own page is ready, then is replaced like any page.
+  function adoptPrerenderedContent() {
+    const root = document.getElementById("page-root");
+    if (!root || !root.firstElementChild) return;
+    const element = document.createElement("div");
+    element.className = "vs-page";
+    element.dataset.prerendered = "";
+    element.append(...root.childNodes);
+    root.appendChild(element);
+    current = {
+      route: { name: "prerendered" },
+      element,
+      page: null,
+      controller: new AbortController(),
+      styleLink: null,
+      keepAlive: false,
+      created: true,
+      shown: true,
+      path: null,
+    };
+  }
+
   Viraspa.core.initRouter = function () {
+    adoptPrerenderedContent();
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     if (!currentKey()) history.replaceState({ ...(history.state || {}), vsKey: newKey() }, "");
     document.addEventListener("click", onDocumentClick);

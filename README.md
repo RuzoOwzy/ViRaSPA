@@ -4,7 +4,7 @@
 
 It keeps the structure that makes frameworks like Angular pleasant to work in (pages, components, lifecycle events, services, routing) but drops the build step. There is no TypeScript to transpile and no bundler: what you write is exactly what the browser runs, served by a small static dev server.
 
-> **Status:** 0.2.0 in progress (milestone M2 of 5, see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
+> **Status:** 0.2.0 in progress (milestone M3 of 5, see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
 
 ## Why ViRaSPA
 
@@ -24,6 +24,8 @@ Current Edge, Chrome, Firefox and Safari. At startup, `viraspa/viraspa.js` check
 node-tools/           <- command-line tools (Node.js), outside the served folder
   serve.js            <- development server
   install.js          <- installs, restores and verifies what app/project-viraspa.json pins
+  prerender.js        <- ready-made public pages for search engines and link previews
+  deploy.js           <- copies a release to a server folder or .zip, with environments and rollback
   create-project.js   <- starts a new project
   clean-sample.js     <- removes the sample app from a copy of this repository
   stamp.js            <- for publishers: writes file lists and checksums into manifests
@@ -281,7 +283,8 @@ Framework events are DOM `CustomEvent`s whose names start with `viraspa:`. Liste
 
 - **App:** `appInit`. Project init code registered with `Viraspa.core.onInit(async () => …)` in `app/config/init.js` is awaited before the layout and the first page.
 - **Layout:** `layoutBeforeLoad`, `layoutOnLoad`, `layoutAfterLoad`.
-- **Route guard:** `routeBeforeGuard`, `routeOnGuard`, `routeAfterGuard`. `routeChanged` fires after a page is shown, for analytics.
+- **Route guard:** `routeBeforeGuard`, `routeOnGuard`, `routeAfterGuard`. `routeChanged` fires after a page is shown: hook analytics page views to it. `layoutChanged` fires when the shell switches.
+- **Session and busy:** `sessionChanged` (`{ signedIn, user, reason }`), `busyStart`, `busyEnd`.
 - **Page:**
   - load: `pageBeforeLoad`, `pageOnLoad`, `pageAfterLoad`
   - data binding: `pageBeforeDataBinding`, `pageOnDataBinding`, `pageAfterDataBinding`
@@ -300,10 +303,21 @@ Routes live in `app/config/routes.js`. Each one maps a URL path to a page folder
 | Option | Meaning |
 | --- | --- |
 | `page` | the folder. `app/pages/about` → `about.js`, `about.html`, `about.css`, `about.model.json`. |
-| `nav` | `{ label, icon, menus, order }` lists the route in a `vs-menu`. `menus` defaults to `["main"]`; `icon` is e.g. `"lucide:house"`. |
-| `access` | `public` or `private`, checked by the guard: set it with `Viraspa.core.setGuard(async (route) => true \| false)`. It allows every route by default. |
-| `keepAlive` | `true` keeps the page's DOM and state when the user leaves, so coming back is instant. At most `settings.pageCache.maxPages` (default 5) pages are kept; the oldest goes first. |
+| `title`, `head` | the tab title, and the page's head information (see [Head information and SEO](#head-information-and-seo)) |
+| `nav` | `{ label, icon, menus, order, divider: "before" }` lists the route in a `vs-menu`.<br>• `menus` defaults to `["main"]`.<br>• `icon` is e.g. `"lucide:house"`.<br>• A list of such entries shows it differently per menu.<br>• Routes the user can't open are left out. |
+| `layout` | `"public"`, `"private"` or `"inherit"` (the default): which shell surrounds the page (see [Layouts](#layouts)) |
+| `access` | `"private"` needs a signed-in user |
+| `requires` | `{ privileges: [...], match: "all" \| "any", roles: [...] }` needs those privileges or roles |
+| `keepAlive` | `true` keeps the page's DOM and state when the user leaves, so coming back is instant. At most `settings.pageCache.maxPages` (default 5) pages are kept; the oldest goes first. Private pages are dropped on sign-out. |
 | `native` | `true` for a plain page (see above) |
+| `prerender` | `true`: `prerender.js` writes a ready-made copy (public routes only) |
+
+**The guard** decides whether a route may open. The default, `Viraspa.session.guard`:
+
+- sends signed-out users to the login page with `?returnTo=`;
+- shows the session's `forbiddenRoute`, or the not-found page, to signed-in users who lack a privilege.
+
+Replace it with `Viraspa.core.setGuard(async (route) => true | false | "/some/path")`.
 
 `Viraspa.notFoundRoute`, also in `routes.js`, is the page shown when nothing matches.
 
@@ -322,7 +336,7 @@ How navigation behaves:
   - links to `#anchors` on the same page only scroll.
 - **Typing a URL, refreshing or a bookmark:** the server returns `index.html` for any path without a file extension, and the router shows the matching page.
 - **Matching:** case-insensitive and without a trailing slash, so `/About/` opens `/about`, and the address bar is corrected.
-- **Wrong URLs** show the not-found page. That 404 is visual only: the server still answers 200.
+- **Wrong URLs** show the not-found page. Once `prerender.js` has written `prerendered/routes.json`, `serve.js` and the server rules from `deploy.js` also answer them with status 404.
 - **A misconfigured route** logs a clear console error and shows the not-found page.
 
 `index.html` has `<base href="/">`, so relative paths always resolve from the site root. If the app is served from a sub-folder, change it to that folder.
@@ -359,7 +373,105 @@ const user = await Viraspa.services.communication.call(Viraspa.endpoints.users.g
    <vs-footer>© 2026</vs-footer>
    ```
 
-**Remote mode:** the framework's files are found relative to `viraspa.js`, so the framework can be served from a CDN instead of being installed, e.g. `<script src="https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.2.0/ViRaSPA/viraspa/viraspa.js"></script>`. CDN files carry no token, since the URL already names the version. This works once version tags are published.
+### Layouts
+
+`index.html` can hold several shells around the one `#page-root`, e.g. a public website and a private app:
+
+```html
+<vs-header sticky>
+  <vs-brand slot="brand" name="VSales"></vs-brand>
+  <vs-menu menu="main" data-layout-only="public"></vs-menu>
+  <a slot="end" href="/login" data-layout-only="public" data-visible-when="signed-out">Sign In</a>
+  <vs-user-menu slot="end" source="session" data-visible-when="signed-in"></vs-user-menu>
+</vs-header>
+<div class="app-body">
+  <vs-sidebar collapsible data-layout-only="private">
+    <vs-menu orientation="vertical" menu="side"></vs-menu>
+  </vs-sidebar>
+  <main id="page-root"></main>
+</div>
+<vs-footer data-layout-only="public">© 2026</vs-footer>
+```
+
+- **Switching:** elements with `data-layout-only="private"` (a space-separated list) show only while the current route's `layout` is one of those names.
+- **Built once:** all the shell elements stay in place, so switching between layouts never rebuilds them.
+- **`"inherit"` (the default):** keeps the current layout, so pages like Features, About and Contact work in both. The first page without a layout gets `"private"` if it is private, else `"public"`.
+- **From code:** `Viraspa.core.setLayout(name)` and `currentLayout()`.
+
+### Session and privileges
+
+The framework handles what every app needs:
+
+- storing the session (`localStorage`);
+- privilege and role checks;
+- guarding routes;
+- adding the token to API calls;
+- reacting to `401` answers and to expiry;
+- keeping browser tabs in step.
+
+The project supplies an **adapter** that talks to its own backend, in `app/config/init.js` or `app/config/session.js`:
+
+```js
+Viraspa.session.configure({
+  adapter: {
+    async login({ username, password, rememberMe }) {
+      // call your API; throw new Error("Wrong email or password.") on failure
+      return { user: { id, name, email }, token, privileges: ["users.view"], roles: ["admin"], expiresIn: 3600 };
+    },
+    async logout(session) {},       // optional: tell the backend
+    async loginWith(providerId) {}, // optional: OAuth etc. (the framework doesn't implement providers)
+  },
+  loginRoute: "/login",
+  homeRoute: "/dashboard",
+  forbiddenRoute: "/forbidden",
+});
+```
+
+**Every automatic behaviour can be switched off or replaced:**
+
+| Option | Default | Choices |
+| --- | --- | --- |
+| `onUnauthorized` (an API call answered 401) | `"logout"` | `"logout"` (with a message, then the login page), `"notify"` (a message only), `"ignore"`, or `function(info)` |
+| `onExpired` | `"logout"` | same choices |
+| `attachToken` | `true` | `true`: `Authorization: Bearer …` on calls to the endpoints' base URL only. `false`, or `(url) => boolean`. |
+| `syncAcrossTabs` | `true` | signing in or out in one tab applies to the others |
+| `slidingExpiry` | `0` | minutes added to the expiry on each successful API call |
+
+**In code:**
+- **Signing in and out:** `login(credentials)`, `loginWith(id)`, `logout({ navigate })`.
+- **State:** `isSignedIn()`, `user()`.
+- **Checks:** `hasPrivilege(p)`, `hasAnyPrivilege([...])`, `hasAllPrivileges([...])`, `hasRole(r)`, `canAccess(route)`.
+- **After signing in:** `returnPath()` gives the page to go back to.
+
+**In HTML** (applied after every render and whenever the session changes):
+
+| Attribute | Meaning |
+| --- | --- |
+| `data-privilege-required="users.edit users.delete"` | needs these privileges |
+| `data-privilege-match="any"` | any of them (default `all`) |
+| `data-privilege-denied="hide"` | what happens without them: `hide` (default), `disable` or `readonly` (form fields inside become read-only) |
+| `data-role-required="admin manager"` | needs any of these roles |
+| `data-visible-when="signed-in"` / `"signed-out"` | follows the session |
+
+Checks in the browser only shape what the user sees. **The backend must enforce every privilege itself.**
+
+### Busy and cancellation
+
+```js
+const users = await Viraspa.busy.run(
+  ({ signal }) => Viraspa.services.communication.call(Viraspa.endpoints.users.list, { signal }),
+  { message: "Loading users...", target: ".table-wrap", signal: this.signal }
+);
+```
+
+- **Indicator:** a `<vs-busy-indicator>` covers the `target`, or shows a small indicator at the top of the window when there's no target.
+- **Delay:** it appears only after `delay` ms (default 200), so quick work never flashes a spinner.
+- **Several runs:** runs on the same target share one indicator.
+- **Cancelling:** the work gets a `signal` that aborts when the page's signal aborts (the user left) or when `Viraspa.busy.cancelAll()` runs.
+
+### Remote mode
+
+The framework's files are found relative to `viraspa.js`, so the framework can be served from a CDN instead of being installed, e.g. `<script src="https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.2.0/ViRaSPA/viraspa/viraspa.js"></script>`. CDN files carry no token, since the URL already names the version. This works once version tags are published.
 
 ### Cache strategies
 
@@ -478,14 +590,90 @@ node node-tools/install.js add library chartjs@4.6.1 --package chart.js --packag
   - `index.html`: the settings, the app version and release date, the shell
   - everything in `app/`
 
-## Deploying one frontend to many servers
+## Head information and SEO
 
-A project may be installed on several servers, each with its own backend:
+Each route describes its head information. On every navigation the framework updates `<title>`, the description, the canonical address, and the Open Graph and Twitter preview tags:
 
-- **Init code:** write it in `app/config/init.js` with `Viraspa.core.onInit(async () => …)`. It runs once at startup and is awaited before the layout and first page load.
-- **Backend address:** call `Viraspa.endpoints.setBaseUrl(url)` there.
-- **A settings file an admin edits on the server:** read it with `Viraspa.utility.assetLoader.fetchJson(path, { fresh: true })`, which bypasses the browser cache.
-- **Secrets:** anything the frontend fetches is public, so never put secrets in such a file.
+```js
+head: {
+  title: "About VSales",                     // falls back to the route's title
+  description: "Who we are and what we do.",
+  image: "app/assets/images/share/about.png", // the shared-link preview picture (about 1200×630)
+  icon: "app/assets/icons/about.svg",         // optional: this page's own tab icon
+}
+```
+
+- **Two different pictures:** the favicon stays site-wide in `index.html`; `image` is the preview card in WhatsApp, Facebook, LinkedIn, X and so on.
+- **Data that arrives later:** a page sets its values with `this.setHeadData({ name })` (filling `{{name}}` placeholders in `head`) or `this.setHead({ title, description, image })`.
+
+### Prerendering: prerender.js
+
+Search engines and link-preview bots often don't run JavaScript. `prerender.js` writes a ready-made copy of every public route with `prerender: true` to `prerendered/<path>/index.html`, beside `index.html`:
+
+```bash
+node node-tools/prerender.js --live-site-address https://vsales.example.com
+```
+
+**How much it writes** is set by `renderLevel`:
+
+- **`headTagsOnly`** (default, fast): index.html with that page's head tags. That's enough for link previews.
+- **`fullPage`:** also the page's rendered content, using the Edge or Chrome already on the computer in headless mode. Nothing is downloaded.
+
+**Where the pages come from:** a temporary local server it starts itself, so your own server isn't touched.
+
+**Private routes are never prerendered.**
+
+**Also written:** `prerendered/routes.json`, the list of known routes, so servers answer other addresses with a real 404.
+
+**After it runs:**
+- `serve.js` and the deploy server rules serve these copies automatically.
+- The folder is created only by the tool and is ignored by git.
+- In the browser, the app takes over the prerendered page seamlessly.
+
+### Dynamic pages (profiles, products…)
+
+Pages whose data changes, like `/profile/amina`, can't be prerendered. The standard answer is **head injection at request time** by whatever server serves `index.html`, in any backend language:
+
+1. A request for `/profile/amina` arrives.
+2. The server looks up the public profile and inserts its `<title>`, description and `og:image` into a copy of `index.html`, using the same tags `prerender.js` writes. A private profile gets only generic tags, so nothing private leaks.
+3. A preview bot reads those tags; people get the normal app, which fills the same values with `this.setHeadData(...)`.
+
+The route declares the placeholders (`head: { title: "{{name}} on VibeNet" }`), so the frontend and the server agree on one source. A ready-made Node reference hook is planned for the next plan.
+
+## Deploying: deploy.js
+
+A ViRaSPA site is static files, so deploying means copying the right files to the right place, safely:
+
+```bash
+node node-tools/deploy.js --target production --prerender
+```
+
+1. **Checks** that the framework, components and libraries match their pins, and restores them if not. So it also works on a server where nothing is installed yet (with Node.js there).
+2. **Prerenders** public pages, with `--prerender`.
+3. **Copies the site,** leaving out `app/project-viraspa.json`, `*.md`, `*.d.ts`, `*.map`, `tests/` and your `exclude` list.
+4. **Writes `app/config/environment.js`** from the chosen environment's settings, e.g. the API address. The sample's `init.js` points the endpoints at `apiBaseAddress`.
+5. **Writes `release.json`** (the `auto` cache strategy uses it) **and the server rules:** `web.config` for IIS, `.htaccess` for Apache, or `<destination>-nginx.conf` beside it for nginx. The rules give you prerendered pages, the `index.html` fallback, real 404s, `no-cache` for `index.html`, and they hide the tool settings.
+6. **Copies into `<destination>.new`, then swaps it in at once.** The old release becomes `<destination>.previous-<its token>`; the newest `keepPrevious` are kept. If Windows or IIS holds the folder open, it copies over it in place instead.
+
+`--rollback` puts the newest previous release back, `--zip <file>` writes the release as one file, and `--dry-run` shows the steps without doing them.
+
+```json
+"deploy": {
+  "targets": [
+    { "name": "production", "destination": "D:\\Sites\\vsales", "serverType": "iis", "environment": "production", "keepPrevious": 2 }
+  ],
+  "environments": [
+    { "name": "production", "settings": { "apiBaseAddress": "https://api.vsales.example.com" } }
+  ],
+  "exclude": []
+}
+```
+
+- **Remote uploads:** FTP, SSH and cloud uploads are not built in. Use `--zip` and your provider's own tools.
+- **No minification or bundling:** that would make it a build step.
+- **Checking a release:** `node node-tools/serve.js --site-folder <release folder> --port 8030` serves a deployed release.
+
+**Secrets:** anything the frontend fetches is public, including `environment.js`, so never put secrets there. One frontend can also read a settings file an admin edits on each server: use `Viraspa.utility.assetLoader.fetchJson(path, { fresh: true })` in `init.js`.
 
 ## Documentation
 

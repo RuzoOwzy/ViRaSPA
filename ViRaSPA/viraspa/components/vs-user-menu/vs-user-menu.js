@@ -7,7 +7,8 @@
   //     { divider: true },
   //     { label: "Sign Out", icon: "lucide:log-out", action: () => Viraspa.session.logout() },
   //   ];
-  // Attributes: name, email, avatar (image URL; initials are shown otherwise).
+  // Attributes: name, email, avatar (image URL; initials are shown otherwise),
+  // or source="session" to take them from Viraspa.session (kept up to date).
   // An item with `action` is a button; one with `href` is a link. Choosing
   // any item closes the panel and dispatches a "vs-select" event
   // (detail: { item }). Keyboard: Enter/Space opens, arrows move, Escape closes.
@@ -36,6 +37,13 @@
 
     prepareModel(model) {
       const escapeHtml = Viraspa.utility.dom.escapeHtml;
+      // source="session": name, email and avatar come from Viraspa.session.user().
+      if (this.getAttribute("source") === "session") {
+        const user = Viraspa.session.user() || {};
+        model.name = user.name || user.email || "";
+        model.email = user.email || "";
+        model.avatar = user.avatar || "";
+      }
       const words = String(model.name || "").trim().split(/\s+/).filter(Boolean);
       model.initials = (words.length > 1 ? words[0][0] + words[words.length - 1][0] : (words[0] || "?").slice(0, 2)).toUpperCase();
       model.avatarHtml = model.avatar
@@ -65,6 +73,9 @@
       root.addEventListener("keydown", (event) => this.onKeyDown(event));
       document.addEventListener("click", (event) => {
         if (!event.composedPath().includes(this)) this.setOpen(false);
+      });
+      document.addEventListener("viraspa:sessionChanged", () => {
+        if (this.getAttribute("source") === "session" && this.isConnected) this.render();
       });
     }
 

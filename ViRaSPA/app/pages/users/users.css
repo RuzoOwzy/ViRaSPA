@@ -1,0 +1,9 @@
+.page-users .table-wrap {
+  min-height: 8rem;
+  overflow-x: auto;
+}
+
+.page-users td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}

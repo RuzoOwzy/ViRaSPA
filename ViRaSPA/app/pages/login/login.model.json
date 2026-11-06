@@ -1,0 +1,6 @@
+{
+  "demoTitle": "Demo accounts",
+  "demoText": "This sample signs in without a server (see app/config/session.js). Try:",
+  "adminText": "every privilege",
+  "viewerText": "can view users and settings, not change them"
+}

@@ -1,0 +1,15 @@
+.page-settings .settings-form {
+  max-width: 28rem;
+}
+
+.page-settings fieldset {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: none;
+}
+
+.page-settings .check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}

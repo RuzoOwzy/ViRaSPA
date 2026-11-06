@@ -9,6 +9,53 @@ must match the newest entry below.
 **Breaking for projects built on 0.1.0.** Work is split into milestones,
 see [plans/](plans/README.md).
 
+### Milestone M3 · App features
+
+#### Added
+- **`Viraspa.session`** (generic parts plus the project's adapter):
+  - `login`, `loginWith`, `logout`, `isSignedIn`, `user`;
+  - `hasPrivilege`, `hasAnyPrivilege`, `hasAllPrivileges`, `hasRole`, `canAccess`, `returnPath`;
+  - stored in `localStorage`;
+  - switches `onUnauthorized` and `onExpired` (`logout` / `notify` / `ignore` / function), `attachToken` (own API only by default), `syncAcrossTabs` and `slidingExpiry`;
+  - the event `viraspa:sessionChanged`.
+- **Privilege attributes:** `data-privilege-required`, `data-privilege-match`, `data-privilege-denied` (`hide` / `disable` / `readonly`), `data-role-required` and `data-visible-when`, applied after every render and on session changes.
+- **Routes:** `access: "private"` and `requires: { privileges, match, roles }`. The default guard redirects to the login page with `?returnTo=`, or to `forbiddenRoute`. Guards may return a path to redirect to.
+- **`Viraspa.busy`:** `run(fn, { message, target, delay, signal })` and `cancelAll()`, with the events `busyStart` and `busyEnd`.
+- **Layouts:** route `layout` (`public` / `private` / `inherit`), `data-layout-only` on shell elements, `Viraspa.core.setLayout()` and the event `viraspa:layoutChanged`.
+- **Head information:** route `head { title, description, image, icon }`; runtime updates of the title, description, canonical, Open Graph and Twitter tags; `page.setHead()` and `page.setHeadData()` with `{{placeholders}}`.
+- **Prerendered content:** the router replaces it smoothly when the app starts.
+- **Component changes:**
+  - `vs-menu`: hides routes the user can't open, takes a list of `nav` entries per route, `nav.divider`, and drops stray dividers;
+  - `vs-user-menu`: `source="session"`;
+  - `communication.request`: adds the token, reports to the session, and handles `headers`, 204 responses and text answers.
+- **Node tools:**
+  - **`prerender.js`:**
+    - `headTagsOnly`, or `fullPage` through the local Edge or Chrome in headless mode;
+    - its own temporary server;
+    - `routes.json` of known routes;
+    - private routes refused.
+  - **`deploy.js`:**
+    - targets and environments, with `environment.js`;
+    - `release.json` and the server rules (IIS / Apache / nginx);
+    - an atomic swap with `keepPrevious`, a locked-folder fallback, `--rollback`, `--zip` and `--dry-run`;
+    - it restores pinned items first.
+  - **`serve.js`:**
+    - serves prerendered `/`;
+    - real 404 status for unknown routes;
+    - can serve a deployed release (`--site-folder`).
+  - **`lib/server-rules.js`, `lib/routes.js`;** zip writing; folder replacement with retries and an in-place fallback on Windows locks.
+- **Sample app:**
+  - **Shells:** public and private; Sign In and Dashboard header actions.
+  - **Demo session adapter:** `admin@example.com` / `admin` and `viewer@example.com` / `viewer`.
+  - **Pages:** Login (`vs-login-form`), Dashboard (`vs-stat-tile` plus Chart.js 4.6.1, loaded on demand), Users, Settings (read-only for viewers), Profile, Change Credentials, No Access, and Features (in both shells, with live demos).
+  - **`native-counter`:** a plain custom element.
+  - **Config:** `app/config/environment.js`, plus example deploy targets and environments.
+- **Project template:** `environment.js` and an init example for the session.
+
+#### Changed
+- **The default guard** is now `Viraspa.session.guard` (it allows every public route as before).
+- **Locked namespaces:** `Viraspa.session`, `busy` and `head` are locked like the other namespaces.
+
 ### Milestone M2 · Components and distribution
 
 #### Added

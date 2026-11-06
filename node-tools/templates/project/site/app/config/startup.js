@@ -5,7 +5,9 @@ window.Viraspa.startup = {
   // Extensions installed in extensions/<name>/ (install.js add extension ...).
   extensions: [],
   groups: [
-    // Endpoints first: init code may change their base URL.
+    // The environment's settings, then endpoints (init code points them at
+    // the environment's backend).
+    { name: "environment", scripts: ["app/config/environment.js"] },
     { name: "config", scripts: ["app/config/endpoints.js"] },
     { name: "init", scripts: ["app/config/init.js"] },
     { name: "routes", scripts: ["app/config/routes.js"] },

@@ -7,8 +7,10 @@ window.Viraspa.startup = {
   // loaded before the groups below.
   extensions: [],
   groups: [
-    // Endpoints first: init code may change their base URL.
-    { name: "config", scripts: ["app/config/endpoints.js"] },
+    // The environment's settings first, then endpoints (init code points
+    // them at the environment's backend), then the session adapter.
+    { name: "environment", scripts: ["app/config/environment.js"], styles: ["app/assets/app.css"] },
+    { name: "config", scripts: ["app/config/endpoints.js", "app/config/session.js"] },
     { name: "init", scripts: ["app/config/init.js"] },
     {
       // The responsive grid used by the sample pages (an app asset, not part
@@ -21,6 +23,7 @@ window.Viraspa.startup = {
     { name: "routes", scripts: ["app/config/routes.js"] },
     // The app's own components. (Framework vs-* components - core ones and
     // those installed in components/ - load by themselves when used.)
-    { name: "components", scripts: ["app/components/note/note.js"] },
+    // native-counter is written in plain JS with no Viraspa.* calls.
+    { name: "components", scripts: ["app/components/note/note.js", "app/components/native-counter/native-counter.js"] },
   ],
 };

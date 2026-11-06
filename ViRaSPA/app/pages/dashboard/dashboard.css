@@ -1,0 +1,23 @@
+.page-dashboard .tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.page-dashboard .chart-card {
+  padding: 1rem 1.25rem 1.25rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius-large);
+  background: var(--vs-color-surface);
+}
+
+.page-dashboard .chart-card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.page-dashboard .chart-box {
+  position: relative;
+  height: 280px;
+}
