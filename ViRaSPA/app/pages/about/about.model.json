@@ -1,0 +1,14 @@
+{
+  "title": "About ViRaSPA",
+  "intro": "ViRaSPA is a minimal, build-free single-page application framework built from vanilla HTML, CSS and JavaScript.",
+  "point1": "No build step - plain files served by a small Node.js static server.",
+  "point2": "Page/component lifecycle events, path-based routing, and components with a choice of style isolation.",
+  "point3": "Write pages and components in 100% native HTML, CSS and JS if you prefer: every framework helper is opt-in.",
+  "isolationTitle": "Component isolation",
+  "isolationIntro": "A component picks how its styles are isolated: \"full\" (Shadow DOM), \"scoped\" (its styles stay inside it, page styles reach in) or \"none\".",
+  "fullTitle": "Full isolation",
+  "fullText": "This card renders in its own shadow root, with the shared base styles adopted into it.",
+  "scopedTitle": "Scoped isolation",
+  "scopedText": "This note's styles stay inside it, while the page's link style reaches in:",
+  "nativeLink": "see a page written in plain HTML, CSS and JS"
+}

@@ -5,45 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Every relative path (scripts, styles, fetched page files) resolves
        from the site root, whatever the URL depth - so /about/team still
-       finds core/version.js. If the app is served from a sub-folder,
+       finds viraspa/viraspa.js. If the app is served from a sub-folder,
        change this to that folder, e.g. "/my-app/". -->
   <base href="/">
   <title>ViRaSPA</title>
+  <meta name="description" content="A no-build single-page application framework in plain HTML, CSS and JavaScript.">
+  <!-- Site icon for browser tabs and bookmarks (per-page share images are
+       set in each route's head information instead). -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="app/assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="app/assets/icons/apple-touch-icon.png">
 </head>
 <body>
+  <noscript>
+    <div style="max-width:560px;margin:3rem auto;padding:1.25rem 1.5rem;font:15px/1.5 system-ui,sans-serif;border:1px solid #e0b4b4;border-radius:8px;background:#fff6f6;color:#5a1a1a">
+      <strong>This site needs JavaScript.</strong>
+      <p>Please turn JavaScript on in your browser settings, then reload the page.</p>
+    </div>
+  </noscript>
+
+  <!-- The app shell: built once. Only #page-root changes per route. -->
   <div id="app">
-    <div id="nav-slot"></div>
+    <app-nav-bar></app-nav-bar>
     <main id="page-root"></main>
-    <div id="footer-slot"></div>
+    <app-footer></app-footer>
   </div>
 
-  <script>window.Viraspa = window.Viraspa || {};</script>
-  <link rel="stylesheet" href="assets/css/general.css">
+  <!-- Project settings, read before anything else loads. This file must be
+       served with "Cache-Control: no-cache" (node-tools/serve.js does), so a
+       change here reaches every browser on its next visit.
+       cache.strategy decides the token added to the app's file URLs:
+         "release"    - app.version + app.releaseDate (bump them on each release)
+         "custom"     - cache.token, any letters/digits/dots/hyphens you choose
+         "auto"       - release.json written at deploy time, else the server's
+                        ETag/Last-Modified of index.html
+         "revalidate" - no token: the browser asks the server every time -->
+  <script>
+    window.Viraspa = {
+      settings: {
+        app: { name: "ViRaSPA Sample", version: "0.2.0", releaseDate: "2026-11-06T12:00:00" },
+        cache: { strategy: "release", token: "" },
+        pageCache: { maxPages: 5 },
+      },
+    };
+  </script>
 
-  <!-- Minimal kernel: just enough to let bootstrap.js load everything else
-       (the core framework, services, shared components, routes) in the
-       background, grouped. No jQuery here - the core framework has no
-       dependency on it; see the explicit includes below. -->
-  <script src="core/framework.js"></script>
-  <script src="core/version.js"></script>
-  <script src="utility/dom.js"></script>
-  <script src="utility/asset-loader.js"></script>
-  <script src="core/events.js"></script>
-  <script src="core/manifest.js"></script>
-  <script src="core/bootstrap.js"></script>
+  <!-- The framework: one script. Its ?v= is the framework version, so it is
+       re-downloaded only when the framework is updated. It loads base.css,
+       the rest of the framework, then the app (app/config/startup.js). -->
+  <script src="viraspa/viraspa.js?v=0.2.0"></script>
 
-  <!-- Explicit includes: add your own files, or an opt-in library, here so
-       it stays a visible, physical reference rather than a background one.
-       jQuery (+ its extensions, + the responsive grid built on top of it)
-       is included this way as a worked example of that pattern, not
-       because the framework requires it - the core framework and this
-       page's own routing/lifecycle/loading mechanism never call it. The
-       sample nav-bar and contact-form pages do use it, the way a
-       developer's own project-specific code would after adding a library
-       here; remove these three if your project doesn't want jQuery. -->
-  <link rel="stylesheet" href="assets/css/x-responsive.css">
-  <script src="lib/jquery/jquery.min.js"></script>
-  <script src="lib/jquery/jquery-extensions.js"></script>
-  <script src="assets/js/x-responsive.js"></script>
+  <!-- Explicit includes: libraries the project opts into, as visible
+       references. Keep each library in a versioned folder, so a new version
+       is a new URL and needs no cache token. jQuery is included as a worked
+       example (the sample contact page uses it); the framework never calls it. -->
+  <script src="lib/jquery/4.0.0/jquery.min.js"></script>
 </body>
 </html>

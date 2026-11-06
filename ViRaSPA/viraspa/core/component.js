@@ -1,0 +1,153 @@
+(function (Viraspa) {
+  const ISOLATION_MODES = ["full", "scoped", "none"];
+  const RESERVED_PREFIXES = ["vs-", "viraspa-"];
+
+  // Base class for framework components. A component is a custom element:
+  //
+  //   class Card extends Viraspa.core.Component {
+  //     static tag = "app-card";              // hyphenated, prefixed
+  //     static folder = "app/components/card"; // card.html/.css/.model.json
+  //     static isolation = "full";            // "full" | "scoped" | "none"
+  //   }
+  //   Viraspa.core.defineComponent(Card);
+  //
+  // Then <app-card title="Hi"></app-card> anywhere, or mountComponent().
+  // The default onLoad renders the folder's .html with its .model.json,
+  // overridden by attributes and `props`. Components written with plain
+  // customElements.define(...) need none of this; the framework leaves them
+  // alone.
+  class Component extends HTMLElement {
+    static tag = "";
+    static folder = "";
+    static isolation = "full";
+    // Shared stylesheets adopted into "full" shadow roots (see
+    // Viraspa.core.styleIsolation.registerSharedStyle).
+    static sharedStyles = ["base"];
+
+    constructor() {
+      super();
+      this.props = this.props || {};
+      this.html = "";
+      this.isolation = ISOLATION_MODES.includes(this.constructor.isolation) ? this.constructor.isolation : "full";
+      // Where the component's own content lives, in every mode: the shadow
+      // root for "full", the element itself for "scoped" and "none".
+      this.componentRoot = this.isolation === "full" ? this.attachShadow({ mode: "open" }) : this;
+      // The shadow root, only in "full" mode (null otherwise).
+      this.documentShadow = this.isolation === "full" ? this.shadowRoot : null;
+      // Resolves once the component has loaded (or failed to).
+      this.ready = new Promise((resolve) => (this._resolveReady = resolve));
+      this._started = false;
+    }
+
+    connectedCallback() {
+      if (this._started) return;
+      this._started = true;
+      this.setAttribute("data-vs-component", this.isolation);
+      // Light-DOM children given by the user of the component, captured
+      // before rendering so "scoped"/"none" can place them into <slot>s.
+      this._lightChildren = this.isolation === "full" ? [] : Array.from(this.childNodes);
+      this._load();
+    }
+
+    async _load() {
+      const { emit, runHook } = Viraspa.core;
+      try {
+        emit("componentBeforeLoad", { component: this }, this);
+        await runHook(this, "beforeLoad");
+        emit("componentOnLoad", { component: this }, this);
+        await runHook(this, "onLoad");
+        emit("componentAfterLoad", { component: this }, this);
+        await runHook(this, "afterLoad");
+      } catch (err) {
+        console.error(`<${this.localName}> failed to load:`, err);
+      }
+      this._resolveReady(this);
+    }
+
+    // Attributes as props: <app-card sub-title="x"> -> { subTitle: "x" }.
+    attributeProps() {
+      const props = {};
+      for (const { name, value } of Array.from(this.attributes)) {
+        if (name === "data-vs-component") continue;
+        props[name.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase())] = value;
+      }
+      return props;
+    }
+
+    async beforeLoad() {}
+
+    // Default: apply the folder's CSS, then render its .html with the
+    // .model.json defaults, attribute values and props (in that order).
+    async onLoad() {
+      const Class = this.constructor;
+      await Viraspa.core.styleIsolation.apply(this);
+      if (!Class.folder) return;
+      const { template, model } = await Viraspa.core.pageLoader.fetchComponent(Viraspa.core.pageLoader.basePath(Class.folder));
+      this.renderTemplate(template, { ...model, ...this.attributeProps(), ...this.props });
+    }
+
+    async afterLoad() {}
+
+    renderTemplate(template, model) {
+      const { emit } = Viraspa.core;
+      emit("componentBeforeDataBinding", { component: this }, this);
+      this.html = Viraspa.services.databinding.bindTemplate(template, model);
+      emit("componentOnDataBinding", { component: this, model }, this);
+      this.componentRoot.innerHTML = this.html;
+      if (this.isolation !== "full") this._fillSlots();
+      emit("componentAfterDataBinding", { component: this }, this);
+      return this.html;
+    }
+
+    // <slot name="x"> works in every mode: in "full" the browser projects the
+    // children; in "scoped"/"none" the framework moves them into the slot
+    // (or keeps the slot's fallback content if none were given).
+    _fillSlots() {
+      const children = this._lightChildren || [];
+      for (const slot of Array.from(this.querySelectorAll("slot"))) {
+        const name = slot.getAttribute("name") || "";
+        const assigned = children.filter((node) =>
+          node.nodeType === Node.ELEMENT_NODE
+            ? (node.getAttribute("slot") || "") === name
+            : !name && node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+        );
+        if (assigned.length) slot.replaceWith(...assigned);
+        else slot.replaceWith(...Array.from(slot.childNodes));
+      }
+    }
+  }
+
+  // Registers a component class as a custom element. Checks the tag name, so
+  // a mistake shows up as a clear message instead of a browser error.
+  function defineComponent(ComponentClass, { allowReservedPrefix = false } = {}) {
+    const tag = ComponentClass.tag;
+    if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)+$/.test(tag || "")) {
+      throw new Error(`${ComponentClass.name}.tag "${tag}" must be lowercase and contain a hyphen, e.g. "app-card".`);
+    }
+    if (!allowReservedPrefix && RESERVED_PREFIXES.some((prefix) => tag.startsWith(prefix))) {
+      throw new Error(`<${tag}>: the "vs-" and "viraspa-" prefixes are reserved for official ViRaSPA components.`);
+    }
+    if (!customElements.get(tag)) customElements.define(tag, ComponentClass);
+    Viraspa.components = Viraspa.components || {};
+    Viraspa.components[ComponentClass.name] = ComponentClass;
+    return ComponentClass;
+  }
+
+  // Creates a component element, gives it `props`, puts it in `target` (a
+  // selector or element; replaces its content unless props.append) and
+  // resolves with the element once it has loaded.
+  async function mountComponent(ComponentClass, target, props = {}) {
+    const host = typeof target === "string" ? Viraspa.utility.dom.qs(target) : target;
+    const element = document.createElement(ComponentClass.tag);
+    const { append, ...ownProps } = props;
+    element.props = ownProps;
+    if (append) host.appendChild(element);
+    else host.replaceChildren(element);
+    return element.ready;
+  }
+
+  Viraspa.core = Viraspa.core || {};
+  Viraspa.core.Component = Component;
+  Viraspa.core.defineComponent = defineComponent;
+  Viraspa.core.mountComponent = mountComponent;
+})(window.Viraspa);

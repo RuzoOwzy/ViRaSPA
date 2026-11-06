@@ -27,5 +27,10 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+# ViRaSPA generated output: prerendered pages (created only by
+# node-tools/prerender.js) and the release stamp written at deploy time
+ViRaSPA/prerendered/
+ViRaSPA/release.json
+
 # Claude Code per-user local settings
 .claude/settings.local.json

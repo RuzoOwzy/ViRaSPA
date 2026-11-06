@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>ViRaSPA</title>
+  <!-- A strong "V" whose right arm rises into an arrow, after the Viramol logo. -->
+  <path d="M7 14 L27 55 L41 26" fill="none" stroke="#c8102e" stroke-width="11" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M30 20.5 L52 3.5 L52 31.5 Z" fill="#c8102e"/>
+</svg>

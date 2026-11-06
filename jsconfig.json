@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
     "checkJs": false,
     "allowJs": true
   },
-  "include": ["ViRaSPA/**/*.js", "ViRaSPA/lib/jquery/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "ViRaSPA/**/*.js",
+    "ViRaSPA/lib/jquery/4.0.0/*.d.ts",
+    "ViRaSPA/app/assets/jquery-extensions/*.d.ts"
+  ],
+  "exclude": ["node_modules", "ViRaSPA/prerendered"]
 }

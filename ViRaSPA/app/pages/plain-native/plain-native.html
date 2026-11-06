@@ -1,0 +1,16 @@
+<div class="page-plain-native">
+  <h1>Plain Native Page</h1>
+  <p>
+    This page is written in plain HTML, CSS and JavaScript only. Its route has
+    <code>native: true</code>, so the framework only loads its three files: no
+    page class, no model and no <code>{{ }}</code> placeholders (these braces
+    are shown as they are).
+  </p>
+  <p>
+    Its script uses only standard DOM APIs. It listens for the
+    <code>viraspa:pageCreated</code> and <code>viraspa:pageShown</code> events,
+    which the framework dispatches on the page's element.
+  </p>
+  <button type="button" class="btn plain-native__button">Clicked 0 times</button>
+  <p class="plain-native__log text-muted"></p>
+</div>

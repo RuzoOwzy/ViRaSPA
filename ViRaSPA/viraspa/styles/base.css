@@ -1,0 +1,140 @@
+/* ViRaSPA base styles: a small reset, the theme variables and a few
+   utilities. Loaded once for the page, and shared into "full"-isolation
+   components' shadow roots, so components and pages look the same.
+
+   FRAMEWORK FILE - never edit it in a project. To change the theme,
+   override the --vs-* variables in your own stylesheet, e.g.
+   :root { --vs-color-primary: #b0122b; } */
+
+:root {
+  --vs-font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --vs-font-size: 15px;
+  --vs-line-height: 1.5;
+
+  --vs-color-text: #152420;
+  --vs-color-text-muted: #58685f;
+  --vs-color-background: #f4f7f5;
+  --vs-color-surface: #ffffff;
+  --vs-color-border: #d3ddd8;
+  --vs-color-primary: #1a9c6b;
+  --vs-color-primary-strong: #0f6e48;
+  --vs-color-on-primary: #ffffff;
+  --vs-color-link: #0f6e48;
+  --vs-color-danger: #c0392b;
+  --vs-color-success: #0f6e48;
+  --vs-color-focus: #1a9c6b;
+
+  --vs-radius: 6px;
+  --vs-radius-large: 8px;
+  --vs-space-1: 0.25rem;
+  --vs-space-2: 0.5rem;
+  --vs-space-3: 0.75rem;
+  --vs-space-4: 1rem;
+  --vs-space-5: 1.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--vs-font-family);
+  font-size: var(--vs-font-size);
+  line-height: var(--vs-line-height);
+  color: var(--vs-color-text);
+  background: var(--vs-color-background);
+}
+
+a {
+  color: var(--vs-color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vs-color-focus);
+  outline-offset: 2px;
+}
+
+/* Headings the router focuses after a navigation: no ring for mouse users. */
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---- Utilities ---------------------------------------------------------- */
+
+.btn {
+  display: inline-block;
+  padding: var(--vs-space-2) 1.1rem;
+  border: none;
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-primary);
+  color: var(--vs-color-on-primary);
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: var(--vs-color-primary-strong);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vs-space-1);
+  margin-bottom: var(--vs-space-3);
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: var(--vs-space-2) 0.6rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+}
+
+.text-muted {
+  color: var(--vs-color-text-muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Hidden on screen, still read by screen readers. */
+.vs-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,22 @@
+/* Plain class names (.title, .body) are safe here: in "scoped" mode these
+   rules only match inside <app-note>. */
+:host {
+  display: block;
+  margin: 1rem 0;
+}
+
+.note {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--vs-color-primary);
+  border-radius: 0 var(--vs-radius) var(--vs-radius) 0;
+  background: #e8f5ee;
+}
+
+.title {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.body {
+  font-size: 0.95rem;
+}

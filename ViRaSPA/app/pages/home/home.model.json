@@ -1,0 +1,6 @@
+{
+  "title": "ViRaSPA",
+  "tagline": "A vanilla HTML, CSS and JavaScript single-page application framework.",
+  "browserNote": "Runs in current Edge, Chrome, Firefox and Safari. On startup the framework checks the browser features it needs, and shows a clear message instead of a blank page if any are missing (or if JavaScript is off).",
+  "sampleApiLabel": "Live sample: first 5 users from a public demo API (jsonplaceholder.typicode.com)"
+}

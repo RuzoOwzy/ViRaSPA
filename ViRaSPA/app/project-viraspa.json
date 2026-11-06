@@ -1,0 +1,6 @@
+{
+  "projectName": "ViRaSPA Sample",
+  "devServer": {
+    "port": 8027
+  }
+}

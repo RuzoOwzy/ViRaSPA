@@ -1,16 +1,79 @@
 # ViRaSPA release notes
 
 Versions follow `x.x.x` (major.minor.patch). The current release is recorded in
-[`ViRaSPA/core/framework.js`](../ViRaSPA/core/framework.js), which must match the
-newest entry below.
+[`ViRaSPA/viraspa/viraspa.js`](../ViRaSPA/viraspa/viraspa.js) (`FRAMEWORK`), which
+must match the newest entry below.
 
-## Unreleased
+## Unreleased (0.2.0)
 
-**Breaking for projects built on 0.1.0:** routes use `page` instead of
-`script` and no longer have `api`/`service`; pages call endpoints from
-`config/endpoints.js` instead of `this.route.api`. Suggested version: 0.2.0.
+**Breaking for projects built on 0.1.0.** Work is split into milestones,
+see [plans/](plans/README.md).
 
-### Changed
+### Milestone M1 · Foundation
+
+#### Changed (breaking)
+- **New layout:**
+  - the framework moved to `viraspa/` (`viraspa.js`, `core/`, `services/`, `utility/`, `styles/`);
+  - the project's code moved to `app/` (`config/`, `pages/`, `components/`, `assets/`);
+  - libraries moved to versioned folders (`lib/jquery/4.0.0/`).
+- **Startup files:**
+  - `index.html` now loads one framework script, `viraspa/viraspa.js?v=<framework version>`;
+  - the framework's file list lives in that loader, and the app's in `app/config/startup.js` (replacing `core/manifest.js`);
+  - `routes/routes.js` moved to `app/config/routes.js`.
+- **Versions:**
+  - `core/version.js` was replaced by `Viraspa.settings` in `index.html` (`app.version`, `app.releaseDate`, `cache.strategy`);
+  - `core/framework.js` was merged into `viraspa/viraspa.js`.
+- **`node-server.js`** was replaced by `node node-tools/serve.js`, with the tools kept in `node-tools/` at the repository root.
+- **`assets/css/general.css`** became `viraspa/styles/base.css`, with theme variables (`--vs-*`).
+- **Events** are prefixed `viraspa:` and camel-cased, e.g. `page:beforeLoad` becomes `viraspa:pageBeforeLoad` and `app:init` becomes `viraspa:appInit`. `Viraspa.core.emit(name)` adds the prefix.
+- **Components** are custom elements:
+  - they extend `Viraspa.core.Component` (an `HTMLElement`) with `static tag`, `folder` and `isolation`, and are registered with `Viraspa.core.defineComponent`;
+  - `mountComponent()` returns the element once it's ready.
+- **`{{key}}`** is now HTML-escaped. Use `{{{key}}}` for trusted raw HTML.
+- **The x-responsive grid** (and the jQuery extensions it uses) moved out of the framework into `app/assets/`.
+- **Page templates** no longer use `<main>`: `#page-root` is the `<main>`.
+
+#### Added
+- **Browser feature check** with a clear "needs a newer browser" message, and a `<noscript>` message.
+- **Favicon:** a crimson "V" with an upward arrow, as SVG, ICO and Apple touch icon.
+- **Cache strategies:** `release`, `custom`, `auto` (`release.json` or the ETag of `index.html`) and `revalidate`. Framework files use the framework version as their token.
+- **No-flicker navigation:**
+  - a page's CSS is loaded before it is shown, and each page keeps its own stylesheet, switched on and off;
+  - page files are fetched once per session;
+  - the last navigation wins, and superseded ones are aborted.
+- **Page features:**
+  - `page.signal` (an `AbortSignal`) and `page.display()`;
+  - `keepAlive` routes, limited by `settings.pageCache.maxPages`.
+- **Route-change behaviour:**
+  - focus moves to the new page's `<h1>`, with an announcer fallback;
+  - scroll position is restored on Back/Forward;
+  - same-page `#hash` links only scroll.
+- **Isolation modes** for components: `full` (Shadow DOM, with `base.css` shared), `scoped` (`@scope`, or tag-prefixed selectors as a fallback) and `none`.
+  - `componentRoot` and `documentShadow`;
+  - `<slot>` works in every mode.
+- **Native pages** (`native: true`) and the page events `viraspa:pageCreated`, `pageShown`, `pageHidden`, `pageRemoved` and `routeChanged`.
+- **URL check** for placeholders in `href`/`src`/`action`/`formaction`/`poster`.
+- **Reserved component prefixes:** `vs-` and `viraspa-`.
+- **`node-tools/`:**
+  - a shared option reader (flag > environment > config > default; `--help`, `--version`, `--save`)
+  - the site-folder finder
+  - `serve.js`: ETag/304, HEAD, no-cache, prerendered pages, a full MIME map, and it never serves `app/project-viraspa.json` or dot-files
+  - `help.js`
+- **`app/project-viraspa.json`**, the settings file for the node tools.
+- **`signal`** option for `communication.call()`/`request()`.
+- **Samples:** `/plain-native`, a page with no `Viraspa.*` calls, and `<app-note>`, a scoped component with a slot, on About.
+
+#### Fixed
+- **Flicker:** the page content appeared before its stylesheet had loaded.
+- **Out of order:** overlapping navigations could finish out of order and show the wrong page.
+- **Dev server path check:** it accepted sibling folders whose names started with the site folder's name.
+
+### Earlier unreleased changes (before M1)
+
+Routes use `page` instead of `script` and no longer have `api`/`service`;
+pages call endpoints from `config/endpoints.js` instead of `this.route.api`.
+
+#### Changed
 - Routes take a page folder (`page: "pages/home"`); the page's files are
   derived by naming convention. `Page` has a default `onLoad` that renders
   the page's own files, so pages no longer call `fetchPage(...)` themselves.
@@ -27,7 +90,7 @@ newest entry below.
 - `jsconfig.json` (VS Code editor settings) moved to the repository root, so
   it's no longer served.
 
-### Added
+#### Added
 - `config/endpoints.js`: shared, frozen endpoint definitions with a base URL,
   called with `Viraspa.services.communication.call(endpoint, { params, query, body })`.
 - `Viraspa.endpoints.setBaseUrl(url)` and `Viraspa.core.onInit(fn)` (awaited
@@ -36,7 +99,7 @@ newest entry below.
 - `fetchJson(path, { fresh: true })` to bypass the browser cache.
 - `.gitattributes` (LF line endings) and a fuller `.gitignore`.
 
-### Fixed
+#### Fixed
 - URLs with an extra segment or a trailing slash (`/about/team`, `/about/`)
   loaded a blank page; `index.html` now has `<base href="/">`, so they show the
   not-found page or the right page.
