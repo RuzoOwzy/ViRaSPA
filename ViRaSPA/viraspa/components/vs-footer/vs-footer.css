@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  background: var(--vs-footer-background, #0b120e);
+  color: var(--vs-footer-color, #a9bdb1);
+}
+
+.footer {
+  padding: var(--vs-space-4) 1.25rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+::slotted(a) {
+  color: inherit;
+  text-decoration: underline;
+}

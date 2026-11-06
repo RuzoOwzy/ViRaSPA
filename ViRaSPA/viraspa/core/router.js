@@ -33,11 +33,14 @@
   }
 
   // Default guard: always allows. A route's `access` ("public"/"private")
-  // is declared metadata until a project overrides this with real
-  // authentication logic.
-  Viraspa.core.guard = async function (route) {
-    return true;
+  // is declared metadata until a project sets real logic with
+  // Viraspa.core.setGuard(async (route) => true | false).
+  let guard = async () => true;
+  Viraspa.core.setGuard = function (fn) {
+    if (typeof fn !== "function") throw new Error("setGuard needs a function (route) => boolean.");
+    guard = fn;
   };
+  Viraspa.core.guard = (route) => guard(route);
 
   function createPageElement(route) {
     const element = document.createElement("div");
@@ -177,6 +180,7 @@
       await styleReady;
       if (isStale(navId)) return;
       entry.element.innerHTML = template;
+      Viraspa.core.components.scan(entry.element);
       swapTo(entry, fromHistory, { announce: false });
       // The script runs once (on the first visit); it listens for the
       // viraspa:pageCreated / pageShown events to set up each page instance.

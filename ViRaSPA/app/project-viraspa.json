@@ -1,5 +1,77 @@
 {
   "projectName": "ViRaSPA Sample",
+  "isFrameworkRepository": true,
+  "framework": {
+    "version": "0.2.0",
+    "managed": false
+  },
+  "downloadSources": [
+    {
+      "name": "components-repository",
+      "type": "folder",
+      "location": "../ViRaSPA-Components/components/{name}"
+    }
+  ],
+  "components": [
+    {
+      "name": "vs-card",
+      "version": "0.1.0",
+      "downloadSource": "components-repository",
+      "checksum": "sha256-62df247aa265f99da278de14e46107553cef31024e3cad1b68383ce074ad1d8d"
+    },
+    {
+      "name": "vs-stat-tile",
+      "version": "0.1.0",
+      "downloadSource": "components-repository",
+      "checksum": "sha256-b8c5a69edaee3dbaa0aa4da5eb72871afe66b15d31b28123be76354c4df493e2"
+    },
+    {
+      "name": "vs-login-form",
+      "version": "0.1.0",
+      "downloadSource": "components-repository",
+      "checksum": "sha256-39a2df6e923c94ee0a4852f7f249bc72624c69c52e6ab059f3140288b34ef6e7"
+    }
+  ],
+  "extensions": [],
+  "libraries": [
+    {
+      "name": "jquery",
+      "version": "4.0.0",
+      "downloadSource": "npm",
+      "package": "jquery",
+      "packageFolder": "dist",
+      "include": [
+        "jquery.min.js"
+      ],
+      "checksum": "sha256-026ddefce6d259bd515f85b6669badd6a6d52b51d33cde96111766c45e0ccb78"
+    },
+    {
+      "name": "fontawesome",
+      "version": "7.3.1",
+      "downloadSource": "npm",
+      "package": "@fortawesome/fontawesome-free",
+      "include": [
+        "css/all.min.css",
+        "webfonts/*.woff2",
+        "LICENSE.txt"
+      ],
+      "checksum": "sha256-dbbba9c23f026044695cc64297dc472bd5875cf1ae5403dc671ba605ade698de"
+    },
+    {
+      "name": "lucide",
+      "version": "1.70.0",
+      "downloadSource": "npm",
+      "package": "lucide-static",
+      "include": [
+        "icons/*.svg",
+        "LICENSE"
+      ],
+      "checksum": "sha256-81296b5b53dc2edbd157b9a685114a9986dad2900e1f5d11b81e581afeaa61b6"
+    }
+  ],
+  "install": {
+    "downloadSource": "official"
+  },
   "devServer": {
     "port": 8027
   }

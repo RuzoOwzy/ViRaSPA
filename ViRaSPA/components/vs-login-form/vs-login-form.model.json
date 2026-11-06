@@ -1,0 +1,15 @@
+{
+  "heading": "Sign In",
+  "usernameLabel": "Email",
+  "usernameType": "email",
+  "passwordLabel": "Password",
+  "submitLabel": "Sign In",
+  "busyLabel": "Signing In...",
+  "rememberMeLabel": "Remember Me",
+  "forgotPasswordHref": "",
+  "forgotPasswordLabel": "Forgot Password?",
+  "messagePosition": "top",
+  "providersLabel": "Or continue with",
+  "requiredMessage": "Enter your email and password.",
+  "failedMessage": "Sign-in failed. Please try again."
+}

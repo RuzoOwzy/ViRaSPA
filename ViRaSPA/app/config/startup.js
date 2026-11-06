@@ -3,6 +3,9 @@
 // together. Each URL gets the app's cache token (see index.html settings).
 // Pages are not listed here: they load on demand, from app/config/routes.js.
 window.Viraspa.startup = {
+  // Extensions installed in extensions/<name>/ (install.js add extension ...),
+  // loaded before the groups below.
+  extensions: [],
   groups: [
     // Endpoints first: init code may change their base URL.
     { name: "config", scripts: ["app/config/endpoints.js"] },
@@ -15,16 +18,9 @@ window.Viraspa.startup = {
       scripts: ["app/assets/jquery-extensions/jquery-extensions.js"],
     },
     { name: "libraries-2", scripts: ["app/assets/x-responsive/x-responsive.js"] },
-    // Routes before components: the nav bar builds its links from them.
     { name: "routes", scripts: ["app/config/routes.js"] },
-    {
-      name: "components",
-      scripts: [
-        "app/components/nav-bar/nav-bar.js",
-        "app/components/footer/footer.js",
-        "app/components/card/card.js",
-        "app/components/note/note.js",
-      ],
-    },
+    // The app's own components. (Framework vs-* components - core ones and
+    // those installed in components/ - load by themselves when used.)
+    { name: "components", scripts: ["app/components/note/note.js"] },
   ],
 };

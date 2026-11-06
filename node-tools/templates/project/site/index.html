@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
+  <title>%%PROJECT_NAME%%</title>
+  <meta name="description" content="%%PROJECT_NAME%%">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+</head>
+<body>
+  <noscript>
+    <div style="max-width:560px;margin:3rem auto;padding:1.25rem 1.5rem;font:15px/1.5 system-ui,sans-serif;border:1px solid #e0b4b4;border-radius:8px;background:#fff6f6;color:#5a1a1a">
+      <strong>This site needs JavaScript.</strong>
+      <p>Please turn JavaScript on in your browser settings, then reload the page.</p>
+    </div>
+  </noscript>
+
+  <!-- The app shell: built once. Only #page-root changes per route. -->
+  <div id="app">
+    <vs-header sticky>
+      <vs-brand slot="brand" name="%%PROJECT_NAME%%"></vs-brand>
+      <vs-menu menu="main"></vs-menu>
+    </vs-header>
+    <main id="page-root"></main>
+    <vs-footer>%%PROJECT_NAME%%</vs-footer>
+  </div>
+
+  <!-- Project settings (this file must be served with Cache-Control: no-cache).
+       cache.strategy: "release" | "custom" | "auto" | "revalidate" - see the ViRaSPA README. -->
+  <script>
+    window.Viraspa = {
+      settings: {
+        app: { name: "%%PROJECT_NAME%%", version: "0.1.0", releaseDate: "%%RELEASE_DATE%%" },
+        cache: { strategy: "release", token: "" },
+        pageCache: { maxPages: 5 },
+      },
+    };
+  </script>
+  <script src="viraspa/viraspa.js?v=%%FRAMEWORK_VERSION%%"></script>
+
+  <!-- Explicit includes: libraries your project opts into, e.g.
+       <script src="lib/chartjs/4.6.1/chart.umd.min.js"></script> -->
+</body>
+</html>

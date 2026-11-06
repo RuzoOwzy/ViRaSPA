@@ -1,0 +1,27 @@
+<form class="login-form" novalidate data-message-position="{{messagePosition}}" data-submit-label="{{submitLabel}}"
+      data-busy-label="{{busyLabel}}" data-required-message="{{requiredMessage}}" data-failed-message="{{failedMessage}}" part="form">
+  <slot name="logo"></slot>
+  <h2 class="heading" part="heading">{{heading}}</h2>
+  <p class="message message-top" role="alert" hidden part="message"></p>
+
+  <div class="form-field">
+    <label for="{{uid}}-username">{{usernameLabel}}</label>
+    <input id="{{uid}}-username" name="username" type="{{usernameType}}" inputmode="{{usernameInputMode}}"
+           autocomplete="username" autocapitalize="none" spellcheck="false" required part="username">
+  </div>
+  <div class="form-field">
+    <label for="{{uid}}-password">{{passwordLabel}}</label>
+    <input id="{{uid}}-password" name="password" type="password" autocomplete="current-password" required part="password">
+  </div>
+
+  <div class="row">
+    {{{rememberMeHtml}}}
+    {{{forgotHtml}}}
+  </div>
+
+  <button type="submit" class="btn submit" part="submit">{{submitLabel}}</button>
+  <p class="message message-bottom" role="alert" hidden part="message"></p>
+
+  {{{providersHtml}}}
+  <slot name="footer"></slot>
+</form>

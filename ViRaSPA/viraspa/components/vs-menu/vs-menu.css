@@ -1,0 +1,150 @@
+:host {
+  display: block;
+  --vs-menu-link-color: inherit;
+  --vs-menu-hover-background: rgba(255, 255, 255, 0.12);
+  --vs-menu-active-background: rgba(255, 255, 255, 0.2);
+}
+
+.list {
+  display: flex;
+  gap: var(--vs-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--vs-space-2);
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--vs-radius);
+  color: var(--vs-menu-link-color);
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.link:hover {
+  background: var(--vs-menu-hover-background);
+  text-decoration: none;
+  opacity: 1;
+}
+
+.link.active {
+  background: var(--vs-menu-active-background);
+  font-weight: 600;
+  opacity: 1;
+}
+
+.icon {
+  font-size: 1.1em;
+}
+
+.divider {
+  align-self: stretch;
+  margin: var(--vs-space-1) var(--vs-space-2);
+  border-left: 1px solid currentColor;
+  opacity: 0.25;
+}
+
+.toggle {
+  display: none;
+  padding: 0.3rem;
+  border: none;
+  border-radius: var(--vs-radius);
+  background: transparent;
+  color: inherit;
+}
+
+.toggle svg {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---- Vertical ---------------------------------------------------------- */
+
+.vertical .list {
+  flex-direction: column;
+}
+
+.vertical .divider {
+  margin: var(--vs-space-2) var(--vs-space-2);
+  border-left: none;
+  border-top: 1px solid currentColor;
+}
+
+/* Collapsed: icons only; the label becomes a tooltip on hover/focus. */
+:host([collapsed]) .vertical .label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:host([collapsed]) .vertical .link {
+  justify-content: center;
+  padding: 0.55rem;
+}
+
+:host([collapsed]) .vertical .link:hover::after,
+:host([collapsed]) .vertical .link:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 0.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--vs-radius);
+  background: #1d2b25;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* ---- Small screens: horizontal menus fold into a toggle --------------- */
+
+@media (max-width: 767px) {
+  .horizontal {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .horizontal .toggle {
+    display: block;
+  }
+
+  .horizontal .list {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 12rem;
+    flex-direction: column;
+    padding: var(--vs-space-2);
+    border-radius: var(--vs-radius-large);
+    background: var(--vs-menu-panel-background, var(--vs-color-primary-strong));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .horizontal.open .list {
+    display: flex;
+  }
+
+  .horizontal .divider {
+    margin: var(--vs-space-2) 0;
+    border-left: none;
+    border-top: 1px solid currentColor;
+  }
+}

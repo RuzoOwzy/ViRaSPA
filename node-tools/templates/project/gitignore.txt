@@ -1,0 +1,23 @@
+# Installed by node-tools/install.js from app/project-viraspa.json -
+# never edit or commit them. On a new computer: node node-tools/install.js restore
+%%SITE%%/viraspa/
+%%SITE%%/components/
+%%SITE%%/extensions/
+%%SITE%%/lib/
+
+# Generated output
+%%SITE%%/prerendered/
+%%SITE%%/release.json
+*.installing/
+*.previous/
+
+# Dependencies, logs, editors, OS files
+node_modules/
+*.log
+.env
+.env.*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini

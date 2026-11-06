@@ -38,6 +38,7 @@
       const html = Viraspa.services.databinding.bindTemplate(template, model);
       emit("pageOnDataBinding", { page: this, model });
       this.container.innerHTML = html;
+      Viraspa.core.components.scan(this.container); // autoload components used in the page
       emit("pageAfterDataBinding", { page: this });
       return html;
     }

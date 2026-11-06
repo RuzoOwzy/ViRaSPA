@@ -32,5 +32,15 @@ Desktop.ini
 ViRaSPA/prerendered/
 ViRaSPA/release.json
 
+# Libraries are pinned in ViRaSPA/app/project-viraspa.json and restored with
+#   node node-tools/install.js restore
+# (official components in ViRaSPA/components/ stay tracked until the
+# ViRaSPA-Components repository is published)
+ViRaSPA/lib/
+
+# Leftovers of an interrupted install.js run
+*.installing/
+*.previous/
+
 # Claude Code per-user local settings
 .claude/settings.local.json

@@ -26,9 +26,12 @@
 
   <!-- The app shell: built once. Only #page-root changes per route. -->
   <div id="app">
-    <app-nav-bar></app-nav-bar>
+    <vs-header sticky>
+      <vs-brand slot="brand" name="ViRaSPA" logo="app/assets/icons/favicon.svg"></vs-brand>
+      <vs-menu menu="main"></vs-menu>
+    </vs-header>
     <main id="page-root"></main>
-    <app-footer></app-footer>
+    <vs-footer>ViRaSPA — a no-build SPA framework in plain HTML, CSS and JavaScript · © 2026</vs-footer>
   </div>
 
   <!-- Project settings, read before anything else loads. This file must be

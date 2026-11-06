@@ -1,0 +1,38 @@
+{
+  "name": "vs-stat-tile",
+  "tag": "vs-stat-tile",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-06",
+  "description": "A key figure for dashboards: a label, a big value, an icon and a trend.",
+  "script": "vs-stat-tile.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.2.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-320d863b3b1c26afa20e78f11ef9cd70c6ed8a5b96e5614ec9059156b88b5ec8"
+    },
+    {
+      "path": "vs-stat-tile.css",
+      "checksum": "sha256-036e880010553d87e543a3ce37871d071a0678ab6859bb752d57d5f2ac2aa26f"
+    },
+    {
+      "path": "vs-stat-tile.html",
+      "checksum": "sha256-350773706e7a8f06952b836847634187141a7570a62dc2f0904426aaf65645eb"
+    },
+    {
+      "path": "vs-stat-tile.js",
+      "checksum": "sha256-a48a651c9dfb2519039124b846a7def9cbde2e29357999489caa2c3f9011926a"
+    },
+    {
+      "path": "vs-stat-tile.model.json",
+      "checksum": "sha256-ce394d23be5ddead01b07cefa8e6aabf9767c37304986aecb3fd50c09cd0bf0c"
+    }
+  ]
+}

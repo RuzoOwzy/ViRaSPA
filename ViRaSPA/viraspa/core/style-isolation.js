@@ -13,7 +13,7 @@
 
   const sheets = new Map(); // href -> Promise<CSSStyleSheet>
   const injected = new Set(); // tags whose light-DOM <style> is in <head>
-  const sharedStyles = new Map([["base", "viraspa/styles/base.css"]]);
+  const sharedStyles = new Map([["base", Viraspa.core.frameworkUrl("styles/base.css")]]);
 
   const supportsScope = typeof window.CSSScopeRule !== "undefined";
 
@@ -144,9 +144,21 @@
   }
 
   // Loads the component's stylesheet (if any) and applies it for its mode.
+  // Extensions may read the --vs-* theme variables but not define them.
+  async function allowedCss(Class, href) {
+    const info = Viraspa.core.components.info(Class.tag);
+    if (!info || info.source !== "extension") return true;
+    const css = await Viraspa.utility.assetLoader.fetchStyleText(href).catch(() => "");
+    if (!Viraspa.manifestRules.definesReservedCssVariable(css)) return true;
+    console.error(`<${Class.tag}> (extension "${info.owner}"): ${href} defines --vs-* variables, which are reserved for ViRaSPA; its styles were not applied.`);
+    return false;
+  }
+
   async function apply(component) {
     const Class = component.constructor;
-    const href = Class.folder ? `${Viraspa.core.pageLoader.basePath(Class.folder)}.css` : null;
+    let href = Class.folder ? `${Viraspa.core.pageLoader.basePath(Class.folder)}.css` : null;
+    if (href && Class.hasStyles === false) href = null;
+    if (href && !(await allowedCss(Class, href))) href = null;
 
     if (component.isolation === "full") {
       const names = Class.sharedStyles || [];

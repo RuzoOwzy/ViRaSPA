@@ -1,0 +1,14 @@
+<div class="user-menu">
+  <button type="button" class="trigger" aria-haspopup="menu" aria-expanded="false" part="trigger">
+    {{{avatarHtml}}}
+    <span class="name" part="name">{{name}}</span>
+    <svg class="caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" /></svg>
+  </button>
+  <div class="panel" role="menu" aria-label="{{name}}" hidden part="panel">
+    <div class="who">
+      <div class="who-name">{{name}}</div>
+      {{{emailHtml}}}
+    </div>
+    {{{itemsHtml}}}
+  </div>
+</div>

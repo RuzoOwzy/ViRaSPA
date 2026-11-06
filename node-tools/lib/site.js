@@ -53,7 +53,7 @@ function projectFilePath(siteFolder) {
 function readProjectFile(siteFolder) {
   const file = projectFilePath(siteFolder);
   try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
+    return JSON.parse(fs.readFileSync(file, "utf8").replace(/^﻿/, ""));
   } catch (err) {
     throw new Error(`Could not read ${file}: ${err.message}`);
   }

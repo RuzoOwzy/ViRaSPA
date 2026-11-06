@@ -1,0 +1,38 @@
+{
+  "name": "vs-login-form",
+  "tag": "vs-login-form",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-06",
+  "description": "A configurable sign-in form: labels, Remember Me, Forgot Password, message position and external sign-in buttons. Works with password managers.",
+  "script": "vs-login-form.js",
+  "isolation": "scoped",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.2.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-fa669add591dd253e115a5150a1554ce3ec75e6c633fce3c2f943ee8ee454c93"
+    },
+    {
+      "path": "vs-login-form.css",
+      "checksum": "sha256-e93c4fe9150e232ba3f9ace227887378954882baefd9dd476126b2a8cb4ab518"
+    },
+    {
+      "path": "vs-login-form.html",
+      "checksum": "sha256-5392880b13a2b17c515ac03aa565cc6a16b09d8082ef94dd64f7b0e2fd44811b"
+    },
+    {
+      "path": "vs-login-form.js",
+      "checksum": "sha256-4ea78a22a744f0149d2fb1bc3e93ad70014e72cd212282ff8e67556893280a66"
+    },
+    {
+      "path": "vs-login-form.model.json",
+      "checksum": "sha256-caab2c902db64483f235a793fe53b10b25be1aa88151f962b5be1292a708476f"
+    }
+  ]
+}

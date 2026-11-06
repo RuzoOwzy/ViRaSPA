@@ -5,7 +5,8 @@
 //
 // Options:
 //   title      the browser tab title
-//   nav        { label } lists the route in the nav bar
+//   nav        { label, icon, menus, order } lists the route in a vs-menu:
+//              menus defaults to ["main"]; icon e.g. "lucide:house"
 //   access     "public" | "private" (read by Viraspa.core.guard)
 //   keepAlive  true keeps the page (its DOM and state) when the user leaves,
 //              so coming back is instant; see settings.pageCache.maxPages
@@ -21,7 +22,7 @@ window.Viraspa.routes = [
     title: "ViRaSPA — Home",
     access: "public",
     keepAlive: true,
-    nav: { label: "Home" },
+    nav: { label: "Home", icon: "lucide:house" },
   },
   {
     path: "/about",
@@ -29,7 +30,7 @@ window.Viraspa.routes = [
     page: "app/pages/about",
     title: "ViRaSPA — About",
     access: "public",
-    nav: { label: "About" },
+    nav: { label: "About", icon: "lucide:info" },
   },
   {
     path: "/contact",
@@ -37,7 +38,7 @@ window.Viraspa.routes = [
     page: "app/pages/contact",
     title: "ViRaSPA — Contact",
     access: "public",
-    nav: { label: "Contact" },
+    nav: { label: "Contact", icon: "lucide:mail" },
   },
   {
     // Written in plain HTML, CSS and JS only - no Viraspa.* calls.

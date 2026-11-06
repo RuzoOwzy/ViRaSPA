@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.card {
+  height: 100%;
+  padding: var(--vs-card-padding, 0.85rem 1rem);
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius-large);
+  background: var(--vs-card-background, var(--vs-color-surface));
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vs-space-3);
+}
+
+.icon {
+  font-size: 1.4rem;
+  color: var(--vs-color-primary);
+  margin-top: 0.1rem;
+}
+
+.titles {
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.subheading {
+  margin: 0.15rem 0 0;
+  color: var(--vs-color-text-muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.subheading:empty {
+  display: none;
+}
+
+.body {
+  margin-top: var(--vs-space-2);
+}
+
+.footer {
+  margin-top: var(--vs-space-3);
+  padding-top: var(--vs-space-2);
+  border-top: 1px solid var(--vs-color-border);
+}

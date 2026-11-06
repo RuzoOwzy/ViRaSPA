@@ -30,10 +30,15 @@
         });
         await Promise.all(
           users.map((user, i) =>
-            Viraspa.core.mountComponent(Viraspa.components.Card, wrappers[i], {
-              title: user.name,
-              subtitle: user.email,
-            })
+            // <vs-card> is an official component installed in components/;
+            // mounting it by tag loads it on first use.
+            Viraspa.core.components.load("vs-card").then(() =>
+              Viraspa.core.mountComponent(customElements.get("vs-card"), wrappers[i], {
+                heading: user.name,
+                subheading: user.email,
+                icon: "lucide:user",
+              })
+            )
           )
         );
       } catch (err) {

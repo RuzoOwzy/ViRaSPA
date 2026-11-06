@@ -9,6 +9,41 @@ must match the newest entry below.
 **Breaking for projects built on 0.1.0.** Work is split into milestones,
 see [plans/](plans/README.md).
 
+### Milestone M2 · Components and distribution
+
+#### Added
+- **Core components** in `viraspa/components/`, loaded the first time their tag appears (autoload): `vs-header`, `vs-brand`, `vs-menu` (from routes or items; vertical, collapsed with tooltips, and a small-screen toggle), `vs-sidebar` (collapsible, remembered), `vs-user-menu` (a dropdown panel, keyboard support), `vs-footer`, `vs-icon`, `vs-busy-indicator` and `vs-toast`, plus `Viraspa.toast.show()`.
+- **Icons:** `Viraspa.icons` with the sets `fontawesome` (Free 7.3.1), `lucide` (1.70.0), `char`, `svg` and `image`; the short form `set:name[:style]`; `register()` and `configure()`.
+- **Component registry and autoload** (`Viraspa.core.components`):
+  - core components;
+  - official components in `components/<tag>/` (`component-viraspa.json`);
+  - extensions in `extensions/<name>/` (`extension-viraspa.json`, listed in `startup.js` `extensions`).
+- **Manifest rules** shared by the browser and the tools (`viraspa/core/manifest-rules.js`):
+  - framework-version compatibility (excluded > supported > min/max);
+  - author and contributors;
+  - reserved tag prefixes;
+  - extensions may not define `--vs-*` variables.
+- **`viraspa/framework-viraspa.json`:** the framework's manifest, with file checksums.
+- **Remote mode:** framework files are found relative to `viraspa.js`, so the framework can come from a CDN.
+- **Component API:** `Component.render()`, `prepareModel(model)`, `static hasModel` / `hasStyles`, and `ready` now waits for inner components.
+- **Node tools:**
+  - **`install.js`:** `add`, `update`, `remove`, `restore`, `verify` and `list`, with `name@version`. Sources are `official`, `npm` or your own web/folder/zip; `--download-source` and `--from` override them for one run; checksums are verified.
+  - **`stamp.js`:** for publishers.
+  - **`create-project.js`** and **`clean-sample.js`**, using a minimal project template.
+  - **Also:** download retries, and BOM-tolerant JSON.
+- **The ViRaSPA-Components repository (local, not yet published):**
+  - components `vs-card`, `vs-stat-tile` and `vs-login-form` (scoped isolation, providers, message position);
+  - a documentation template for components.
+
+#### Changed (breaking)
+- **Sample shell:** it now uses `vs-header`, `vs-brand`, `vs-menu` and `vs-footer`. The sample's `app-nav-bar`, `app-footer` and `app-card` were removed; `vs-card` replaces `app-card`.
+- **Guard:** `Viraspa.core.guard = fn` is replaced by `Viraspa.core.setGuard(fn)`.
+- **Frozen namespaces:** `core`, `services`, `utility`, `icons`, `toast`, `extensions` and `cache` are frozen after startup.
+- **`defineComponent`:** it refuses `vs-` and `viraspa-` tags except for core and official components. The `allowReservedPrefix` option is gone.
+- **Libraries in this repository:**
+  - `lib/` is no longer tracked, and is restored with `install.js restore`;
+  - `jquery.d.ts` moved to `app/assets/jquery-extensions/`.
+
 ### Milestone M1 · Foundation
 
 #### Changed (breaking)

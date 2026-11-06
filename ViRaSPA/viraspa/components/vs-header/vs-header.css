@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 20;
+  background: var(--vs-header-background, var(--vs-color-primary-strong));
+  color: var(--vs-header-color, var(--vs-color-on-primary));
+}
+
+:host([sticky]) {
+  position: sticky;
+  top: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-space-4);
+  min-height: 3.25rem;
+  padding: var(--vs-space-2) 1.25rem;
+}
+
+.middle {
+  flex: 1;
+  min-width: 0;
+}
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-space-2);
+}

@@ -1,0 +1,38 @@
+{
+  "name": "vs-card",
+  "tag": "vs-card",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-06",
+  "description": "A content card with a heading, an optional icon, body content and a footer.",
+  "script": "vs-card.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.2.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-babc0738b649fee61d6f6d68654fff76ac1e95fb5c621dd7482ae780f1b7f745"
+    },
+    {
+      "path": "vs-card.css",
+      "checksum": "sha256-9b411f67da3ac9f67c3786c67b455df9616436376ddd60c43d7cb3f49a495735"
+    },
+    {
+      "path": "vs-card.html",
+      "checksum": "sha256-de32f35adfb806df89bdda59da803a8077afe7466059bf270b993162ee2b644f"
+    },
+    {
+      "path": "vs-card.js",
+      "checksum": "sha256-b070908e662d65e1ec84bd4a8575591e724fb1cc6e9702acdabedfd7b055aceb"
+    },
+    {
+      "path": "vs-card.model.json",
+      "checksum": "sha256-9c7a6f96c8f995672acefafd0049f65af67821581589c4916c7ea34f8505dc30"
+    }
+  ]
+}

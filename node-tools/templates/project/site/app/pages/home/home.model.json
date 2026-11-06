@@ -1,0 +1,4 @@
+{
+  "title": "%%PROJECT_NAME%%",
+  "intro": "Your ViRaSPA app is running. Edit app/pages/home/ to change this page, and app/config/routes.js to add pages."
+}

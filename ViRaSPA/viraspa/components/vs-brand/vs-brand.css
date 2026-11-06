@@ -1,0 +1,24 @@
+:host {
+  display: inline-block;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vs-space-2);
+  color: inherit;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.logo {
+  width: 1.6em;
+  height: 1.6em;
+  object-fit: contain;
+}

@@ -23,6 +23,9 @@
     // Shared stylesheets adopted into "full" shadow roots (see
     // Viraspa.core.styleIsolation.registerSharedStyle).
     static sharedStyles = ["base"];
+    // Set to false when the folder has no .model.json / no .css file.
+    static hasModel = true;
+    static hasStyles = true;
 
     constructor() {
       super();
@@ -58,6 +61,7 @@
         await runHook(this, "onLoad");
         emit("componentAfterLoad", { component: this }, this);
         await runHook(this, "afterLoad");
+        await this._childrenLoaded;
       } catch (err) {
         console.error(`<${this.localName}> failed to load:`, err);
       }
@@ -77,13 +81,29 @@
     async beforeLoad() {}
 
     // Default: apply the folder's CSS, then render its .html with the
-    // .model.json defaults, attribute values and props (in that order).
+    // .model.json defaults, attribute values and props (in that order),
+    // after prepareModel() has had its say.
     async onLoad() {
-      const Class = this.constructor;
       await Viraspa.core.styleIsolation.apply(this);
+      await this.render();
+    }
+
+    // (Re-)renders the component's template - call it again after changing
+    // props or attributes that the template shows.
+    async render() {
+      const Class = this.constructor;
       if (!Class.folder) return;
-      const { template, model } = await Viraspa.core.pageLoader.fetchComponent(Viraspa.core.pageLoader.basePath(Class.folder));
-      this.renderTemplate(template, { ...model, ...this.attributeProps(), ...this.props });
+      const { template, model } = await Viraspa.core.pageLoader.fetchComponent(Viraspa.core.pageLoader.basePath(Class.folder), {
+        withModel: Class.hasModel !== false,
+      });
+      const merged = { ...model, ...this.attributeProps(), ...this.props };
+      this.renderTemplate(template, (await this.prepareModel(merged)) || merged);
+    }
+
+    // Override to add derived values before rendering, e.g. HTML built from
+    // a list. Return the model (or change it in place).
+    async prepareModel(model) {
+      return model;
     }
 
     async afterLoad() {}
@@ -95,6 +115,8 @@
       emit("componentOnDataBinding", { component: this, model }, this);
       this.componentRoot.innerHTML = this.html;
       if (this.isolation !== "full") this._fillSlots();
+      // Autoload components used inside (vs-icon...); `ready` waits for them.
+      this._childrenLoaded = Viraspa.core.components.scan(this.componentRoot);
       emit("componentAfterDataBinding", { component: this }, this);
       return this.html;
     }
@@ -119,12 +141,12 @@
 
   // Registers a component class as a custom element. Checks the tag name, so
   // a mistake shows up as a clear message instead of a browser error.
-  function defineComponent(ComponentClass, { allowReservedPrefix = false } = {}) {
+  function defineComponent(ComponentClass) {
     const tag = ComponentClass.tag;
     if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)+$/.test(tag || "")) {
       throw new Error(`${ComponentClass.name}.tag "${tag}" must be lowercase and contain a hyphen, e.g. "app-card".`);
     }
-    if (!allowReservedPrefix && RESERVED_PREFIXES.some((prefix) => tag.startsWith(prefix))) {
+    if (RESERVED_PREFIXES.some((prefix) => tag.startsWith(prefix)) && !Viraspa.core.components.mayUseReservedPrefix(tag)) {
       throw new Error(`<${tag}>: the "vs-" and "viraspa-" prefixes are reserved for official ViRaSPA components.`);
     }
     if (!customElements.get(tag)) customElements.define(tag, ComponentClass);

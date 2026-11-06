@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.tile {
+  height: 100%;
+  padding: var(--vs-space-4);
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius-large);
+  background: var(--vs-stat-tile-background, var(--vs-color-surface));
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vs-space-2);
+}
+
+.label {
+  color: var(--vs-color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.icon {
+  font-size: 1.3rem;
+  color: var(--vs-stat-tile-icon-color, var(--vs-color-primary));
+}
+
+.value {
+  margin: var(--vs-space-2) 0 var(--vs-space-1);
+  font-size: var(--vs-stat-tile-value-size, 1.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.trend {
+  font-size: 0.85rem;
+  color: var(--vs-color-text-muted);
+}
+
+.trend:empty {
+  display: none;
+}
+
+.trend.up {
+  color: var(--vs-color-success);
+}
+
+.trend.down {
+  color: var(--vs-color-danger);
+}

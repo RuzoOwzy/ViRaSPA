@@ -1,0 +1,209 @@
+{
+  "name": "viraspa",
+  "version": "0.2.0",
+  "releaseDate": "2026-11-06",
+  "description": "ViRaSPA - a no-build SPA framework in plain HTML, CSS and JavaScript.",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "homepage": "https://github.com/RuzoOwzy/ViRaSPA",
+  "files": [
+    {
+      "path": "components/vs-brand/vs-brand.css",
+      "checksum": "sha256-b6913c563bde3fb37a44105957c67fc0e0c0aa9134ae6e6caa42ec4dd27cc228"
+    },
+    {
+      "path": "components/vs-brand/vs-brand.html",
+      "checksum": "sha256-d0f630f23ca31c6c8ee96792b666dcbc47e92d8a13c38f7f75f0e0bf3c33d3b1"
+    },
+    {
+      "path": "components/vs-brand/vs-brand.js",
+      "checksum": "sha256-1269e11cea83b772b3a511eb72f562d7c8b32f1011d44cf0c292c0f7f0d03262"
+    },
+    {
+      "path": "components/vs-brand/vs-brand.model.json",
+      "checksum": "sha256-c2e4d88ac4a424b761710b52c29dc7806b89060d79d1594b24b4537cb8c461da"
+    },
+    {
+      "path": "components/vs-busy-indicator/vs-busy-indicator.css",
+      "checksum": "sha256-f4436a18266877c2b413ce7d3a33994c52547acfdc074f0af569b96ae2006211"
+    },
+    {
+      "path": "components/vs-busy-indicator/vs-busy-indicator.html",
+      "checksum": "sha256-08eb3e73aacd586de3b0ff0794d42d2d4bb91b6613e607ada86e26b6f07ed3ed"
+    },
+    {
+      "path": "components/vs-busy-indicator/vs-busy-indicator.js",
+      "checksum": "sha256-c99f4dea2e928275df244639d4204456d3bbc032dd3fb1ab0ceecea3cdba4e45"
+    },
+    {
+      "path": "components/vs-busy-indicator/vs-busy-indicator.model.json",
+      "checksum": "sha256-a3d321ec7e43e02027f05c25f857a6d7bc6743ce7deb400e589fda5112ecc36e"
+    },
+    {
+      "path": "components/vs-footer/vs-footer.css",
+      "checksum": "sha256-a2f46e8c9a6f379167774fb2b6e0b725cea692b708e8d026224a2d78e85d2608"
+    },
+    {
+      "path": "components/vs-footer/vs-footer.html",
+      "checksum": "sha256-a8de383f6419f2792c9df19214b25deaa04a9209b10a5a7cb5fa58132d2b5e50"
+    },
+    {
+      "path": "components/vs-footer/vs-footer.js",
+      "checksum": "sha256-778511b944479af3dfeb34a007757ebda72c331b037ba617064ab2c6af4e02f0"
+    },
+    {
+      "path": "components/vs-header/vs-header.css",
+      "checksum": "sha256-2ddc6b2feacb204fde4e014c1638964640493ea60fe3b784902f49fa6f926bf6"
+    },
+    {
+      "path": "components/vs-header/vs-header.html",
+      "checksum": "sha256-5e9b94f07d770c2f02bef0762b8678827271850155f462b2568211b07dbcf92d"
+    },
+    {
+      "path": "components/vs-header/vs-header.js",
+      "checksum": "sha256-976b379b26fdb4c11aeb5ef6c867c17b892f578ad519d98e60d3b68f5309a42e"
+    },
+    {
+      "path": "components/vs-icon/vs-icon.css",
+      "checksum": "sha256-0b167a0e4904fc58738de0d4e929da1431e7b4af122f83d43354e840f56735b8"
+    },
+    {
+      "path": "components/vs-icon/vs-icon.js",
+      "checksum": "sha256-0dd9ba5fd2dafe046c21b92b593cba83aadbe186ba4c4a3f3cfd9790a850a4ea"
+    },
+    {
+      "path": "components/vs-menu/vs-menu.css",
+      "checksum": "sha256-915ab5756fa04e6954e1624c256f061a8c751b0397be5c284bd61d229b72af2b"
+    },
+    {
+      "path": "components/vs-menu/vs-menu.html",
+      "checksum": "sha256-93620ae21e77ca01b214f50dd253ac138dd8604b8d905722f1d35f1a3ed65886"
+    },
+    {
+      "path": "components/vs-menu/vs-menu.js",
+      "checksum": "sha256-d0e0c194133ddfb8c4144c71e1ea7a70c52cefd4685cd561017cab0224feae14"
+    },
+    {
+      "path": "components/vs-menu/vs-menu.model.json",
+      "checksum": "sha256-ad838d2d2d3eac21c9e6c63c278e964e48d188d244ad1f5d3971f9ac5466ba98"
+    },
+    {
+      "path": "components/vs-sidebar/vs-sidebar.css",
+      "checksum": "sha256-13c84982fb3063242c324159bad4bc2901e28eb9073d4daf83df2bcbfb32ec7c"
+    },
+    {
+      "path": "components/vs-sidebar/vs-sidebar.html",
+      "checksum": "sha256-8a13137bc023e6c636802b0152347da824e40c748f4f6deefd937c7b5edc8021"
+    },
+    {
+      "path": "components/vs-sidebar/vs-sidebar.js",
+      "checksum": "sha256-d095e3fd694cf3f283f12310b3cab38c55c9ee6486d5cade9d72eefca04aea1c"
+    },
+    {
+      "path": "components/vs-sidebar/vs-sidebar.model.json",
+      "checksum": "sha256-ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "components/vs-toast/vs-toast.css",
+      "checksum": "sha256-c1adc2550b1e016121f815dc56bdf391dab19559518be808f7ece991bb48606c"
+    },
+    {
+      "path": "components/vs-toast/vs-toast.html",
+      "checksum": "sha256-51ba945b4579e35af09d665023119231947dc237cf8356e735a9c70f9334b11c"
+    },
+    {
+      "path": "components/vs-toast/vs-toast.js",
+      "checksum": "sha256-96a8e566f9de47f4ba233e8f6fd3ad9d28469f5d1666e93f385d67a2166ac75d"
+    },
+    {
+      "path": "components/vs-user-menu/vs-user-menu.css",
+      "checksum": "sha256-1043359be98f49f0b9ac36cf0169fd00f680a54ee799354573444a2370614d02"
+    },
+    {
+      "path": "components/vs-user-menu/vs-user-menu.html",
+      "checksum": "sha256-6f427feca39237b0ec0c78e50fde43239d4dcbd83d8d3420b883a21ba087fd07"
+    },
+    {
+      "path": "components/vs-user-menu/vs-user-menu.js",
+      "checksum": "sha256-721db9802c0716419864e6c2bb2ae842c0ebe2aa93111d332d39d3536cd595ad"
+    },
+    {
+      "path": "components/vs-user-menu/vs-user-menu.model.json",
+      "checksum": "sha256-64a1aeb3f1c0b6c9dc03bd7308846b622f36cf97ee7426734af495fc66593205"
+    },
+    {
+      "path": "core/bootstrap.js",
+      "checksum": "sha256-f8a96c197420fd94ccbed9042d089952c2fcf08cc19ecc5fdedc2874a6de956f"
+    },
+    {
+      "path": "core/component-registry.js",
+      "checksum": "sha256-19804ace1fbc9d5f28d511102e26155c9d7fbbb0fa7131049c8beda12897b9bb"
+    },
+    {
+      "path": "core/component.js",
+      "checksum": "sha256-5566a435b38f21c3e0ad0b9cf4584d3f6119a87518547697c56bcc2b8a0bc145"
+    },
+    {
+      "path": "core/events.js",
+      "checksum": "sha256-598ef965bf93bdb43c8db725f42ede5b9f5c8e8872593b5429534efdc4336c95"
+    },
+    {
+      "path": "core/icons.js",
+      "checksum": "sha256-2bad60ceb587883823f70e8e890782fbd33631379ba8146c4aeff81320487a95"
+    },
+    {
+      "path": "core/layout.js",
+      "checksum": "sha256-c3bd0479318b3a953baf2fad94d8ad15a260dc7a38b8bc669af10a522bb9f17b"
+    },
+    {
+      "path": "core/manifest-rules.js",
+      "checksum": "sha256-5f3b0a6760e3927ef6cfeb638a99a4eecbbf2ed2e1657efe98bc84d09b26b236"
+    },
+    {
+      "path": "core/page-loader.js",
+      "checksum": "sha256-bd2b184336a70e21c111a0e720cc5ff2f1f505eecc5b3281d57c0a84d9832c3c"
+    },
+    {
+      "path": "core/page.js",
+      "checksum": "sha256-d839a55f66e24cba3ef42fe0b77915ba32adc0da1343ac2dbf5bc51a8ce95d9c"
+    },
+    {
+      "path": "core/router.js",
+      "checksum": "sha256-dc266cdf939c9f020e96a57fcc29d96f7f1f13ba34275eac63d28dbb1bfc3d3b"
+    },
+    {
+      "path": "core/style-isolation.js",
+      "checksum": "sha256-4ef2ca86b19b6020b90e75b8a2e2d3a0df1c03b78a72363917d1e987b51158d6"
+    },
+    {
+      "path": "core/toast.js",
+      "checksum": "sha256-7ecbd84d8b54c2320f4593c0f933f0385d8baca762d36e9950a385001af688a2"
+    },
+    {
+      "path": "services/communication/http-service.js",
+      "checksum": "sha256-e5ab7dcd86b262a6da625010a70da8ed651a08cfeba0cf0f17a0e1eb34176f8f"
+    },
+    {
+      "path": "services/databinding/data-binding-service.js",
+      "checksum": "sha256-4899435524a514385e5ed7e1b92c868ed8498a9aeef2f33da61a7af25ede7af5"
+    },
+    {
+      "path": "styles/base.css",
+      "checksum": "sha256-2ec23de7a28e9331334bea1e4237a45186ffa2114a36ba890e696e80f25896b8"
+    },
+    {
+      "path": "utility/asset-loader.js",
+      "checksum": "sha256-3af521cd3dc81c640628e2caeb638cb9a9b4a37d15a9a67acd4df61aae484746"
+    },
+    {
+      "path": "utility/dom.js",
+      "checksum": "sha256-38a1d33325776ea779ed6f9a328404ceede60374a4760a5160caa4b6d86a52a8"
+    },
+    {
+      "path": "viraspa.js",
+      "checksum": "sha256-0435e31f705e758510da0011c60bbb7b4f53aaee5f096f92b457b194b7bddcd3"
+    }
+  ]
+}

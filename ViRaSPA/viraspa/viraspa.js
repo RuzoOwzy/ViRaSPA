@@ -8,6 +8,8 @@
  *   3. works out the cache token for the app's files (Viraspa.settings.cache),
  *   4. loads base.css and the framework's own files, in order.
  * core/bootstrap.js (the last file) then loads the app from app/config/startup.js.
+ * The framework's own files are found relative to this script, so the
+ * framework can be served locally (viraspa/) or from a CDN ("remote" mode).
  *
  * FRAMEWORK FILE - never edit it in a project.
  */
@@ -16,23 +18,34 @@
 
   var FRAMEWORK = { name: "ViRaSPA", version: "0.2.0", releaseDate: "2026-11-06" };
 
-  // Loaded in this order; the browser downloads them in parallel but runs
-  // them one after another.
+  // Loaded in this order (relative to this file's folder); the browser
+  // downloads them in parallel but runs them one after another.
   var FRAMEWORK_SCRIPTS = [
-    "viraspa/core/events.js",
-    "viraspa/utility/dom.js",
-    "viraspa/utility/asset-loader.js",
-    "viraspa/services/databinding/data-binding-service.js",
-    "viraspa/services/communication/http-service.js",
-    "viraspa/core/page-loader.js",
-    "viraspa/core/style-isolation.js",
-    "viraspa/core/component.js",
-    "viraspa/core/page.js",
-    "viraspa/core/layout.js",
-    "viraspa/core/router.js",
-    "viraspa/core/bootstrap.js",
+    "core/manifest-rules.js",
+    "core/events.js",
+    "utility/dom.js",
+    "utility/asset-loader.js",
+    "services/databinding/data-binding-service.js",
+    "services/communication/http-service.js",
+    "core/page-loader.js",
+    "core/style-isolation.js",
+    "core/component-registry.js",
+    "core/component.js",
+    "core/icons.js",
+    "core/toast.js",
+    "core/page.js",
+    "core/layout.js",
+    "core/router.js",
+    "core/bootstrap.js",
   ];
-  var BASE_STYLE = "viraspa/styles/base.css";
+  var BASE_STYLE = "styles/base.css";
+
+  // Where the framework is served from: the folder of this script, as
+  // written in index.html. Usually "viraspa/" (installed with the site);
+  // in remote mode a CDN folder such as
+  // "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.2.0/ViRaSPA/viraspa/".
+  var scriptSrc = (document.currentScript && document.currentScript.getAttribute("src")) || "viraspa/viraspa.js";
+  var FRAMEWORK_BASE = scriptSrc.replace(/viraspa\.js(\?.*)?$/, "");
 
   var Viraspa = (window.Viraspa = window.Viraspa || {});
   var settings = (Viraspa.settings = Viraspa.settings || {});
@@ -160,11 +173,12 @@
       return token;
     }),
     // Adds ?v=<token> to a site-relative URL the framework loads: the
-    // framework version for viraspa/..., the app token for everything else.
-    // Absolute URLs (https://, data:, //cdn) are returned unchanged.
+    // framework version for the framework's own files, the app token for
+    // everything else. Absolute URLs (https://, data:, //cdn) are returned
+    // unchanged - a CDN URL already names its version.
     version: function (url) {
       if (/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) return url;
-      var token = url.indexOf("viraspa/") === 0 ? cache.frameworkToken : cache.appToken;
+      var token = url.indexOf(FRAMEWORK_BASE) === 0 ? cache.frameworkToken : cache.appToken;
       if (!token) return url;
       return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + token;
     },
@@ -172,11 +186,15 @@
   Viraspa.cache = cache;
   Viraspa.core = Viraspa.core || {};
   Viraspa.core.v = cache.version;
+  // The URL of a framework file, e.g. frameworkUrl("styles/base.css").
+  Viraspa.core.frameworkUrl = function (path) {
+    return FRAMEWORK_BASE + path;
+  };
 
   // ---- 3. Load base.css and the framework files -----------------------------
   var baseLink = document.createElement("link");
   baseLink.rel = "stylesheet";
-  baseLink.href = cache.version(BASE_STYLE);
+  baseLink.href = cache.version(FRAMEWORK_BASE + BASE_STYLE);
   Viraspa.core.baseStyleLoaded = new Promise(function (resolve) {
     baseLink.onload = resolve;
     baseLink.onerror = resolve;
@@ -185,7 +203,7 @@
 
   for (var s = 0; s < FRAMEWORK_SCRIPTS.length; s++) {
     var script = document.createElement("script");
-    script.src = cache.version(FRAMEWORK_SCRIPTS[s]);
+    script.src = cache.version(FRAMEWORK_BASE + FRAMEWORK_SCRIPTS[s]);
     script.async = false; // keep the order above
     script.onerror = onScriptError;
     document.head.appendChild(script);

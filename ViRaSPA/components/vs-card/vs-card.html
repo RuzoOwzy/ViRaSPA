@@ -1,0 +1,11 @@
+<article class="card" part="card">
+  <header class="head" part="head">
+    {{{iconHtml}}}
+    <div class="titles">
+      <h3 class="heading" part="heading">{{heading}}</h3>
+      <p class="subheading" part="subheading">{{subheading}}</p>
+    </div>
+  </header>
+  <div class="body" part="body"><slot></slot></div>
+  <footer class="footer" part="footer"><slot name="footer"></slot></footer>
+</article>

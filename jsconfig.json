@@ -5,10 +5,6 @@
     "checkJs": false,
     "allowJs": true
   },
-  "include": [
-    "ViRaSPA/**/*.js",
-    "ViRaSPA/lib/jquery/4.0.0/*.d.ts",
-    "ViRaSPA/app/assets/jquery-extensions/*.d.ts"
-  ],
-  "exclude": ["node_modules", "ViRaSPA/prerendered"]
+  "include": ["ViRaSPA/**/*.js", "ViRaSPA/app/assets/jquery-extensions/*.d.ts"],
+  "exclude": ["node_modules", "ViRaSPA/lib", "ViRaSPA/prerendered"]
 }

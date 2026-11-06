@@ -1,0 +1,49 @@
+:host {
+  display: none;
+}
+
+:host([visible]) {
+  display: block;
+}
+
+:host([overlay][visible]) {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--vs-busy-overlay-background, rgba(244, 247, 245, 0.75));
+}
+
+.busy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vs-space-2);
+  color: var(--vs-color-text-muted);
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2.5px solid var(--vs-color-border);
+  border-top-color: var(--vs-color-primary);
+  border-radius: 50%;
+  animation: vs-spin 0.8s linear infinite;
+}
+
+.message:empty {
+  display: none;
+}
+
+@keyframes vs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
