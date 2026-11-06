@@ -18,7 +18,7 @@ It doesn't talk to any server itself: it hands the credentials to your code.
 ## Install
 
 ```bash
-node node-tools/install.js add component vs-login-form --version 0.1.0
+node node-tools/install.js add component vs-login-form@0.1.0
 ```
 
 ## Usage

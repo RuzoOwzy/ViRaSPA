@@ -17,19 +17,19 @@
       "name": "vs-card",
       "version": "0.1.0",
       "downloadSource": "components-repository",
-      "checksum": "sha256-62df247aa265f99da278de14e46107553cef31024e3cad1b68383ce074ad1d8d"
+      "checksum": "sha256-72d9c3ae4d91ab322c47e3882ee29227477aac8d5522de66db7b491c0eab8c9d"
     },
     {
       "name": "vs-stat-tile",
       "version": "0.1.0",
       "downloadSource": "components-repository",
-      "checksum": "sha256-b8c5a69edaee3dbaa0aa4da5eb72871afe66b15d31b28123be76354c4df493e2"
+      "checksum": "sha256-699145926ebf25fb91006f851029e12da68da8f63042291c892974a9a44dcf7f"
     },
     {
       "name": "vs-login-form",
       "version": "0.1.0",
       "downloadSource": "components-repository",
-      "checksum": "sha256-39a2df6e923c94ee0a4852f7f249bc72624c69c52e6ab059f3140288b34ef6e7"
+      "checksum": "sha256-a67f9fd04993dd7723acd6b5f3e631a14a316aba92ce104a8c238f709108c95e"
     }
   ],
   "extensions": [],

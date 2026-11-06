@@ -11,7 +11,7 @@ A key figure for dashboards: a label, a big value, an optional icon and a trend.
 ## Install
 
 ```bash
-node node-tools/install.js add component vs-stat-tile --version 0.1.0
+node node-tools/install.js add component vs-stat-tile@0.1.0
 ```
 
 ## Usage

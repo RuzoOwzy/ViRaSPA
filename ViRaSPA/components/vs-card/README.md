@@ -11,7 +11,7 @@ A content card: a heading, an optional subheading and icon, body content, and an
 ## Install
 
 ```bash
-node node-tools/install.js add component vs-card --version 0.1.0
+node node-tools/install.js add component vs-card@0.1.0
 ```
 
 Nothing else to do: the framework loads it the first time `<vs-card>` appears on a page.
