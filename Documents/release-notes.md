@@ -11,6 +11,12 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N9 · Composite components
+
+- **ViRaSPA-Extensions:** `vs-pagination`, `vs-table` (cell wrappers, sorting incl. several columns, search with plain-language scopes, column filters, client or server paging through the data contract, selection, row open, a row menu slot, column chooser, resizing, remembered settings, CSV export, totals, a keyboard grid, phone "cards" layout, printing), `vs-table-entry` (Enter from cell to cell, a new row on the last cell - switchable -, Ctrl+Delete, computed columns, totals, validation, form value), `vs-tree` (on-demand children, single/multiple/cascading selection, filter, ARIA keyboard, add/rename/delete/move with locked nodes and save handlers) and `vs-select-tree`; the helper `table-core` they share. Their dependencies install automatically.
+- **Sample:** an `/orders` list page (the old "filter page" ideas: search, filters, selection and delete, double-click to open, a row menu, export, phone cards) with a server-paged table beside it; the entry table, tree and tree-select on `/showcase`.
+- **Fixed in the framework:** `Viraspa.keyboard.parse(" ")` lost the Space key (keys written as a lone space never matched).
+
 ### Milestone N8 · Basic components
 
 - **13 official components** (ViRaSPA-Extensions): `vs-popup` (with `Viraspa.popup`), `vs-input-number`, `vs-input-date`, `vs-input-password`, `vs-input-color`, `vs-textarea`, `vs-select`, `vs-select-search`, `vs-tabs`, `vs-tooltip`, `vs-context-menu`, `vs-progress`, `vs-countdown`. All keyboard-complete with overridable keys; the inputs are form-associated.

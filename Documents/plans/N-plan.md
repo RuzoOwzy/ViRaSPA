@@ -14,7 +14,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | **N6** | Dynamic page previews: the optional Node helper (plus route parameters and an ASP.NET Core reference) | done, see [N6 report](N6-report.md) |
 | **N7** | Study and foundations | done, see [N7 report](N7-report.md) and the [inventory](N7-migration-inventory.md) |
 | **N8** | Basic components (13) | done, see [N8 report](N8-report.md) |
-| **N9** | Composite components (5) and the list-page example | planned |
+| **N9** | Composite components (5) and the list-page example | done, see [N9 report](N9-report.md) |
 | **N10** | Media viewer, image cropper, rich text editor v1 | planned |
 | **N11** | Showcase, benchmark and review | planned |
 

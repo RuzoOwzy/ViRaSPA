@@ -26,6 +26,31 @@
   </section>
 
   <section>
+    <h2>Entry table</h2>
+    <p class="text-muted">Type a sale with the keyboard: Enter moves from cell to cell and adds a row at the end; Ctrl+Delete removes one. Amount is computed; totals follow.</p>
+    <vs-table-entry id="sc-lines" name="lines" add-button delete-button label="Sale lines">
+      <column field="product" label="Product" required></column>
+      <column field="quantity" label="Qty" editor="number" min="1" width="90" total="sum"></column>
+      <column field="price" label="Price" editor="number" width="130"></column>
+      <column field="vat" label="VAT %" editor="select" options="0,18" width="100"></column>
+      <column field="amount" label="Amount" format="currency:'TZS'" total="sum" width="160"></column>
+    </vs-table-entry>
+  </section>
+
+  <section>
+    <h2>Tree</h2>
+    <div class="demo">
+      <div class="field wide">
+        <p class="text-muted">A chart of accounts: arrows move, Right/Left open and close, Insert adds, F2 renames, Delete removes (only leaves), Ctrl+X then Ctrl+V moves; locked accounts can't change. Hover a row for the + and × buttons.</p>
+        <vs-tree id="sc-accounts" filter editable delete-leaves-only label="Chart of accounts"></vs-tree>
+      </div>
+      <div class="field"><label for="sc-category">Category (tree select)</label><vs-select-tree id="sc-category" name="category" placeholder="Choose a category" filter></vs-select-tree></div>
+      <div class="field"><label for="sc-regions">Regions (several)</label><vs-select-tree id="sc-regions" name="regions" multiple cascade placeholder="Choose regions"></vs-select-tree></div>
+      <span class="output" id="tree-output"></span>
+    </div>
+  </section>
+
+  <section>
     <h2>Popups</h2>
     <div class="demo">
       <button type="button" class="plain" data-demo="alert">Alert</button>

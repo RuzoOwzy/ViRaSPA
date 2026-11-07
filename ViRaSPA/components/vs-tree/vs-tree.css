@@ -1,0 +1,176 @@
+:host {
+  display: block;
+}
+
+.filter {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  font: inherit;
+}
+
+.filter[hidden],
+.message[hidden] {
+  display: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[role="treeitem"]:focus {
+  outline: none;
+}
+
+[role="treeitem"]:focus-visible > .row {
+  outline: 2px solid var(--vs-color-focus);
+  outline-offset: -2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.15rem 0.4rem 0.15rem calc(0.4rem + (var(--level, 1) - 1) * var(--vs-tree-indent, 1.25rem));
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.row:hover {
+  background: var(--vs-color-surface-muted, #f2f5f4);
+}
+
+.row.selected,
+[aria-checked="true"] > .row {
+  background: color-mix(in srgb, var(--vs-color-primary) 12%, transparent);
+}
+
+.row.drop {
+  box-shadow: inset 0 0 0 2px var(--vs-color-primary);
+}
+
+.toggle,
+.leaf {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  display: inline-grid;
+  place-items: center;
+}
+
+.toggle::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 2px solid var(--vs-color-text-muted);
+  border-bottom: 2px solid var(--vs-color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+
+[aria-expanded="true"] > .row .toggle::before {
+  transform: rotate(45deg);
+}
+
+.leaf::before {
+  content: "";
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--vs-color-border);
+}
+
+.check {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid var(--vs-color-border);
+  border-radius: 4px;
+}
+
+.check[data-state="true"] {
+  border-color: var(--vs-color-primary);
+  background: var(--vs-color-primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8l3 3 7-7' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center / 80% no-repeat;
+}
+
+.check[data-state="mixed"] {
+  border-color: var(--vs-color-primary);
+  background: linear-gradient(var(--vs-color-primary), var(--vs-color-primary)) center / 60% 2px no-repeat;
+}
+
+.label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lock {
+  font-size: 0.75em;
+  opacity: 0.6;
+}
+
+.tools {
+  display: none;
+  gap: 0.2rem;
+}
+
+.row:hover .tools,
+[role="treeitem"]:focus-within > .row .tools {
+  display: inline-flex;
+}
+
+.tool {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: 50%;
+  background: var(--vs-color-surface, #fff);
+  color: var(--vs-color-text-muted);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tool.add:hover {
+  color: var(--vs-color-primary);
+}
+
+.tool.remove:hover {
+  color: var(--vs-color-danger, #c0392b);
+}
+
+.edit {
+  flex: 1;
+  min-width: 6rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--vs-color-primary);
+  border-radius: 5px;
+  font: inherit;
+}
+
+[aria-disabled="true"] > .row {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.loading,
+.empty {
+  padding: 0.4rem 0.6rem 0.4rem 2rem;
+  color: var(--vs-color-text-muted);
+  font-size: 0.9em;
+}
+
+.message {
+  margin-top: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: var(--vs-color-surface-muted, #f2f5f4);
+  font-size: 0.9em;
+}

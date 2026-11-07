@@ -1,0 +1,51 @@
+{
+  "name": "vs-table",
+  "tag": "vs-table",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A data table: sorting, search, column filters, client or server paging, selection, row actions, columns, CSV export, totals, keyboard grid, phone layouts.",
+  "script": "vs-table.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "dependencies": [
+    {
+      "kind": "helper",
+      "name": "table-core",
+      "version": "0.1.0"
+    },
+    {
+      "kind": "component",
+      "name": "vs-pagination",
+      "version": "0.1.0"
+    },
+    {
+      "kind": "component",
+      "name": "vs-progress",
+      "version": "0.1.0"
+    }
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-dc511195ec47ffd6a5233823bb731c416e7cb87b9941906b8f359f008f54bb09"
+    },
+    {
+      "path": "vs-table.css",
+      "checksum": "sha256-b607c4120f9bd0ba6476e19ff819ce5275474972a85a0473c022a92f3f9aa189"
+    },
+    {
+      "path": "vs-table.html",
+      "checksum": "sha256-8d3e03e4bb0d49eb11f21e26800052abae5ad4db20fad3fed98c52e6a55ce5ed"
+    },
+    {
+      "path": "vs-table.js",
+      "checksum": "sha256-98fb47f8a58b68a9a205fdf89d3e0d19842796228c5e9308dce0748cc004493d"
+    }
+  ]
+}

@@ -47,7 +47,7 @@
       "name": "vs-tooltip",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-123c3197c1943bb9164656770b32c38f1704fed9f33b6e528737518a440ca1f5"
+      "checksum": "sha256-a6f20fde2165441f6004b4deefc40d57282654a8f28d1ab9275730305d51d2a5"
     },
     {
       "name": "vs-popup",
@@ -107,7 +107,37 @@
       "name": "vs-select",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-6803315e07aa0ff877e7e5521ebf7228e8f1e04d6727a44f7d5f9b024f71c134"
+      "checksum": "sha256-9cb5eea3726908cd0f8a8919b64c58ebef3347e7264f8c75d6d9ac3f5bf7fbd8"
+    },
+    {
+      "name": "vs-table",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-9ab468e55665d03e5256659487844c68b4ffefba66440f799f72db0aba5de36c"
+    },
+    {
+      "name": "vs-pagination",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-ff301e2ebcdf3a7e9201d8fd6403d3c26e78273c795d88ffb4bd61cd34bf0d18"
+    },
+    {
+      "name": "vs-table-entry",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-867a1af8b1aaddf37f2601ef811db06f230327e15d4096c330058c3afceb0fa8"
+    },
+    {
+      "name": "vs-select-tree",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-6ae5cfe51c0528c0e415434de23179b4526171fbe7f1aa3c2d476d54a76f9b7c"
+    },
+    {
+      "name": "vs-tree",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-8f6015940de71da8c2a4a048f79e30da74ed74624b7f5b35fc27e5b9de98636c"
     }
   ],
   "helpers": [
@@ -134,6 +164,12 @@
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
       "checksum": "sha256-18483a9b9c982dc9ab1078858015b703d1ea1a4fec3abffc9e8a4020f4becece"
+    },
+    {
+      "name": "table-core",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-c43a8c460d245837d4947cd9188fd1ed766dd1714a4be3e2116b3bf28e2e8b51"
     }
   ],
   "extensions": [],

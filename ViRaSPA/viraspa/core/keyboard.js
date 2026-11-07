@@ -32,6 +32,7 @@
 
   // "ctrl+shift+k" -> { ctrl, shift, alt, meta, key }
   function parse(keys) {
+    if (keys === " ") return { ctrl: false, shift: false, alt: false, meta: false, key: " " }; // a lone space: the Space key
     const parts = String(keys).toLowerCase().split("+").map((p) => p.trim());
     // "ctrl++" ends with an empty part: the key is "+"
     if (parts[parts.length - 1] === "" && parts.length > 1) parts.splice(-2, 2, "+");

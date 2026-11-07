@@ -281,7 +281,7 @@
 
     onKey(event) {
       if (this.disabled) return;
-      const keys = this.keymap({ open: ["alt+arrowdown", "enter", " "], close: ["escape", "alt+arrowup"], choose: "enter" });
+      const keys = this.keymap({ open: ["alt+arrowdown", "enter", "space"], close: ["escape", "alt+arrowup"], choose: "enter" });
       const inFilter = event.composedPath()[0] === this.filterBox;
       if (!this.isOpen) {
         if (this.hasAttribute("readonly")) return;

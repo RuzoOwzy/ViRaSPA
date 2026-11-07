@@ -1,0 +1,37 @@
+.page-orders .toolbar-button {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-surface, #fff);
+  font: inherit;
+  cursor: pointer;
+}
+
+.page-orders .toolbar-button.danger {
+  border-color: var(--vs-color-danger, #c0392b);
+  color: var(--vs-color-danger, #c0392b);
+}
+
+.page-orders .toolbar-button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.page-orders section {
+  margin-bottom: 2.5rem;
+}
+
+.page-orders .details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.page-orders .details dt {
+  color: var(--vs-color-text-muted);
+}
+/* Overdue orders (vs-table rowClass names are part names). */
+#orders-table::part(overdue) {
+  color: var(--vs-color-danger, #c0392b);
+}

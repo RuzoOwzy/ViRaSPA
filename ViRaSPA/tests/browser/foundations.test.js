@@ -83,6 +83,8 @@
     assert.equal(Viraspa.keyboard.actionFor(new KeyboardEvent("keydown", { key: "Delete", altKey: true }), map), "remove");
     assert.equal(Viraspa.keyboard.actionFor(new KeyboardEvent("keydown", { key: "Enter" }), map), null);
     assert.equal(Viraspa.keyboard.label("ctrl+shift+k"), "Ctrl+Shift+K");
+    assert.ok(Viraspa.keyboard.matches(new KeyboardEvent("keydown", { key: " " }), " "), "a lone space is the Space key");
+    assert.ok(Viraspa.keyboard.matches(new KeyboardEvent("keydown", { key: " " }), "space"));
   });
 
   test("roving focus moves with the arrow keys; trapFocus keeps Tab inside", () => {

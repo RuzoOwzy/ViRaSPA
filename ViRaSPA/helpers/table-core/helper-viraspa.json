@@ -1,0 +1,28 @@
+{
+  "name": "table-core",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Shared logic of vs-table and vs-table-entry: columns, formatting, sorting, filtering, totals, CSV.",
+  "namespace": "tableCore",
+  "scripts": [
+    "table-core.js"
+  ],
+  "styles": [],
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-27b18e73a60831cf47548af0c9a5b1a850f2d88deb2cfe319c5a35bfe2a2448e"
+    },
+    {
+      "path": "table-core.js",
+      "checksum": "sha256-9e86f2fc6982e85ebfb7c6a05177ffaf305eb29c2434b08c942401c16cdbb898"
+    }
+  ]
+}

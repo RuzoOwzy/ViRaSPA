@@ -1,0 +1,41 @@
+{
+  "name": "vs-select-tree",
+  "tag": "vs-select-tree",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A select whose choices are a tree: single or multiple, leaves or any node, filter; works in forms.",
+  "script": "vs-select-tree.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "dependencies": [
+    {
+      "kind": "component",
+      "name": "vs-tree",
+      "version": "0.1.0"
+    }
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-d8f3c9a3e227d1c94f3a321bbd98d2f3f18eca9d5a484921883821612b2838cc"
+    },
+    {
+      "path": "vs-select-tree.css",
+      "checksum": "sha256-2521ff2c653143f8d1af3352ac6641c7c0b3942b026f1d62b3d2fd152ec6f1af"
+    },
+    {
+      "path": "vs-select-tree.html",
+      "checksum": "sha256-a606634cae3eb6b23ffd7968c54db5fba10ad941c9d1d81ac724de83e72700f1"
+    },
+    {
+      "path": "vs-select-tree.js",
+      "checksum": "sha256-33479678907125a39c6d05d8cf608b3a4b7943d248ff9bd1eb68847f9546cb26"
+    }
+  ]
+}

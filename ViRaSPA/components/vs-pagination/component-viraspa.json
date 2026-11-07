@@ -1,0 +1,34 @@
+{
+  "name": "vs-pagination",
+  "tag": "vs-pagination",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Page navigation for long lists: first/previous/next/last, a page box, a \"21-40 of 135\" line and a page-size choice.",
+  "script": "vs-pagination.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-bdd912907bfeec1c561f8901e39e0ad9264b627f06edf95d395b38344ca831f0"
+    },
+    {
+      "path": "vs-pagination.css",
+      "checksum": "sha256-db415ec6de3dd166f28a8591e47d311f267c9950d9a9d9745990e5941db1ae5d"
+    },
+    {
+      "path": "vs-pagination.html",
+      "checksum": "sha256-0628f2163336449fbc8dc586a1aa94419890818bf6538094e45e9b4595458d18"
+    },
+    {
+      "path": "vs-pagination.js",
+      "checksum": "sha256-a2a2e7daaa67f7891452ae76f9cf01088e1ac34fab5f63afac1eab9912fc7d4c"
+    }
+  ]
+}

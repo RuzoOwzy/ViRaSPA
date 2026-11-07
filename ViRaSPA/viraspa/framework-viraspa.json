@@ -180,7 +180,7 @@
     },
     {
       "path": "core/keyboard.js",
-      "checksum": "sha256-503cc32825b1b8c03cabed2763f7b0fc2a627ed77f0481960470233b0fa22ae9"
+      "checksum": "sha256-65c727d0e26135e3c3239f5288b0540386fdabbcc9c5e3c5ce47eaacd4a1daf6"
     },
     {
       "path": "core/layout.js",

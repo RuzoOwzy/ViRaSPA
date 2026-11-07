@@ -47,6 +47,15 @@ window.Viraspa.routes = [
     nav: { label: "Showcase", icon: "lucide:layout-grid", menus: ["main"], order: 3 },
   },
   {
+    path: "/orders",
+    name: "orders",
+    page: "app/pages/orders",
+    title: "Orders · ViRaSPA",
+    head: { description: "A list page: search, filters, selection, row actions and export with vs-table." },
+    layout: "public",
+    nav: { label: "Orders", icon: "lucide:list", menus: ["main"], order: 5 },
+  },
+  {
     path: "/data-entry",
     name: "data-entry",
     page: "app/pages/data-entry",

@@ -1,0 +1,32 @@
+<div class="x-container page-orders">
+  <h1>Orders</h1>
+  <p class="text-muted">A list page built from <code>vs-table</code>: search, a status filter, sorting (Shift+click for several columns), selection with "Delete selected", double-click (or Enter) to open, a right-click menu, columns, export, totals and remembered settings. On a phone, rows turn into cards.</p>
+
+  <section>
+    <vs-table id="orders-table" key-field="number" page-size="10" page-sizes="10,25,50" search selectable="multiple" export export-name="orders" column-chooser remember="sample-orders" phone-layout="cards" label="Orders">
+      <column field="number" label="Order" width="100"></column>
+      <column field="customer" label="Customer" filterable></column>
+      <column field="region" label="Region" width="140" filterable></column>
+      <column field="date" label="Date" format="date:'short'" width="120"></column>
+      <column field="status" label="Status" width="120" filterable></column>
+      <column field="amount" label="Amount" format="currency:'TZS'" total="sum" width="150"></column>
+      <button slot="toolbar" type="button" class="toolbar-button danger" data-action="delete" disabled>Delete selected</button>
+      <vs-context-menu slot="row-menu">
+        <button value="open" data-icon="lucide:external-link" data-shortcut="Enter">Open</button>
+        <button value="paid" data-icon="lucide:check">Mark as paid</button>
+        <hr>
+        <button value="delete" data-icon="lucide:trash-2" class="danger">Delete</button>
+      </vs-context-menu>
+    </vs-table>
+  </section>
+
+  <section>
+    <h2>The same table with the server</h2>
+    <p class="text-muted">Paging, sorting and search go to the server (the public demo API's posts); the table only shows what comes back.</p>
+    <vs-table id="posts-table" page-size="10" search search-scope="choose" label="Posts">
+      <column field="id" label="#" width="70"></column>
+      <column field="title" label="Title"></column>
+      <column field="userId" label="Author" width="100"></column>
+    </vs-table>
+  </section>
+</div>

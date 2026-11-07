@@ -1,0 +1,41 @@
+{
+  "name": "vs-table-entry",
+  "tag": "vs-table-entry",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A data-entry table: Enter from cell to cell, a new row on the last cell (switchable), computed columns, totals, validation; works in forms.",
+  "script": "vs-table-entry.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "dependencies": [
+    {
+      "kind": "helper",
+      "name": "table-core",
+      "version": "0.1.0"
+    }
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-0dad47aac846c8f0be748f797ba2dbd196e2dc31320fce58610d767cb950c5af"
+    },
+    {
+      "path": "vs-table-entry.css",
+      "checksum": "sha256-f87bf689283420c14219a88ea35792b95c9bcb0b715836e44f201d1905d33ba3"
+    },
+    {
+      "path": "vs-table-entry.html",
+      "checksum": "sha256-4ae7798f8d56e244c12a42d734989b990e079a5d8c1b9dc55319a9e2626a64b7"
+    },
+    {
+      "path": "vs-table-entry.js",
+      "checksum": "sha256-5a75768bb6d0e26c3f7cf6c85e0151a5e23ba0842243d60ae96ecc613bbb4be4"
+    }
+  ]
+}

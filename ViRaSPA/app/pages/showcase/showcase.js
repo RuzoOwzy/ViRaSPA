@@ -19,6 +19,46 @@
       ];
       $("#sc-due").isDateDisabled = (iso) => new Date(iso).getDay() === 0; // no Sundays
 
+      // vs-table-entry: a computed column, defaults for new rows. (Viraspa.tableCore
+      // arrives with the table components: wait for them before using it.)
+      await Viraspa.core.components.load("vs-table-entry");
+      const lines = $("#sc-lines");
+      lines.columns = Viraspa.tableCore.columnsFromChildren(lines).map((c) =>
+        c.field === "amount" ? { ...c, value: (row) => (Number(row.quantity) || 0) * (Number(row.price) || 0) * (1 + (Number(row.vat) || 0) / 100) } : c
+      );
+      lines.newRow = () => ({ quantity: 1, vat: "18" });
+      lines.rows = [{ product: "Rice 5 kg", quantity: 2, price: 18000, vat: "18" }];
+
+      // vs-tree: a chart of accounts (locked system accounts, like EliteWeb's).
+      const accounts = $("#sc-accounts");
+      accounts.nodes = [
+        { id: 1, label: "Assets", locked: true, expanded: true, children: [
+          { id: 11, label: "Cash", locked: true },
+          { id: 12, label: "Bank accounts", children: [{ id: 121, label: "CRDB" }, { id: 122, label: "NMB" }] },
+          { id: 13, label: "Customers (receivable)" },
+        ] },
+        { id: 2, label: "Liabilities", locked: true, children: [{ id: 21, label: "Suppliers (payable)" }, { id: 22, label: "VAT payable" }] },
+        { id: 3, label: "Income", locked: true, children: [{ id: 31, label: "Sales" }] },
+        { id: 4, label: "Expenses", locked: true, children: [{ id: 41, label: "Rent" }, { id: 42, label: "Salaries" }, { id: 43, label: "Transport" }] },
+      ];
+      let nextId = 500;
+      accounts.onAdd = async (parent, label) => ({ id: ++nextId, label }); // a real app saves it on the server
+      this.listen(accounts, "vs-node-add", (e) => ($("#tree-output").textContent = `added "${e.detail.node.label}" under "${e.detail.parent.label}"`));
+      this.listen(accounts, "vs-node-move", (e) => ($("#tree-output").textContent = `moved "${e.detail.node.label}" to "${e.detail.to.label}"`));
+
+      $("#sc-category").items = [
+        { id: "food", label: "Food" },
+        { id: "rice", label: "Rice", parent: "food" },
+        { id: "oil", label: "Cooking oil", parent: "food" },
+        { id: "drinks", label: "Drinks" },
+        { id: "soda", label: "Soda", parent: "drinks" },
+        { id: "water", label: "Water", parent: "drinks" },
+      ];
+      $("#sc-regions").nodes = [
+        { id: "north", label: "North", children: [{ id: "aru", label: "Arusha" }, { id: "kil", label: "Kilimanjaro" }] },
+        { id: "coast", label: "Coast", children: [{ id: "dar", label: "Dar es Salaam" }, { id: "tan", label: "Tanga" }] },
+      ];
+
       const form = $("#inputs-form");
       this.listen(form, "submit", (event) => {
         event.preventDefault();

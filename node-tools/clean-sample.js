@@ -26,6 +26,7 @@ const SAMPLE_PATHS = [
   "app/pages/person",
   "app/pages/data-entry",
   "app/pages/showcase",
+  "app/pages/orders",
   "app/utils/names.js",
   "app/services/people.js",
   "app/i18n",

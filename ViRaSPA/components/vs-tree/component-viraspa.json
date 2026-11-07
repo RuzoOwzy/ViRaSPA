@@ -1,0 +1,34 @@
+{
+  "name": "vs-tree",
+  "tag": "vs-tree",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A tree with on-demand children, single or multiple (cascading) selection, a filter, full keyboard and optional editing (add, rename, delete, move).",
+  "script": "vs-tree.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-4f4d1101feabead40cf911833831a3cfb77682ba71cc17e392f59a6d8eefc2a8"
+    },
+    {
+      "path": "vs-tree.css",
+      "checksum": "sha256-adf594a007b7c0a99d85895a35ab6b1f77daf2df5b494118ce8d2f003d1afc13"
+    },
+    {
+      "path": "vs-tree.html",
+      "checksum": "sha256-c053cddc00eea08c6f06613108c499195f586d2bee7674b09f7208a99dd549c6"
+    },
+    {
+      "path": "vs-tree.js",
+      "checksum": "sha256-2c5fc55d2192600bbbbe53df28e249114375d0731c10000887247ac29ab344e7"
+    }
+  ]
+}

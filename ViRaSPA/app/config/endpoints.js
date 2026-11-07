@@ -13,6 +13,7 @@
       get: { method: "GET", path: "/users/{id}" },
     },
     posts: {
+      list: { method: "GET", path: "/posts" },
       create: { method: "POST", path: "/posts" },
     },
   });

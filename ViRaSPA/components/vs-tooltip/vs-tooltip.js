@@ -21,7 +21,9 @@
 
     get target() {
       const id = this.getAttribute("for");
-      return id ? this.getRootNode().getElementById(id) : this.previousElementSibling;
+      if (!this.isConnected) return null;
+      const root = this.getRootNode();
+      return id ? (root.getElementById ? root.getElementById(id) : root.querySelector(`#${CSS.escape(id)}`)) : this.previousElementSibling;
     }
 
     async afterLoad() {

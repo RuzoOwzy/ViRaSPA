@@ -1,0 +1,22 @@
+<div class="wrap" part="wrap">
+  <div class="toolbar" part="toolbar">
+    <input class="search" type="search" part="search" hidden>
+    <select class="scope" part="scope" hidden></select>
+    <slot name="toolbar"></slot>
+    <span class="spacer"></span>
+    <button type="button" class="columns-button" part="columns-button" hidden></button>
+    <button type="button" class="export-button" part="export-button" hidden></button>
+  </div>
+  <div class="scroll" part="scroll">
+    <table role="grid" part="table">
+      <colgroup></colgroup>
+      <thead part="head"></thead>
+      <tbody part="body"></tbody>
+      <tfoot part="foot"></tfoot>
+    </table>
+    <div class="state" part="state" role="status" hidden></div>
+  </div>
+  <vs-pagination part="pagination" hidden></vs-pagination>
+  <div class="chooser" part="column-chooser"></div>
+  <slot name="row-menu"></slot>
+</div>

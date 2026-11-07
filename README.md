@@ -175,6 +175,9 @@ Use it as `<app-note heading="Tip">…</app-note>`, or from code with `await Vir
 - **`ready`:** `element.ready` resolves once it has loaded, including the components inside it.
 - **Reserved prefixes:** `vs-` and `viraspa-` are kept for core and official components; `defineComponent` refuses them elsewhere.
 - **Native components:** a component written with plain `customElements.define(...)` works without any of this; the framework leaves it alone.
+- **Names the base class uses:** don't reuse `render`, `renderTemplate`, `onLoad`, `beforeLoad`, `afterLoad`, `prepareModel`, `attributeProps`, `dispose`, `effect`, `listen`, `shortcut`, `keymap` or `labelText` for something else (a component that names its own drawing method `render()` replaces the template rendering and stays empty). Built-in element names such as `title`, `hidden` or `id` are taken too.
+- **Properties set early:** a property set on the element before its component has loaded (e.g. `el.source = fn` right after the page renders) is applied through the component's own setter when it starts.
+- **Focus:** `static delegatesFocus = true` (full mode) passes focus, and clicks on the field's `<label>`, to the first focusable thing inside.
 
 #### Isolation modes
 
