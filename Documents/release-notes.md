@@ -11,6 +11,13 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N6 · Dynamic pages: route parameters and head injection
+
+- **Route parameters:** `path: "/customers/:id"`; `this.params` and `this.query` in pages, `event.detail.params` for native pages; routes without parameters win; values keep their letter case; `keepAlive` per address; menus skip such routes; head placeholders are filled from the parameters. Shared rules in `viraspa/core/route-paths.js` (`Viraspa.routePaths`), mirrored in the tools (dev server 404s, server rules for IIS, Apache and nginx, `check-server.js`); prerender skips them.
+- **Head placeholders:** a value whose placeholder has no value yet now falls back to the route's plain title or the site default (no more half-filled " · My Site").
+- **Head injection for link previews:** `node-tools/lib/head-injector.js` (any Node server) and `serve.js --head-lookups <file>`; `server-side/aspnetcore/ViraspaSite.cs`, an ASP.NET Core reference (`app.UseViraspaSite`), tested with .NET 10; `server-side/README.md` for other backends. `deploy.js` now writes the routes (paths, head templates, private flags) into `release.json` for them.
+- **Sample:** the `/people/:id` page (Home's cards link to it) and `server-side/head-lookups.js`.
+
 ### Milestone N5 · GitHub Pages demo
 
 - **Sites in a sub-folder** (`<base href="/shop/">`): routes stay app paths; the router, the private-page redirect, `vs-menu`, `vs-brand` and `vs-user-menu` add the folder; `Viraspa.core.toAppPath()` and `toUrlPath()`. Checked on a test server under `/sub/`: deep links, menu links, clicks, Back, `navigate()`, the login redirect, spelling correction and the not-found page.

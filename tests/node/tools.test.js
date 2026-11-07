@@ -130,3 +130,39 @@ test("bundle: framework, app, pack and preload on an in-memory site", () => {
   assert.equal(site["viraspa/viraspa.js"].toString().includes("viraspa.bundle.js"), false, "the input is not changed");
   assert.ok(!report.some((line) => /not isolated/.test(line)), report.join("\n"));
 });
+
+test("routes: parameters match the same way in the tools and in the browser", () => {
+  const browser = require("../../ViRaSPA/viraspa/core/route-paths.js");
+  const cases = ["/people/3", "/People/3/", "/people", "/people/3/x", "/about", "/ABOUT/", "/a/b%20c/d"];
+  for (const routePath of ["/people/:id", "/about", "/a/:x/d", "/"]) {
+    const tool = routes.routePattern(routePath);
+    for (const p of cases) assert.equal(tool.test(p), browser.compile(routePath).regex.test(p), `${routePath} vs ${p}`);
+  }
+  const rules = serverRules.generate("apache", ["/", "/people/:id"]).content;
+  assert.match(rules, /people\/\[\^\/\]\+/);
+});
+
+test("head injector: parameters, lookups, 404 and private pages", async () => {
+  const { createHeadInjector } = require("../../node-tools/lib/head-injector");
+  const inject = createHeadInjector({
+    siteFolder: SITE,
+    siteAddress: "https://example.com",
+    lookups: {
+      person: async ({ id }) => (id === "3" ? { name: "Clementine <B>", company: "Romaguera" } : null),
+    },
+  });
+  const found = await inject("/People/3/");
+  assert.equal(found.status, 200);
+  assert.match(found.html, /<title>Clementine &lt;B&gt; · ViRaSPA Sample<\/title>/);
+  assert.match(found.html, /og:description" content="Clementine &lt;B&gt; works at Romaguera\./);
+  assert.match(found.html, /canonical" href="https:\/\/example\.com\/people\/3"/);
+  assert.equal((await inject("/people/999")).status, 404);
+  const privatePage = await inject("/dashboard");
+  assert.equal(privatePage.status, 200);
+  assert.doesNotMatch(privatePage.html, /og:title/);
+  assert.equal(await inject("/no-such-page"), null);
+  const failing = createHeadInjector({ siteFolder: SITE, lookups: { person: async () => { throw new Error("db down"); } } });
+  const fallback = await failing("/people/3");
+  assert.equal(fallback.status, 200);
+  assert.match(fallback.html, /<title>Person · ViRaSPA<\/title>/);
+});

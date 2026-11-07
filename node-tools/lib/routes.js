@@ -21,6 +21,20 @@ function normalizePath(p) {
   return (trimmed || "/").toLowerCase();
 }
 
+// The same matching rules as viraspa/core/route-paths.js (the browser's):
+// ":name" matches one segment; other segments any letter case; an optional
+// trailing slash. (Kept here too, so the tools also work in remote mode,
+// where the site has no viraspa/ folder.)
+const hasParams = (routePath) => /(^|\/):[A-Za-z_]/.test(routePath || "");
+function routePattern(routePath) {
+  const trimmed = routePath.length > 1 ? routePath.replace(/\/+$/, "") : routePath || "/";
+  const parts = trimmed
+    .split("/")
+    .slice(1)
+    .map((segment) => (/^:[A-Za-z_][A-Za-z0-9_]*$/.test(segment) ? "[^/]+" : segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  return new RegExp(`^/${parts.join("/")}/?$`, "i");
+}
+
 const isPrivate = (route) => route.access === "private" || Boolean(route.requires);
 const hasPlaceholders = (text) => typeof text === "string" && /\{\{/.test(text);
 
@@ -43,4 +57,4 @@ function resolveHead(route, { siteAddress, fallbackTitle, fallbackDescription })
   };
 }
 
-module.exports = { loadRoutes, normalizePath, isPrivate, resolveHead };
+module.exports = { loadRoutes, normalizePath, isPrivate, resolveHead, hasParams, routePattern };

@@ -191,8 +191,8 @@
   const here = () => (Viraspa.core.toAppPath ? Viraspa.core.toAppPath(location.pathname) : location.pathname);
 
   function isPrivatePath(pathname) {
-    const path = Viraspa.core.normalizePath(pathname);
-    const route = (Viraspa.routes || []).find((r) => r.path && Viraspa.core.normalizePath(r.path) === path);
+    const found = Viraspa.routePaths.match(Viraspa.routes || [], pathname);
+    const route = found && found.route;
     return Boolean(route && (route.access === "private" || route.requires));
   }
 

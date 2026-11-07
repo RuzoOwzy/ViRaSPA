@@ -37,6 +37,13 @@
                 heading: user.name,
                 subheading: user.email,
                 icon: "lucide:user",
+              }).then((card) => {
+                // A link to the person's own page: a route with a parameter.
+                const link = document.createElement("a");
+                link.slot = "footer";
+                link.href = `people/${user.id}`;
+                link.textContent = "Open";
+                card.appendChild(link);
               })
             )
           )

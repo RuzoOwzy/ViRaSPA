@@ -53,6 +53,8 @@
       return (Viraspa.routes || [])
         .flatMap((route, index) => [].concat(route.nav || []).map((nav) => ({ route, nav, index })))
         .filter(({ nav }) => (nav.menus || ["main"]).includes(menuName))
+        // A route with parameters ("/customers/:id") has no single address to link to.
+        .filter(({ route }) => !(route.path && Viraspa.routePaths.hasParams(route.path)))
         // Routes the current user can't open (private, missing privileges) are left out.
         .filter(({ route }) => Viraspa.session.canAccess(route))
         .sort((a, b) => (a.nav.order ?? a.index) - (b.nav.order ?? b.index))

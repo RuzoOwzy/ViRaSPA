@@ -55,11 +55,17 @@
     return path.startsWith("/") && !path.startsWith("//") ? new URL(toUrlPath(path), location.origin) : new URL(path, document.baseURI);
   }
 
-  const currentAppPath = () => normalizePath(toAppPath(location.pathname));
+  // The current address as an app path, without a trailing slash (letter
+  // case kept: parameter values may need it).
+  const currentAppPath = () => Viraspa.routePaths.trim(toAppPath(location.pathname));
 
+  // { route, params } or null - see core/route-paths.js for the rules.
   function matchRoute(path) {
-    return Viraspa.routes.find((route) => route.path && normalizePath(route.path) === path);
+    return Viraspa.routePaths.match(Viraspa.routes, path);
   }
+
+  // keepAlive pages are kept per route - per address for routes with parameters.
+  const keepKey = (route, path) => (route.path && Viraspa.routePaths.hasParams(route.path) ? `${route.name} ${path}` : route.name);
 
   function isStale(navId) {
     return navId !== navCounter;
@@ -151,11 +157,11 @@
 
   function retire(entry) {
     Viraspa.utility.assetLoader.setStyleActive(entry.styleLink, false);
-    if (entry.keepAlive && kept.get(entry.route.name) === entry) {
+    if (entry.keepAlive && kept.get(entry.keepKey) === entry) {
       entry.element.hidden = true;
-      emit("pageHidden", { route: entry.route, page: entry.page }, entry.element);
+      emit("pageHidden", { route: entry.route, page: entry.page, params: entry.params || {} }, entry.element);
     } else {
-      emit("pageHidden", { route: entry.route, page: entry.page }, entry.element);
+      emit("pageHidden", { route: entry.route, page: entry.page, params: entry.params || {} }, entry.element);
       remove(entry);
     }
   }
@@ -168,8 +174,8 @@
   }
 
   function keep(entry) {
-    kept.delete(entry.route.name);
-    kept.set(entry.route.name, entry);
+    kept.delete(entry.keepKey);
+    kept.set(entry.keepKey, entry);
     const max = Number.isInteger(Viraspa.settings.pageCache.maxPages) ? Viraspa.settings.pageCache.maxPages : 5;
     for (const [name, old] of kept) {
       if (kept.size <= max) break;
@@ -197,7 +203,7 @@
     current = entry;
     if (pending === entry) pending = null;
     if (entry.keepAlive) keep(entry);
-    Viraspa.head.apply(entry.route, entry.headData, entry.headOverrides);
+    Viraspa.head.apply(entry.route, headData(entry), entry.headOverrides);
     shownKey = currentKey();
 
     restoreScroll(fromHistory);
@@ -207,8 +213,12 @@
     if (announce) announceShown(entry);
   }
 
+  // Head placeholders are filled from the route's parameters, then from the
+  // page's own setHeadData() values.
+  const headData = (entry) => ({ ...(entry.params || {}), ...(entry.headData || {}) });
+
   function announceShown(entry) {
-    const detail = { route: entry.route, page: entry.page };
+    const detail = { route: entry.route, page: entry.page, params: entry.params || {} };
     if (!entry.created) {
       entry.created = true;
       emit("pageCreated", detail, entry.element);
@@ -219,8 +229,8 @@
     if (window.performance && performance.mark) performance.mark("viraspa:pageShown", { detail: { route: entry.route.name } });
   }
 
-  async function showRoute(route, navId, fromHistory) {
-    const keptEntry = kept.get(route.name);
+  async function showRoute(route, navId, fromHistory, params = {}) {
+    const keptEntry = kept.get(keepKey(route, currentAppPath()));
     if (keptEntry) {
       swapTo(keptEntry, fromHistory);
       return;
@@ -235,6 +245,8 @@
       controller: new AbortController(),
       styleLink: null,
       keepAlive: Boolean(route.keepAlive),
+      keepKey: keepKey(route, currentAppPath()),
+      params,
       created: false,
       shown: false,
     };
@@ -276,9 +288,9 @@
     const setHead = (data, overrides) => {
       if (data !== undefined) entry.headData = { ...(entry.headData || {}), ...data };
       if (overrides !== undefined) entry.headOverrides = { ...(entry.headOverrides || {}), ...overrides };
-      if (current === entry) Viraspa.head.apply(entry.route, entry.headData, entry.headOverrides);
+      if (current === entry) Viraspa.head.apply(entry.route, headData(entry), entry.headOverrides);
     };
-    const page = new PageClass(entry.element, route, { signal: entry.controller.signal, display, setHead });
+    const page = new PageClass(entry.element, route, { signal: entry.controller.signal, display, setHead, params });
     entry.page = page;
 
     emit("pageBeforeLoad", { route, page });
@@ -312,13 +324,16 @@
     const matched = matchRoute(path);
 
     // Show the matched route's own spelling in the address bar (e.g.
-    // "/About/" becomes "/about"), without adding a history entry. A wrong
-    // URL is left as typed, so the user can see what didn't match.
-    if (matched && location.pathname !== toUrlPath(path)) {
-      history.replaceState(history.state, "", toUrlPath(path) + location.search + location.hash);
+    // "/About/" becomes "/about"; parameter values are kept as typed),
+    // without adding a history entry. A wrong URL is left as typed, so the
+    // user can see what didn't match.
+    if (matched) {
+      const spelled = toUrlPath(Viraspa.routePaths.build(matched.route.path, matched.params));
+      if (location.pathname !== spelled) history.replaceState(history.state, "", spelled + location.search + location.hash);
     }
 
-    const route = matched || Viraspa.notFoundRoute;
+    const route = matched ? matched.route : Viraspa.notFoundRoute;
+    const params = matched ? matched.params : {};
 
     emit("routeBeforeGuard", { route });
     let allowed;
@@ -336,7 +351,7 @@
     // A path pointing back at this same page counts as "not allowed".
     if (typeof allowed === "string") {
       const target = toUrl(allowed);
-      if (normalizePath(toAppPath(target.pathname)) !== path) {
+      if (Viraspa.routePaths.trim(toAppPath(target.pathname)).toLowerCase() !== path.toLowerCase()) {
         history.replaceState({ vsKey: currentKey() || newKey() }, "", target.pathname + target.search + target.hash);
         return loadRoute();
       }
@@ -344,7 +359,7 @@
 
     const target = allowed && typeof allowed !== "string" ? route : Viraspa.notFoundRoute;
     try {
-      await showRoute(target, navId, fromHistory);
+      await showRoute(target, navId, fromHistory, target === route ? params : {});
     } catch (err) {
       if (isStale(navId) || err.name === "AbortError") return;
       // A page folder that doesn't follow the naming convention would
@@ -378,7 +393,7 @@
       return false;
     }
     if (link.origin !== location.origin) return false;
-    return Boolean(matchRoute(normalizePath(toAppPath(link.pathname))));
+    return Boolean(matchRoute(toAppPath(link.pathname)));
   }
 
   function onDocumentClick(event) {

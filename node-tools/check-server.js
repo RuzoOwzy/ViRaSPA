@@ -66,7 +66,9 @@ async function check({ url, routes: routesOption }) {
   const index = await get(base, "index.html");
   record("index.html is sent with Cache-Control: no-cache", /no-cache|no-store|max-age=0/i.test(index.cache), index.cache || "(none)");
 
-  for (const route of routes.filter((r) => r !== "/")) {
+  for (const pattern of routes.filter((r) => r !== "/")) {
+    // A route with parameters is checked with a sample value ("/people/:id" -> "/people/1").
+    const route = pattern.replace(/:[A-Za-z_][A-Za-z0-9_]*/g, "1");
     const rel = route.replace(/^\/+/, "");
     const plain = await get(base, rel);
     const isPrerendered = prerendered.includes(route);
@@ -83,7 +85,7 @@ async function check({ url, routes: routesOption }) {
   const unknown = await get(base, `no-such-page-${Date.now()}`);
   if (hasRoutesFile || routesOption) {
     record("an unknown address answers 404 with the app", unknown.status === 404 && isApp(unknown.body), `${unknown.status}`);
-    const deep = await get(base, `${(routes.find((r) => r !== "/") || "/x").replace(/^\/+/, "")}/no-such-child`);
+    const deep = await get(base, `${(routes.find((r) => r !== "/" && !r.includes(":")) || "/x").replace(/^\/+/, "")}/no-such-child`);
     record("an unknown sub-address answers 404 with the app", deep.status === 404 && isApp(deep.body), `${deep.status}`);
   } else {
     record("an unknown address answers with the app (no routes.json deployed, so 200 is expected)", isApp(unknown.body), `${unknown.status}`);

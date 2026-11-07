@@ -26,6 +26,7 @@
     "core/events.js",
     "core/state.js",
     "core/expressions.js",
+    "core/route-paths.js",
     "utility/dom.js",
     "utility/asset-loader.js",
     "core/format.js",

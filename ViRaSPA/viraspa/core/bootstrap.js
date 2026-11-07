@@ -25,7 +25,7 @@
   }
 
   function lockFrameworkNamespaces() {
-    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules", "state", "expressions", "format", "i18n"]) {
+    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules", "state", "expressions", "routePaths", "format", "i18n"]) {
       deepFreeze(Viraspa[name]);
       Object.defineProperty(Viraspa, name, { value: Viraspa[name], writable: false, configurable: false });
     }

@@ -97,7 +97,7 @@
   // Namespaces the framework itself owns: a helper can't claim them.
   const CORE_NAMESPACES = [
     "core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions",
-    "manifestRules", "state", "expressions", "format", "i18n", "templates", "keyboard", "settings",
+    "manifestRules", "state", "expressions", "routePaths", "format", "i18n", "templates", "keyboard", "settings",
     "framework", "startup", "routes", "pages", "endpoints", "app", "testing", "helpers",
   ];
   const DEPENDENCY_KINDS = ["component", "helper"];

@@ -31,12 +31,18 @@
     return defaults;
   }
 
+  // A value with every {{placeholder}} filled, or "" when one has no value
+  // yet (the caller then falls back to the plain title / site default, so a
+  // half-filled " · My Site" never shows).
   function fill(text, data) {
     if (typeof text !== "string") return text;
-    return text.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => {
+    let missing = false;
+    const result = text.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => {
       const value = key.split(".").reduce((v, k) => (v == null ? undefined : v[k]), data || {});
+      if (value == null || value === "") missing = true;
       return value == null ? "" : String(value);
     });
+    return missing ? "" : result;
   }
 
   function absolute(url) {

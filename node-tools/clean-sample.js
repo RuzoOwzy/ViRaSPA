@@ -23,6 +23,7 @@ const SAMPLE_PATHS = [
   "app/pages/change-credentials",
   "app/pages/forbidden",
   "app/pages/live-demo",
+  "app/pages/person",
   "app/i18n",
   "tests",
   "app/components/nav-bar",

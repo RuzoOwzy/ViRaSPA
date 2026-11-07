@@ -213,12 +213,18 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
   }
 
   // The release stamp (written in step 5; the bundle's preloads need its token).
+  // The routes go in too, so a backend in any language can do head injection
+  // for dynamic pages (README "Dynamic pages") from this one JSON file.
+  const { routes: appRoutes } = routesLib.loadRoutes(siteFolder);
   const releaseInfo = {
     token: stamp(),
     releasedAt: new Date().toISOString(),
     app: project.projectName || "",
     environment: target.environment || "",
     frameworkVersion: site.frameworkVersion(siteFolder),
+    routes: appRoutes
+      .filter((r) => r.path)
+      .map((r) => ({ path: r.path, name: r.name, title: r.title || "", private: routesLib.isPrivate(r), head: r.head || {} })),
   };
 
   // 4b. Bundle.
@@ -235,8 +241,7 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
 
   // 5. Release stamp and server rules.
   release["release.json"] = Buffer.from(JSON.stringify(releaseInfo, null, 2) + "\n", "utf8");
-  const { routes } = routesLib.loadRoutes(siteFolder);
-  const knownPaths = routes.filter((r) => r.path).map((r) => routesLib.normalizePath(r.path));
+  const knownPaths = appRoutes.filter((r) => r.path).map((r) => routesLib.normalizePath(r.path));
   const rules = serverRules.generate(target.serverType, knownPaths);
   let besideFiles = [];
   if (rules && rules.inSite) release[rules.fileName] = Buffer.from(rules.content, "utf8");

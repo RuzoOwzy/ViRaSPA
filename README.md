@@ -28,6 +28,7 @@ node-tools/           <- command-line tools (Node.js), outside the served folder
   deploy.js           <- copies a release to a server folder or .zip, with environments and rollback
   bundle.js           <- optional faster copy: bundles, packed templates, compaction, preloads
   check-server.js     <- checks that a real web server serves a deployed site correctly
+server-side/          <- optional: head injection for dynamic pages (Node lookups, ASP.NET Core)
   create-project.js   <- starts a new project
   clean-sample.js     <- removes the sample app from a copy of this repository
   stamp.js            <- for publishers: writes file lists and checksums into manifests
@@ -469,7 +470,24 @@ Routes live in `app/config/routes.js`. Each one maps a URL path to a page folder
 | `requires` | `{ privileges: [...], match: "all" \| "any", roles: [...] }` needs those privileges or roles |
 | `keepAlive` | `true` keeps the page's DOM and state when the user leaves, so coming back is instant. At most `settings.pageCache.maxPages` (default 5) pages are kept; the oldest goes first. Private pages are dropped on sign-out. |
 | `native` | `true` for a plain page (see above) |
-| `prerender` | `true`: `prerender.js` writes a ready-made copy (public routes only) |
+| `prerender` | `true`: `prerender.js` writes a ready-made copy (public routes without parameters only) |
+| `i18n` | `true`: the page has its own translations, one file per language except the default; or a list such as `["en", "sw"]` |
+
+**Parameters.** A segment written `:name` matches any one segment, and the page gets the value:
+
+```js
+{ path: "/customers/:id", name: "customer", page: "app/pages/customer", head: { title: "{{name}} · VSales" } }
+```
+
+- **In the page:** `this.params.id` is `"42"` at `/customers/42` (URL-decoded, letter case kept); `this.query` holds the query string (`URLSearchParams`). Native pages get `event.detail.params` in their `viraspa:pageCreated` and `pageShown` events.
+- **Order doesn't matter:** a route without parameters wins, so `/customers/new` beats `/customers/:id`.
+- **Head placeholders** are filled from the parameters first, then from `this.setHeadData(...)`. A value whose placeholder has no value yet falls back to the route's `title` (or the site's default), so a half-filled title never shows.
+- **Menus** leave such routes out (they have no single address); link to them yourself, e.g. `href="customers/42"`.
+- **`keepAlive`** keeps one page per address (`/customers/1` and `/customers/2` separately).
+- **Prerendering** skips them; for link previews see [Dynamic pages](#dynamic-pages-profiles-products). The dev server, the server rules and `check-server.js` know them.
+- **One set of matching rules** for the browser and the tools: `Viraspa.routePaths` (`match`, `build`, `hasParams`).
+
+The sample's `/people/:id` page shows a person from the demo API (open one from Home).
 
 **The guard** decides whether a route may open. The default, `Viraspa.session.guard`:
 
@@ -498,7 +516,7 @@ How navigation behaves:
 - **Wrong URLs** show the not-found page. Once `prerender.js` has written `prerendered/routes.json`, `serve.js` and the server rules from `deploy.js` also answer them with status 404.
 - **A misconfigured route** logs a clear console error and shows the not-found page.
 
-`index.html` has `<base href="/">`, so relative paths always resolve from the site root. If the app is served from a sub-folder, change it to that folder.
+`index.html` has `<base href="/">`, so relative paths always resolve from the site root. If the app is served from a sub-folder, change it to that folder (see [Serving from a sub-folder](#serving-from-a-sub-folder)).
 
 ### Endpoints
 
@@ -804,13 +822,17 @@ node node-tools/prerender.js --live-site-address https://vsales.example.com
 
 ### Dynamic pages (profiles, products…)
 
-Pages whose data changes, like `/profile/amina`, can't be prerendered. The standard answer is **head injection at request time** by whatever server serves `index.html`, in any backend language:
+Pages whose data changes, like `/people/3` (route `/people/:id`), can't be prerendered. Link previews (WhatsApp, Slack, social sites) and search engines still need their title and image, which they read from the HTML **without running JavaScript**. The answer is **head injection** by the server that answers with `index.html`:
 
-1. A request for `/profile/amina` arrives.
-2. The server looks up the public profile and inserts its `<title>`, description and `og:image` into a copy of `index.html`, using the same tags `prerender.js` writes. A private profile gets only generic tags, so nothing private leaks.
-3. A preview bot reads those tags; people get the normal app, which fills the same values with `this.setHeadData(...)`.
+1. A request for `/people/3` arrives.
+2. The server matches the route, asks your **lookup** for the public data (`{ name: "Clementine Bauch", company: "…" }`), fills the route's head templates (`"{{name}} · ViRaSPA Sample"`) and puts the tags into a copy of `index.html`: title, description, preview image, canonical, Open Graph and Twitter. A lookup that finds nothing makes the answer a 404; private routes never get page details; a lookup that fails gives the plain tags, never an error page.
+3. A preview bot reads those tags; people get the normal app, which fills the same templates in the browser.
 
-The route declares the placeholders (`head: { title: "{{name}} on VibeNet" }`), so the frontend and the server agree on one source. A ready-made Node reference hook is planned for the next plan.
+One source: the route's `head` templates serve the browser, the Node helper and the ASP.NET Core reference alike.
+
+- **Node:** `node-tools/lib/head-injector.js` (`createHeadInjector({ siteFolder, siteAddress, lookups })`, for any Node server). Try it with the dev server: `node node-tools/serve.js --head-lookups server-side/head-lookups.js`, then open `/people/3` with "view source".
+- **ASP.NET Core:** [`server-side/aspnetcore/ViraspaSite.cs`](server-side/aspnetcore/ViraspaSite.cs), one file: `app.UseViraspaSite(options)` serves a deployed release with the same rules plus head injection, reading the routes from `release.json` (which `deploy.js` writes).
+- **Other backends:** read `routes` from `release.json` (`path`, `name`, `title`, `private`, `head`) and follow [server-side/README.md](server-side/README.md).
 
 ## Deploying: deploy.js
 

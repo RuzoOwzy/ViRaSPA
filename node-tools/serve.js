@@ -8,6 +8,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { defineTool } = require("./lib/options");
+const { routePattern } = require("./lib/routes");
 
 const tool = defineTool({
   name: "serve.js",
@@ -17,6 +18,7 @@ const tool = defineTool({
     "  - the SPA fallback: a path without a file extension gets index.html, so the router can show the page;",
     "  - prerendered pages: /about is answered from prerendered/about/index.html when that file exists;",
     "  - real 404s: with prerendered/routes.json present, unknown addresses get index.html with status 404;",
+    "  - with --head-lookups <file>, app pages get their own head tags (title, description, preview image).",
     "  - Cache-Control: no-cache plus ETags, so the browser always gets your latest edits cheaply;",
     "  - app/project-viraspa.json and dot-files are never served (they may hold local paths).",
   ].join("\n"),
@@ -35,6 +37,13 @@ const tool = defineTool({
       description: 'The address to listen on. Use "0.0.0.0" to allow other devices on your network.',
     },
     { key: "logRequests", type: "boolean", default: false, description: "Print one line per request." },
+    {
+      key: "headLookups",
+      type: "string",
+      valueName: "file",
+      default: "",
+      description: "A .js file with head lookups for dynamic pages (README \"Dynamic pages\"): app pages get their title, description and preview image in index.html.",
+    },
   ],
   examples: [
     "node node-tools/serve.js",
@@ -78,8 +87,15 @@ const MIME = {
 
 const NEVER_SERVED = [/(^|\/)\./, /^\/app\/project-viraspa\.json$/i];
 
-function createServer({ siteFolder, logRequests, usePrerendered = true }) {
+function createServer({ siteFolder, logRequests, usePrerendered = true, headLookups = "" }) {
   const root = path.resolve(siteFolder);
+  // Optional head injection for app pages (node-tools/lib/head-injector.js).
+  let injector = null;
+  if (headLookups) {
+    const loaded = require(path.resolve(headLookups));
+    const { createHeadInjector } = require("./lib/head-injector");
+    injector = createHeadInjector({ siteFolder: root, siteAddress: loaded.siteAddress || "", lookups: loaded.lookups || loaded, reload: true });
+  }
 
   // prerendered/routes.json (written by prerender.js) lists the app's known
   // routes: other extensionless paths get index.html with a 404 status, so
@@ -88,7 +104,7 @@ function createServer({ siteFolder, logRequests, usePrerendered = true }) {
     if (!usePrerendered) return null;
     try {
       const data = JSON.parse(fs.readFileSync(path.join(root, "prerendered", "routes.json"), "utf8"));
-      return new Set((data.routes || []).map(normalizeRoute));
+      return (data.routes || []).map((p) => routePattern(p)); // "/people/:id" matches /people/3
     } catch {
       return null;
     }
@@ -141,7 +157,7 @@ function createServer({ siteFolder, logRequests, usePrerendered = true }) {
     return status;
   }
 
-  function handle(req, res) {
+  async function handle(req, res) {
     if (req.method !== "GET" && req.method !== "HEAD") {
       res.setHeader("Allow", "GET, HEAD");
       return sendText(res, 405, "Method not allowed");
@@ -170,6 +186,15 @@ function createServer({ siteFolder, logRequests, usePrerendered = true }) {
     const stat = statFile(target);
     if (stat) return sendFile(req, res, target, stat);
 
+    if (isPage && injector) {
+      const result = await injector(urlPath);
+      if (result) {
+        res.writeHead(result.status, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache", "X-Content-Type-Options": "nosniff" });
+        res.end(req.method === "HEAD" ? undefined : result.html);
+        return result.status;
+      }
+    }
+
     if (isPage) {
       // index.html for the client-side router - with status 404 when the
       // known-routes list says the address doesn't exist. (A missing file
@@ -177,7 +202,7 @@ function createServer({ siteFolder, logRequests, usePrerendered = true }) {
       const index = path.join(root, "index.html");
       const indexStat = statFile(index);
       const known = knownRoutes();
-      const status = known && !known.has(normalizeRoute(urlPath)) ? 404 : 200;
+      const status = known && !known.some((pattern) => pattern.test(urlPath)) ? 404 : 200;
       if (indexStat) return sendFile(req, res, index, indexStat, status);
     }
     return sendText(res, 404, `Not found: ${urlPath}`);
@@ -185,14 +210,14 @@ function createServer({ siteFolder, logRequests, usePrerendered = true }) {
 
   return http.createServer((req, res) => {
     const started = Date.now();
-    let status;
-    try {
-      status = handle(req, res);
-    } catch (err) {
-      console.error(err);
-      status = sendText(res, 500, "Server error");
-    }
-    if (logRequests) console.log(`${status} ${req.method} ${req.url} (${Date.now() - started} ms)`);
+    handle(req, res)
+      .catch((err) => {
+        console.error(err);
+        return res.headersSent ? 500 : sendText(res, 500, "Server error");
+      })
+      .then((status) => {
+        if (logRequests) console.log(`${status} ${req.method} ${req.url} (${Date.now() - started} ms)`);
+      });
   });
 }
 

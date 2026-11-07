@@ -38,6 +38,18 @@ window.Viraspa.routes = [
     ],
   },
   {
+    // A route with a parameter: /people/1, /people/2... (this.params.id).
+    path: "/people/:id",
+    name: "person",
+    page: "app/pages/person",
+    title: "Person · ViRaSPA",
+    head: {
+      title: "{{name}} · ViRaSPA Sample",
+      description: "{{name}} works at {{company}}. A sample of a page with a parameter.",
+    },
+    layout: "public",
+  },
+  {
     path: "/features",
     name: "features",
     page: "app/pages/features",

@@ -6,9 +6,13 @@
   // Pages work with the normal `document` (no Shadow DOM): page CSS is
   // switched on only while the page is shown.
   class Page {
-    constructor(container, route, { signal, display, setHead } = {}) {
+    constructor(container, route, { signal, display, setHead, params } = {}) {
       this.container = container;
       this.route = route;
+      // The route's parameters: for path "/customers/:id" at /customers/42,
+      // this.params is { id: "42" }. (The query string: this.query.)
+      this.params = Object.freeze({ ...(params || {}) });
+      this.query = new URLSearchParams(location.search);
       this._setHead = setHead || (() => {});
       // Aborted when the user leaves this page (or a newer navigation wins
       // before it is shown) - pass it to fetch/call to cancel requests.

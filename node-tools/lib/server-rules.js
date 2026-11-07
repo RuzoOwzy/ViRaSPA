@@ -15,10 +15,12 @@
 const SERVER_TYPES = ["iis", "apache", "nginx", "none"];
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+// A route path as a regular expression body: "/people/:id" -> "/people/[^/]+".
+const pathRegex = (p) => p.split("/").map((s) => (/^:[A-Za-z_][A-Za-z0-9_]*$/.test(s) ? "[^/]+" : escapeRegex(s))).join("/");
 
 function knownRoutesPattern(knownPaths) {
   // "/" plus each path, e.g. ^/(about|contact|users)?/?$
-  const parts = knownPaths.filter((p) => p !== "/").map((p) => escapeRegex(p.replace(/^\/+/, "")));
+  const parts = knownPaths.filter((p) => p !== "/").map((p) => pathRegex(p.replace(/^\/+/, "")));
   return parts.length ? `^/(${parts.join("|")})?/?$` : "^/$";
 }
 
@@ -136,7 +138,7 @@ RewriteRule ^[^.]*$ index.html [L]
 // nginx needs two pieces: maps (http { } level) and the site rules (server
 // { } level), written as two files to include.
 function nginxHttp(knownPaths) {
-  const entries = ["/", ...knownPaths.filter((p) => p !== "/")].map((p) => `    "~*^${escapeRegex(p)}/?$" 1;`).join("\n");
+  const entries = ["/", ...knownPaths.filter((p) => p !== "/")].map((p) => `    "~*^${pathRegex(p)}/?$" 1;`).join("\n");
   return `# Written by node-tools/deploy.js for a ViRaSPA site.
 # Include this file in the http { } block (nginx.conf), once.
 

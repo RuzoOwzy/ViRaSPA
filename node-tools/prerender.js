@@ -63,7 +63,7 @@ const tool = defineTool({
 const escapeAttr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 // index.html + one page's head tags.
-function withHeadTags(indexHtml, head) {
+function withHeadTags(indexHtml, head, { by = "node-tools/prerender.js" } = {}) {
   let html = indexHtml.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeAttr(head.title)}</title>`);
   if (/<meta\s+name="description"[^>]*>/i.test(html)) {
     html = html.replace(/<meta\s+name="description"[^>]*>/i, `<meta name="description" content="${escapeAttr(head.description)}">`);
@@ -80,7 +80,7 @@ function withHeadTags(indexHtml, head) {
     head.description && `<meta name="twitter:description" content="${escapeAttr(head.description)}" data-vs-head>`,
     head.image && `<meta name="twitter:image" content="${escapeAttr(head.image)}" data-vs-head>`,
   ].filter(Boolean);
-  return html.replace(/<\/head>/i, `  <!-- Prerendered by node-tools/prerender.js -->\n  ${tags.join("\n  ")}\n</head>`);
+  return html.replace(/<\/head>/i, `  <!-- ${by === "node-tools/prerender.js" ? "Prerendered by" : "Head tags by"} ${by} -->\n  ${tags.join("\n  ")}\n</head>`);
 }
 
 function findBrowser(explicit) {
@@ -144,7 +144,8 @@ async function prerender({ siteFolder, options, log = console.log }) {
     : null;
   const selected = routes.filter((r) => r.path && (wanted ? wanted.includes(routesLib.normalizePath(r.path)) : r.prerender));
   for (const r of selected.filter(routesLib.isPrivate)) log(`  skipped ${r.path}: private pages are never prerendered.`);
-  const pages = selected.filter((r) => !routesLib.isPrivate(r));
+  for (const r of selected.filter((x) => routesLib.hasParams(x.path))) log(`  skipped ${r.path}: a route with parameters has no single page to prerender (see README "Dynamic pages").`);
+  const pages = selected.filter((r) => !routesLib.isPrivate(r) && !routesLib.hasParams(r.path));
   if (wanted) {
     for (const p of wanted) if (!routes.some((r) => r.path && routesLib.normalizePath(r.path) === p)) log(`  skipped ${p}: no such route.`);
   }
