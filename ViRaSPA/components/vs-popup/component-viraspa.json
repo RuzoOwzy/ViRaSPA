@@ -1,0 +1,34 @@
+{
+  "name": "vs-popup",
+  "tag": "vs-popup",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A modal popup on the native dialog, plus Viraspa.popup alert/confirm/prompt/flash/drop/open returning promises.",
+  "script": "vs-popup.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-72012ca9460f741dba3a6e46f39c2e4ce73f52b802c2c956cfe836105c17c68a"
+    },
+    {
+      "path": "vs-popup.css",
+      "checksum": "sha256-39eae6f78f9314ef239c9526e9b7c29032d3f798c67df8c9caef46bb5ef399fb"
+    },
+    {
+      "path": "vs-popup.html",
+      "checksum": "sha256-2de2080b865ee2cce4edda848e46354c205ccc31db79188e6b199a7b254e8432"
+    },
+    {
+      "path": "vs-popup.js",
+      "checksum": "sha256-eac27ef41408e82650f51da9ee34997ea2687dce2e524e00b02cb961ddd6c7a1"
+    }
+  ]
+}

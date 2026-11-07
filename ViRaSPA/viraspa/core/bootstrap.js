@@ -49,6 +49,9 @@
 
     // Official helpers, then extensions, so the app's own files can use them.
     await Promise.all((startup.helpers || []).map((name) => Viraspa.core.components.loadHelper(name)));
+    // Components whose API the app uses from the start (e.g. "vs-popup" for
+    // Viraspa.popup); other components still load when their tag appears.
+    await Promise.all((startup.components || []).map((tag) => Viraspa.core.components.load(tag)));
     for (const name of startup.extensions || []) {
       await Viraspa.core.components.loadExtension(name);
     }

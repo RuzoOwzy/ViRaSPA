@@ -1,0 +1,83 @@
+<div class="x-container page-showcase">
+  <h1>Showcase</h1>
+  <p class="text-muted">Every official component, live. Each is installed one by one from ViRaSPA-Extensions and loads the first time its tag appears.</p>
+
+  <section>
+    <h2>Inputs</h2>
+    <form class="demo" id="inputs-form" data-entry-mode>
+      <div class="field"><label for="sc-amount">Amount (TZS)</label><vs-input-number id="sc-amount" name="amount" decimals="2" min="0" step="500" prefix="TZS" value="1250000" required></vs-input-number></div>
+      <div class="field"><label for="sc-qty">Quantity</label><vs-input-number id="sc-qty" name="qty" min="1" max="99" value="3" spin></vs-input-number></div>
+      <div class="field"><label for="sc-password">Password</label><vs-input-password id="sc-password" name="password" autocomplete="new-password" minlength="8" strength></vs-input-password></div>
+      <div class="field"><label for="sc-region">Region</label><vs-select id="sc-region" name="region" placeholder="Choose a region" required clearable>
+        <option value="dar">Dar es Salaam</option><option value="aru">Arusha</option><option value="dod">Dodoma</option><option value="mwa">Mwanza</option>
+        <optgroup label="South"><option value="mbe">Mbeya</option><option value="iri">Iringa</option><option value="mtw" disabled>Mtwara (closed)</option></optgroup>
+        <option value="tan">Tanga</option><option value="kil">Kilimanjaro</option>
+      </vs-select></div>
+      <div class="field"><label for="sc-tags">Tags</label><vs-select id="sc-tags" name="tags" multiple filter="off"><option value="vip">VIP</option><option value="new">New</option><option value="debt">Has debt</option></vs-select></div>
+      <div class="field"><label for="sc-customer">Customer (server)</label><vs-select-search id="sc-customer" name="customer" columns="email" placeholder="Type a name…"></vs-select-search></div>
+      <div class="field"><label for="sc-product">Product (list)</label><vs-select-search id="sc-product" name="product" columns="price" placeholder="Rice, oil…"></vs-select-search></div>
+      <div class="field"><label for="sc-due">Due date</label><vs-input-date id="sc-due" name="due" min="2026-01-01" required></vs-input-date></div>
+      <div class="field"><label for="sc-month">Month</label><vs-input-date id="sc-month" name="month" type="month"></vs-input-date></div>
+      <div class="field"><label for="sc-meeting">Meeting</label><vs-input-date id="sc-meeting" name="meeting" type="datetime"></vs-input-date></div>
+      <div class="field"><label for="sc-color">Label colour</label><vs-input-color id="sc-color" name="color" value="#1e8449"></vs-input-color></div>
+      <div class="field wide"><label for="sc-note">Note</label><vs-textarea id="sc-note" name="note" rows="2" max-rows="6" maxlength="200" show-count placeholder="It grows as you type…"></vs-textarea></div>
+      <div class="field wide"><button type="submit" class="plain">Show the form's values</button> <span class="output" id="inputs-output"></span></div>
+    </form>
+  </section>
+
+  <section>
+    <h2>Popups</h2>
+    <div class="demo">
+      <button type="button" class="plain" data-demo="alert">Alert</button>
+      <button type="button" class="plain" data-demo="confirm">Confirm</button>
+      <button type="button" class="plain" data-demo="prompt">Prompt</button>
+      <button type="button" class="plain" data-demo="flash">Flash</button>
+      <button type="button" class="plain" data-demo="drop">Drop</button>
+      <button type="button" class="plain" data-demo="custom">Custom popup</button>
+      <span class="output" id="popup-output"></span>
+      <vs-popup id="sc-popup" heading="Edit customer" size="small">
+        <p>Any content goes here, with its own buttons.</p>
+        <label>Name <input value="Amina Juma"></label>
+        <div slot="footer" class="vs-popup-actions"><button type="button" data-close>Cancel</button><button type="button" data-close="save" class="primary">Save</button></div>
+      </vs-popup>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tabs</h2>
+    <vs-tabs remember="showcase-tabs">
+      <section label="General" icon="lucide:user"><p>Tabs from labelled child panels. Arrow keys move between tabs; the last tab is remembered.</p></section>
+      <section label="Addresses" icon="lucide:map-pin"><p>Dar es Salaam, Arusha and Dodoma.</p></section>
+      <section label="History" lazy><template><p>This panel's content was created the first time it was shown (lazy).</p></template></section>
+      <section label="Disabled" disabled><p>Never shown.</p></section>
+    </vs-tabs>
+  </section>
+
+  <section>
+    <h2>Tooltip and context menu</h2>
+    <div class="demo">
+      <button type="button" class="plain" id="sc-stock">Stock levels</button>
+      <vs-tooltip for="sc-stock" placement="bottom"><strong>Dar es Salaam:</strong> 120 · <strong>Arusha:</strong> 35 · <a href="data-entry">Enter a sale</a></vs-tooltip>
+      <div class="menu-target" id="sc-menu-target" tabindex="0">Right-click here (or focus it and press Shift+F10, or long-press on a phone).</div>
+      <vs-context-menu for="#sc-menu-target">
+        <button value="open" data-icon="lucide:external-link" data-shortcut="Enter">Open</button>
+        <button value="edit" data-icon="lucide:pencil" data-shortcut="F2">Edit</button>
+        <hr>
+        <button value="delete" data-icon="lucide:trash-2" class="danger">Delete</button>
+      </vs-context-menu>
+      <span class="output" id="menu-output"></span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Progress and countdown</h2>
+    <div class="demo">
+      <vs-progress value="40" show-value class="wide"></vs-progress>
+      <vs-progress class="wide" label="Loading"></vs-progress>
+      <vs-progress type="ring" value="3" max="8" show-value="count"></vs-progress>
+      <vs-progress type="ring" label="Working"></vs-progress>
+      <vs-progress type="dots" label="Loading orders"></vs-progress>
+      <span>Offer ends in <vs-countdown seconds="125" finished-text="Offer ended"></vs-countdown></span>
+    </div>
+  </section>
+</div>

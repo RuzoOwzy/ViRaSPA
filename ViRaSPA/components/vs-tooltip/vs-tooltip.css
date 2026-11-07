@@ -1,0 +1,19 @@
+:host {
+  display: contents;
+}
+
+.box {
+  max-width: min(22rem, calc(100vw - 8px));
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: 8px;
+  background: var(--vs-tooltip-rich-background, var(--vs-color-surface, #fff));
+  color: var(--vs-color-text);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.box:not(:popover-open) {
+  display: none;
+}

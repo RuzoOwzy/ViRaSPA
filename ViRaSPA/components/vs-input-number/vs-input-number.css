@@ -1,0 +1,81 @@
+:host {
+  display: inline-block;
+  min-width: 8rem;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.field {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  border: 1px solid var(--vs-input-border, var(--vs-color-border));
+  border-radius: var(--vs-radius);
+  background: var(--vs-input-background, var(--vs-color-surface, #fff));
+}
+
+.field:focus-within {
+  outline: 2px solid var(--vs-color-focus);
+  outline-offset: 1px;
+}
+
+:host([aria-invalid="true"]) .field {
+  border-color: var(--vs-color-danger, #c0392b);
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--vs-input-padding, 0.45rem 0.6rem);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: var(--vs-input-number-align, right);
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+input[readonly] {
+  background: var(--vs-input-readonly-background, transparent);
+}
+
+.prefix,
+.suffix {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  color: var(--vs-color-text-muted);
+}
+
+.prefix:empty,
+.suffix:empty {
+  display: none;
+}
+
+.spin {
+  display: flex;
+  flex-direction: column;
+  border-inline-start: 1px solid var(--vs-color-border);
+}
+
+.spin[hidden] {
+  display: none;
+}
+
+.spin button {
+  flex: 1;
+  padding: 0 0.45rem;
+  border: 0;
+  background: transparent;
+  color: var(--vs-color-text-muted);
+  font-size: 0.55rem;
+  line-height: 1;
+  touch-action: none;
+}
+
+.spin button:hover {
+  background: var(--vs-color-surface-muted, #eef2f0);
+}

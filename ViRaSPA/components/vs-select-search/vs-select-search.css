@@ -1,0 +1,118 @@
+:host {
+  display: inline-block;
+  min-width: 14rem;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.field {
+  position: relative;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--vs-input-padding, 0.45rem 0.6rem);
+  padding-inline-end: 2rem;
+  border: 1px solid var(--vs-input-border, var(--vs-color-border));
+  border-radius: var(--vs-radius);
+  background: var(--vs-input-background, var(--vs-color-surface, #fff));
+  color: inherit;
+  font: inherit;
+}
+
+input:focus {
+  outline: 2px solid var(--vs-color-focus);
+  outline-offset: 1px;
+}
+
+:host([aria-invalid="true"]) input {
+  border-color: var(--vs-color-danger, #c0392b);
+}
+
+.icon {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 2px solid var(--vs-color-text-muted);
+  border-radius: 50%;
+  transform: translateY(-60%);
+  pointer-events: none;
+}
+
+.icon::after {
+  content: "";
+  position: absolute;
+  right: -0.32rem;
+  bottom: -0.32rem;
+  width: 0.35rem;
+  height: 2px;
+  background: var(--vs-color-text-muted);
+  transform: rotate(45deg);
+}
+
+.panel {
+  box-sizing: border-box;
+  max-height: min(22rem, 60vh);
+  overflow-y: auto;
+  padding: 0.25rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-surface, #fff);
+  color: var(--vs-color-text);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.panel:not(:popover-open) {
+  display: none;
+}
+
+.option {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.option.active {
+  background: var(--vs-select-active, var(--vs-color-surface-muted, #e8efec));
+}
+
+.label {
+  flex: 1;
+}
+
+.col {
+  color: var(--vs-color-text-muted);
+  font-size: 0.875em;
+  white-space: nowrap;
+}
+
+.status {
+  padding: 0.5rem 0.6rem;
+  color: var(--vs-color-text-muted);
+}
+
+.status[hidden] {
+  display: none;
+}
+
+.status[data-kind="error"] {
+  color: var(--vs-color-danger, #c0392b);
+}
+
+.retry {
+  margin-inline-start: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: var(--vs-radius);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}

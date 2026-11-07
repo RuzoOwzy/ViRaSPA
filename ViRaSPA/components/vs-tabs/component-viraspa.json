@@ -1,0 +1,34 @@
+{
+  "name": "vs-tabs",
+  "tag": "vs-tabs",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Tabs from labelled child panels: ARIA keyboard support, remembered tab, lazy panels.",
+  "script": "vs-tabs.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-acf2eccf2eeea694abca253c9ff32a3a82ca424fa1b0f7b06bcae0387aab065a"
+    },
+    {
+      "path": "vs-tabs.css",
+      "checksum": "sha256-dd840e3f669816d46369f736bb2c090dfd8d94f7e5a83a4ebfd7ea8a5957bcb8"
+    },
+    {
+      "path": "vs-tabs.html",
+      "checksum": "sha256-4cdb41153467f3b8d2969fe14135ac2a17225b5995cff5c45817960918ae2b6a"
+    },
+    {
+      "path": "vs-tabs.js",
+      "checksum": "sha256-82bde45d20aef1905b7cef46a377d5e4471878e91062025e30e370632dcbba2c"
+    }
+  ]
+}

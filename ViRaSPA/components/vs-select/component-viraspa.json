@@ -1,0 +1,34 @@
+{
+  "name": "vs-select",
+  "tag": "vs-select",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A select for a fixed list: filter box, multiple choice with chips, groups, type-ahead, full keyboard support; works in forms.",
+  "script": "vs-select.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-970fa98b1a474f7e077f04c471a34b2b14e5b534eef29aed29f9f1fbd60b6386"
+    },
+    {
+      "path": "vs-select.css",
+      "checksum": "sha256-5677422d3cf2d40f2967672c8031eca767345ee972ce5e620058ed8f2c30f6c8"
+    },
+    {
+      "path": "vs-select.html",
+      "checksum": "sha256-c6507269416298be2836055b1ebd3927743e402cb85607e56ef5906ebdc74117"
+    },
+    {
+      "path": "vs-select.js",
+      "checksum": "sha256-02a551d602b9a79fe12da3e8f861f16b48884ba26474a6f4483209a97b4b69a6"
+    }
+  ]
+}

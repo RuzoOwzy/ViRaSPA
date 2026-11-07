@@ -1,0 +1,127 @@
+:host {
+  display: block;
+  --vs-progress-color-used: var(--vs-progress-color, var(--vs-color-primary));
+  --vs-progress-track-used: var(--vs-progress-track, var(--vs-color-border));
+}
+
+:host([type="ring"]),
+:host([type="dots"]) {
+  display: inline-block;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bar,
+.ring,
+.dots {
+  display: none;
+}
+
+/* ---- bar ---- */
+.progress[data-type="bar"] .bar {
+  position: relative;
+  display: block;
+  flex: 1;
+  height: var(--vs-progress-size, 6px);
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--vs-progress-track-used);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--vs-progress-color-used);
+  transform: scaleX(var(--vs-progress-ratio, 0));
+  transform-origin: 0 50%;
+  transition: transform 0.3s ease;
+}
+
+.progress[data-indeterminate] .fill {
+  width: 40%;
+  transform: none;
+  animation: vs-progress-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes vs-progress-slide {
+  from { left: -40%; }
+  to { left: 100%; }
+}
+
+/* ---- ring ---- */
+.progress[data-type="ring"] .ring {
+  display: block;
+  width: var(--vs-progress-size, 2.5rem);
+  height: var(--vs-progress-size, 2.5rem);
+  transform: rotate(-90deg);
+}
+
+.ring circle {
+  fill: none;
+  stroke-width: 3.5;
+}
+
+.ring .track {
+  stroke: var(--vs-progress-track-used);
+}
+
+.ring .arc {
+  stroke: var(--vs-progress-color-used);
+  stroke-linecap: round;
+  stroke-dasharray: calc(var(--vs-progress-ratio, 0) * 100) 100;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.progress[data-indeterminate] .ring {
+  animation: vs-progress-spin 1s linear infinite;
+}
+
+.progress[data-indeterminate] .ring .arc {
+  stroke-dasharray: 25 100;
+}
+
+@keyframes vs-progress-spin {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+/* ---- dots ---- */
+.progress[data-type="dots"] .dots {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.dots span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--vs-progress-color-used);
+  animation: vs-progress-pulse 1.2s ease-in-out infinite;
+}
+
+.dots span:nth-child(2) { animation-delay: 0.15s; }
+.dots span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes vs-progress-pulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.text {
+  font-size: 0.85em;
+  color: var(--vs-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.text[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill, .ring, .dots span { animation-duration: 3s !important; }
+}

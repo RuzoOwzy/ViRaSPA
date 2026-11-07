@@ -1,0 +1,34 @@
+{
+  "name": "vs-context-menu",
+  "tag": "vs-context-menu",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A context menu for an element or a group of elements: right-click, long press, Menu key; full keyboard support.",
+  "script": "vs-context-menu.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-9991bdd095a6cc26b744442a1aa1fbc2fc0fc5e74c8776590ab8c7c5909f5bba"
+    },
+    {
+      "path": "vs-context-menu.css",
+      "checksum": "sha256-ac85974d460efe387131b0bf72351056964bac825b350cdcdae8600afd635b46"
+    },
+    {
+      "path": "vs-context-menu.html",
+      "checksum": "sha256-837a5ecc2f1f1440481c766e5954c005464ed7a3801fcb945a7a7f6696374a74"
+    },
+    {
+      "path": "vs-context-menu.js",
+      "checksum": "sha256-819f4fad121c7e3398e242050ae7fa0e21a1fc2afec8ae5b3e19d0c0f5a04d89"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "vs-input-number",
+  "tag": "vs-input-number",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A number field: the user's number format, typing and paste filtering, steps with keys or spin buttons, min/max, works in forms.",
+  "script": "vs-input-number.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-db6db22911030c5ef1a9dbd5fe3eaf89b227c130d2e7757d9d9c27722b9a4532"
+    },
+    {
+      "path": "vs-input-number.css",
+      "checksum": "sha256-3c06b9bdf23e373947161b6bd229457898144be55fe9a39282fc6f2a6b1bddeb"
+    },
+    {
+      "path": "vs-input-number.html",
+      "checksum": "sha256-eb1d66bbc6d02eab1239046481dd2da968059bcf3c8463a442950ad108038339"
+    },
+    {
+      "path": "vs-input-number.js",
+      "checksum": "sha256-97dd6ff5761ec13186d88ea31683680eaba2703b4023c7b4a3f9e6b46db8a484"
+    }
+  ]
+}

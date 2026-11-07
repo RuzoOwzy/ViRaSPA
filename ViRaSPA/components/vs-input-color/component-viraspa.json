@@ -1,0 +1,34 @@
+{
+  "name": "vs-input-color",
+  "tag": "vs-input-color",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A friendly colour picker: swatches, recent colours, hex field, the full picker and an eyedropper where supported.",
+  "script": "vs-input-color.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-6ff84a45af80bf363d1507a3edad526c0fcf6e36107e2883f97b1439449fcec6"
+    },
+    {
+      "path": "vs-input-color.css",
+      "checksum": "sha256-221f68e0ce37658b5bc2563c1aba55da0d03b80d8bb0dba3bd5065668df4f6c0"
+    },
+    {
+      "path": "vs-input-color.html",
+      "checksum": "sha256-579f8c3bf725390d2d1816675b2b12122ed1528a6ce8c2ccede99a3d644db6b6"
+    },
+    {
+      "path": "vs-input-color.js",
+      "checksum": "sha256-08b47561c8bbb307985d34f3a92ff521b7d21c57b2bbe5b32e7aa6d0b9d869d8"
+    }
+  ]
+}

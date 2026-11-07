@@ -136,7 +136,7 @@
     },
     {
       "path": "core/bootstrap.js",
-      "checksum": "sha256-93acfadd47ca7d36d24873ca4851f2d1de883a50bb45d3f5bdc6c3fa72f76965"
+      "checksum": "sha256-58903bc9fab9efad3969f9a4b23ee55317795aeabb1a0604044db6022b5ed211"
     },
     {
       "path": "core/busy.js",
@@ -148,7 +148,7 @@
     },
     {
       "path": "core/component.js",
-      "checksum": "sha256-0d76891f0d731a8f28c86eab537108675a8508160232a80ce1015e82d60ba139"
+      "checksum": "sha256-81d6f1a4f07388613375e735de13cad8658836d755f14cbdbd4c6b2b42542f7e"
     },
     {
       "path": "core/data.js",
@@ -248,7 +248,7 @@
     },
     {
       "path": "utility/dom.js",
-      "checksum": "sha256-38a1d33325776ea779ed6f9a328404ceede60374a4760a5160caa4b6d86a52a8"
+      "checksum": "sha256-df662bd656fe289fd3f6977b480206e8ec4c6dba4f9866bcdf609db9631b727c"
     },
     {
       "path": "viraspa.js",

@@ -29,6 +29,9 @@
     // Set to false when the folder has no .model.json / no .css file.
     static hasModel = true;
     static hasStyles = true;
+    // "full" mode: focusing the element (or clicking its <label>) focuses
+    // the first focusable thing inside - for form fields.
+    static delegatesFocus = false;
 
     constructor() {
       super();
@@ -46,7 +49,7 @@
       this.isolation = requested && allowed.includes(requested) ? requested : own;
       // Where the component's own content lives, in every mode: the shadow
       // root for "full", the element itself for "scoped" and "none".
-      this.componentRoot = this.isolation === "full" ? this.attachShadow({ mode: "open" }) : this;
+      this.componentRoot = this.isolation === "full" ? this.attachShadow({ mode: "open", delegatesFocus: Boolean(Class.delegatesFocus) }) : this;
       // The shadow root, only in "full" mode (null otherwise).
       this.documentShadow = this.isolation === "full" ? this.shadowRoot : null;
       // Resolves once the component has loaded (or failed to).
@@ -91,6 +94,20 @@
       if (Object.values(flags).some(Boolean)) this.internals.setValidity(flags, message || " ", anchor);
       else this.internals.setValidity({});
     }
+    // The text of this field's <label>s (or its aria-label), for the input
+    // inside its shadow root - a label outside can't name it directly.
+    labelText() {
+      if (this.hasAttribute("aria-label")) return this.getAttribute("aria-label");
+      const labels = this.internals && this.internals.labels ? [...this.internals.labels] : [];
+      return labels
+        .map((label) => {
+          const copy = label.cloneNode(true);
+          for (const hidden of copy.querySelectorAll("[aria-hidden='true']")) hidden.remove();
+          return copy.textContent.trim();
+        })
+        .filter(Boolean)
+        .join(" ");
+    }
     formDisabledCallback(disabled) {
       this.toggleAttribute("data-form-disabled", disabled);
       if (typeof this.onFormDisabled === "function") this.onFormDisabled(disabled);
@@ -114,8 +131,32 @@
       return Viraspa.keyboard.keymap(this.constructor.tag, defaults, this);
     }
 
+    // A property set on the element before its component was loaded (e.g.
+    // el.source = fn, or el.value = 3, before the tag was defined) is a plain
+    // property that would hide the component's own setter. It is applied
+    // through that setter now.
+    _upgradeProperties() {
+      for (const key of Object.keys(this)) {
+        let proto = Object.getPrototypeOf(this);
+        let descriptor = null;
+        while (proto && proto !== HTMLElement.prototype && !descriptor) {
+          descriptor = Object.getOwnPropertyDescriptor(proto, key);
+          proto = Object.getPrototypeOf(proto);
+        }
+        if (descriptor && descriptor.set) {
+          const value = this[key];
+          delete this[key];
+          this[key] = value;
+        }
+      }
+    }
+
     connectedCallback() {
       if (this._started) return;
+      if (!this._propertiesUpgraded) {
+        this._propertiesUpgraded = true;
+        this._upgradeProperties();
+      }
       this._started = true;
       this.setAttribute("data-vs-component", this.isolation);
       // Light-DOM children given by the user of the component, captured

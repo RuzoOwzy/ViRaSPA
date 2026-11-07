@@ -1,0 +1,69 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.wrap {
+  position: relative;
+}
+
+textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(var(--vs-textarea-line, 1.5em) + 1rem);
+  padding: var(--vs-input-padding, 0.45rem 0.6rem);
+  border: 1px solid var(--vs-input-border, var(--vs-color-border));
+  border-radius: var(--vs-radius);
+  background: var(--vs-input-background, var(--vs-color-surface, #fff));
+  color: inherit;
+  font: inherit;
+  line-height: var(--vs-textarea-line, 1.5);
+  resize: vertical;
+  field-sizing: content;
+}
+
+/* With field-sizing: the browser grows it; max-rows caps it. */
+:host(:not([max-rows])) textarea {
+  max-height: none;
+}
+
+:host([max-rows]) textarea {
+  max-height: calc(var(--vs-textarea-max-rows) * var(--vs-textarea-line, 1.5) * 1em + 1rem);
+}
+
+textarea:focus {
+  outline: 2px solid var(--vs-color-focus);
+  outline-offset: 1px;
+}
+
+:host([aria-invalid="true"]) textarea {
+  border-color: var(--vs-color-danger, #c0392b);
+}
+
+/* overlap: while focused, grow over the content below instead of pushing it. */
+:host([overlap][data-focused]) .wrap {
+  height: var(--vs-textarea-rest-height, auto);
+}
+
+:host([overlap][data-focused]) textarea {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.count {
+  margin-top: 0.2rem;
+  color: var(--vs-color-text-muted);
+  font-size: 0.8em;
+  text-align: end;
+}
+
+.count[hidden] {
+  display: none;
+}

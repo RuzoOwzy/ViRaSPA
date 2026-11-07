@@ -1,0 +1,34 @@
+{
+  "name": "vs-select-search",
+  "tag": "vs-select-search",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Type to search and choose from a list, a table or the server (debounced, cancelled, late answers ignored), with columns and free text.",
+  "script": "vs-select-search.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-db0e389e949c31e67175c81537a48ba97d3f8317ab44fe2c1fbb0ab18676d3ec"
+    },
+    {
+      "path": "vs-select-search.css",
+      "checksum": "sha256-acb31f19dd86f9fa07091f15cedbe5e0216bb03fdef74c8b52353623647590fa"
+    },
+    {
+      "path": "vs-select-search.html",
+      "checksum": "sha256-94b9637bd02bffe3ca4b1e8547cf1de83e0df7f53083d8d340230c321a224407"
+    },
+    {
+      "path": "vs-select-search.js",
+      "checksum": "sha256-9f1c5e1d05daea61a0f82c6b62c4864a61837090740317dd2eae55527b8129ee"
+    }
+  ]
+}

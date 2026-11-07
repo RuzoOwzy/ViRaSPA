@@ -1,0 +1,34 @@
+{
+  "name": "vs-input-date",
+  "tag": "vs-input-date",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A date field in the user's format with a calendar (days, months, years), min/max and disabled days; date, month or datetime.",
+  "script": "vs-input-date.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-fadb71caf0ccc172853a667e6f464a50ba543314e2bf421d019e969d41226ab4"
+    },
+    {
+      "path": "vs-input-date.css",
+      "checksum": "sha256-5115dbc9c7d0157fb69954197c29ed0452d614f716d9cf6efdf7c94187a9b747"
+    },
+    {
+      "path": "vs-input-date.html",
+      "checksum": "sha256-32836a03ec5c4361f1be179de5ca1a689b67fea86d1b78d8400027c39692cacf"
+    },
+    {
+      "path": "vs-input-date.js",
+      "checksum": "sha256-85ca94376ca442e67bca4b5cdd8b55b48bbcb4d8656a0619a9cf8d74c236d806"
+    }
+  ]
+}

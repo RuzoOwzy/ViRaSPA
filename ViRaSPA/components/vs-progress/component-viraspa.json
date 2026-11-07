@@ -1,0 +1,34 @@
+{
+  "name": "vs-progress",
+  "tag": "vs-progress",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Progress as a bar, a ring or dots, with a value or indeterminate, screen-reader friendly.",
+  "script": "vs-progress.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-f69da88cca70d37258aee750d1bf1ab957641939f6ac0b2aca9978790fec37e1"
+    },
+    {
+      "path": "vs-progress.css",
+      "checksum": "sha256-cd70425adce9e95a8269fa27d462986cf50cc1d8ce04ebf21d29dd7afc28ee00"
+    },
+    {
+      "path": "vs-progress.html",
+      "checksum": "sha256-3bd262de875bbc73f8fa7aa7d1f1f462af46a1713d9b0361c0c0e3aba4c91044"
+    },
+    {
+      "path": "vs-progress.js",
+      "checksum": "sha256-229237cd07433b1df3f3644a1746942d594c9977882fe55ca04696248e3bba56"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "vs-textarea",
+  "tag": "vs-textarea",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A text area that grows with its text, with max rows, an overlap mode, a character count and an optional submit key.",
+  "script": "vs-textarea.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-2980f209f63962c66e46acd90bfe98aafdc912fba0c58bbf5b67185cc46855db"
+    },
+    {
+      "path": "vs-textarea.css",
+      "checksum": "sha256-1c2850995d2371a42bb0a553c02199bad388283f0d82438b08d81cb3746ff124"
+    },
+    {
+      "path": "vs-textarea.html",
+      "checksum": "sha256-328fc09caf957c6fac8af12125324863271f84daae13bf5856e0659325886efa"
+    },
+    {
+      "path": "vs-textarea.js",
+      "checksum": "sha256-98482cc7c7355bc41c2960b26f9cd729f8f19d59a7ac43ee22712487121490bd"
+    }
+  ]
+}

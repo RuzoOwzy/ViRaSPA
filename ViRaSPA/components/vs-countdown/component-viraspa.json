@@ -1,0 +1,34 @@
+{
+  "name": "vs-countdown",
+  "tag": "vs-countdown",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A countdown to a moment or for a number of seconds, with a format and tick/finished events.",
+  "script": "vs-countdown.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-15bcd079e37ffed93f22850b0e85539c47f2ed57df65172f5455dd3f55abdfbd"
+    },
+    {
+      "path": "vs-countdown.css",
+      "checksum": "sha256-8fe42374263d255157059d94162b26aa58750354e6af87d3da1ceb2a8ed20a9d"
+    },
+    {
+      "path": "vs-countdown.html",
+      "checksum": "sha256-d5f8949a8e392a26702aa6aa4136ecd9a0b00adaaecb1ee2289ba434e88ed1cf"
+    },
+    {
+      "path": "vs-countdown.js",
+      "checksum": "sha256-bd3e4464cc67b48e039a334d447515fa79fc8a24496e06e0d9e5d47d9680a507"
+    }
+  ]
+}

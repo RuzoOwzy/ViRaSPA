@@ -11,6 +11,13 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N8 · Basic components
+
+- **13 official components** (ViRaSPA-Extensions): `vs-popup` (with `Viraspa.popup`), `vs-input-number`, `vs-input-date`, `vs-input-password`, `vs-input-color`, `vs-textarea`, `vs-select`, `vs-select-search`, `vs-tabs`, `vs-tooltip`, `vs-context-menu`, `vs-progress`, `vs-countdown`. All keyboard-complete with overridable keys; the inputs are form-associated.
+- **Framework additions they needed:** `static delegatesFocus` for components; `labelText()` (a field's `<label>` text for the input inside its shadow root); `Viraspa.utility.dom.position()` / `follow()` (drop-downs and menus next to their anchor, flipping when there's no room) and `uid()`; `startup.js` `components` (load chosen components at startup, e.g. `["vs-popup"]` for `Viraspa.popup`).
+- **Fixed in the framework:** a property set on an element before its component loaded (e.g. `el.source = fn`) hid the component's own setter; components now apply such properties through their setters when they start.
+- **Sample:** a `/showcase` page with every component live.
+
 ### Milestone N7 · Migration study and foundations
 
 - **[Migration inventory](plans/N7-migration-inventory.md):** the features of every old component and helper, from the newest sources, with what each new package keeps, improves or drops.

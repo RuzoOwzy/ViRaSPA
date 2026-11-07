@@ -6,6 +6,9 @@ window.Viraspa.startup = {
   // that your own code uses, e.g. ["forms"]. (Components load the helpers
   // they need by themselves.)
   helpers: [],
+  // Official components to load at startup because the app calls their API
+  // before their tag appears, e.g. ["vs-popup"] for Viraspa.popup.alert().
+  components: [],
   // Extensions installed in extensions/<name>/ (install.js add extension ...).
   extensions: [],
   groups: [

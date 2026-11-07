@@ -1,0 +1,34 @@
+{
+  "name": "vs-tooltip",
+  "tag": "vs-tooltip",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A tooltip with rich content (links, buttons) for another element: hover, focus, Escape.",
+  "script": "vs-tooltip.js",
+  "isolation": "full",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-a0621cd8bb366d318ecf5174d2cff3460d7da15bf393bb47d03d15baf6a5cb67"
+    },
+    {
+      "path": "vs-tooltip.css",
+      "checksum": "sha256-f681f1692043d02b9b94429498e228699e4aecb9f9819ccdb0ed641323ecea2b"
+    },
+    {
+      "path": "vs-tooltip.html",
+      "checksum": "sha256-d310fe6d29778ff477c52b2b724cdc1a949f824d794c1454960faa0834b971f2"
+    },
+    {
+      "path": "vs-tooltip.js",
+      "checksum": "sha256-889e61083802fffd2ed2e67e4b7a0325f6ba466e842df267994885a2d305142e"
+    }
+  ]
+}

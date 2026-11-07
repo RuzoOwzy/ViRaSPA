@@ -1,0 +1,44 @@
+.page-showcase section {
+  margin: 0 0 2.5rem;
+}
+
+.page-showcase .demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--vs-color-border);
+  border-radius: var(--vs-radius);
+}
+
+.page-showcase .field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 12rem;
+}
+
+.page-showcase .wide {
+  flex: 1 1 100%;
+}
+
+.page-showcase .output {
+  color: var(--vs-color-text-muted);
+  font-size: 0.9em;
+}
+
+.page-showcase button.plain {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-surface, #fff);
+  font: inherit;
+  cursor: pointer;
+}
+
+.page-showcase .menu-target {
+  padding: 1.5rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-surface-muted, #f2f4f3);
+}

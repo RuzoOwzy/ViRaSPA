@@ -1,0 +1,34 @@
+{
+  "name": "vs-input-password",
+  "tag": "vs-input-password",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A password field with a show/hide button, a Caps Lock warning and an optional strength meter; password managers find it.",
+  "script": "vs-input-password.js",
+  "isolation": "scoped",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-6c3c45742d37fabbe81c3a35676ea82fa22b875c514ce91caec582d0d8b174b0"
+    },
+    {
+      "path": "vs-input-password.css",
+      "checksum": "sha256-04901d3ab0b3c80ad4d8ea748644d73c6954ebe0bbf8d7a919c5460f8a7aaf30"
+    },
+    {
+      "path": "vs-input-password.html",
+      "checksum": "sha256-e10e5eadc0b8b7a758acb72451ab9bf5db905299c6aa06514bf074b32b7c60c6"
+    },
+    {
+      "path": "vs-input-password.js",
+      "checksum": "sha256-6ddf901fc74006591aa53a0b5bb3ebdf04754a977c3ee12805b1e685d15cf87f"
+    }
+  ]
+}

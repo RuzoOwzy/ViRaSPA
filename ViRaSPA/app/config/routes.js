@@ -38,6 +38,15 @@ window.Viraspa.routes = [
     ],
   },
   {
+    path: "/showcase",
+    name: "showcase",
+    page: "app/pages/showcase",
+    title: "Showcase · ViRaSPA",
+    head: { description: "Every official ViRaSPA component, live." },
+    layout: "public",
+    nav: { label: "Showcase", icon: "lucide:layout-grid", menus: ["main"], order: 3 },
+  },
+  {
     path: "/data-entry",
     name: "data-entry",
     page: "app/pages/data-entry",
