@@ -1,6 +1,6 @@
 // stamp.js - for publishers: writes the file list and per-file SHA-256
 // checksums into a manifest before publishing a framework release, an
-// official component or an extension.
+// official component or helper, or an extension.
 "use strict";
 
 const fs = require("fs");
@@ -10,7 +10,7 @@ const files = require("./lib/files");
 
 const tool = defineTool({
   name: "stamp.js",
-  summary: "writes file lists and checksums into a framework, component or extension manifest before publishing.",
+  summary: "writes file lists and checksums into a framework, component, helper or extension manifest before publishing.",
   description: [
     "Only publishers need this - projects never do. It finds the *-viraspa.json in the folder,",
     "lists every file beside it (dot-files skipped) with its SHA-256 checksum, and writes the list",
@@ -23,7 +23,8 @@ const tool = defineTool({
   options: [{ key: "dryRun", type: "boolean", default: false, configurable: false, description: "Show the result without writing it." }],
   examples: [
     "node node-tools/stamp.js ViRaSPA/viraspa",
-    "node node-tools/stamp.js ../ViRaSPA-Components/components/vs-card",
+    "node node-tools/stamp.js ../ViRaSPA-Extensions/components/vs-card",
+    "node node-tools/stamp.js ../ViRaSPA-Extensions/helpers/forms",
     "node node-tools/stamp.js extensions/owzy --dry-run",
   ],
 });
@@ -45,8 +46,8 @@ if (require.main === module) {
   tool.run(({ command: folderArg, options }) => {
     if (!folderArg) throw new Error("Give the folder to stamp, e.g. node node-tools/stamp.js ViRaSPA/viraspa");
     const folder = path.resolve(folderArg);
-    const manifestName = fs.readdirSync(folder).find((name) => /^(framework|component|extension)-viraspa\.json$/.test(name));
-    if (!manifestName) throw new Error(`${folder} has no framework-, component- or extension-viraspa.json.`);
+    const manifestName = fs.readdirSync(folder).find((name) => /^(framework|component|helper|extension)-viraspa\.json$/.test(name));
+    if (!manifestName) throw new Error(`${folder} has no framework-, component-, helper- or extension-viraspa.json.`);
     const kind = manifestName.split("-")[0];
     const manifestFile = path.join(folder, manifestName);
     const manifest = files.readJson(manifestFile);

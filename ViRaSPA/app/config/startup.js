@@ -3,6 +3,10 @@
 // together. Each URL gets the app's cache token (see index.html settings).
 // Pages are not listed here: they load on demand, from app/config/routes.js.
 window.Viraspa.startup = {
+  // Official helpers installed in helpers/<name>/ (install.js add helper ...)
+  // that your own code uses, e.g. ["forms"]. (Components load the helpers
+  // they need by themselves.)
+  helpers: [],
   // Extensions installed in extensions/<name>/ (install.js add extension ...),
   // loaded before the groups below.
   extensions: [],

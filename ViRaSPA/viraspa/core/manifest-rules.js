@@ -1,5 +1,5 @@
 // Rules for ViRaSPA manifests (framework-viraspa.json,
-// component-viraspa.json, extension-viraspa.json): version comparison,
+// component-viraspa.json, helper-viraspa.json, extension-viraspa.json): version comparison,
 // framework-version compatibility, reserved names and field checks.
 // Shared by the browser (Viraspa.manifestRules) and the node tools
 // (require("<site>/viraspa/core/manifest-rules.js")), so both judge a
@@ -94,7 +94,33 @@
     }
   }
 
-  // kind: "framework" | "component" | "extension".
+  // Namespaces the framework itself owns: a helper can't claim them.
+  const CORE_NAMESPACES = [
+    "core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions",
+    "manifestRules", "state", "expressions", "format", "i18n", "templates", "keyboard", "settings",
+    "framework", "startup", "routes", "pages", "endpoints", "app", "testing", "helpers",
+  ];
+  const DEPENDENCY_KINDS = ["component", "helper"];
+
+  // dependencies: [{ kind: "component" | "helper", name, version }] - what an
+  // official component or helper needs; install.js installs missing ones.
+  // `version` is the lowest version that works.
+  function checkDependencies(list, errors) {
+    if (list === undefined) return;
+    if (!Array.isArray(list)) {
+      errors.push("dependencies must be a list of { kind, name, version }.");
+      return;
+    }
+    list.forEach((d, i) => {
+      const where = `dependencies[${i}]`;
+      if (!d || typeof d !== "object") return errors.push(`${where} must be { kind, name, version }.`);
+      if (!DEPENDENCY_KINDS.includes(d.kind)) errors.push(`${where}.kind "${d.kind}" must be component or helper.`);
+      if (!NAME.test(d.name || "")) errors.push(`${where}.name "${d.name}" must be lowercase words joined by hyphens.`);
+      if (!parseVersion(d.version)) errors.push(`${where}.version "${d.version}" must be x.y.z.`);
+    });
+  }
+
+  // kind: "framework" | "component" | "helper" | "extension".
   // options: { frameworkVersion, takenPrefixes: [] }
   // Returns { errors: [], warnings: [] } - any error means "reject".
   function validateManifest(kind, manifest, options = {}) {
@@ -119,6 +145,20 @@
         if (result.warning) warnings.push(result.warning);
       } catch (err) {
         errors.push(`frameworkVersion: ${err.message}`);
+      }
+    }
+
+    if (kind === "component" || kind === "helper") checkDependencies(m.dependencies, errors);
+
+    if (kind === "helper") {
+      // An official helper: scripts (and styles) loaded once, usually adding
+      // one Viraspa.<namespace> API, e.g. Viraspa.forms.
+      const scripts = m.scripts || [];
+      if (!Array.isArray(scripts) || !scripts.length) errors.push("scripts (the helper's .js files) must be a non-empty list.");
+      if (m.styles !== undefined && !Array.isArray(m.styles)) errors.push("styles must be a list of .css files.");
+      if (m.namespace !== undefined) {
+        if (!/^[a-z][A-Za-z0-9]*$/.test(m.namespace)) errors.push(`namespace "${m.namespace}" must be a camelCase name, e.g. "forms".`);
+        else if (CORE_NAMESPACES.includes(m.namespace)) errors.push(`namespace "${m.namespace}" belongs to the framework.`);
       }
     }
 
@@ -170,6 +210,7 @@
   return Object.freeze({
     RESERVED,
     ISOLATION_MODES,
+    CORE_NAMESPACES,
     parseVersion,
     compareVersions,
     checkFrameworkVersion,

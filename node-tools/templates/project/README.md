@@ -16,7 +16,7 @@ Then open http://localhost:8027/.
 | --- | --- | --- |
 | `%%SITE%%/index.html` | settings and app shell | yes |
 | `%%SITE%%/app/` | your code: pages, components, config, `project-viraspa.json` | yes |
-| `%%SITE%%/viraspa/`, `components/`, `extensions/`, `lib/` | installed by `node-tools/install.js` | no |
+| `%%SITE%%/viraspa/`, `components/`, `helpers/`, `extensions/`, `lib/` | installed by `node-tools/install.js` | no |
 | `node-tools/` | serve, install and other tools (`node node-tools/help.js`) | yes |
 
 ## On a new computer

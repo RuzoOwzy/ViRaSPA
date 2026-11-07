@@ -4,7 +4,7 @@
 
 It keeps the structure that makes frameworks like Angular pleasant to work in (pages, components, lifecycle events, services, routing) but drops the build step. There is no TypeScript to transpile and no bundler: what you write is exactly what the browser runs, served by a small static dev server.
 
-> **Status:** 0.2.0 complete, all five milestones done, waiting for the release tag (see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
+> **Status:** first version (0.1.0), in development and not released yet. Milestones M1–M5 are done; the N milestones are in progress (see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
 
 ## Why ViRaSPA
 
@@ -229,9 +229,14 @@ An icon is an object, so its source is always explicit. In HTML, a short `set:na
 - **Changing the location:** `Viraspa.icons.configure("lucide", { folder: "…" })`.
 - **Adding a set:** `Viraspa.icons.register("myset", { render(icon, root) { return element; } })`.
 
-### Official components and extensions
+### Official components, helpers and extensions
 
-**Official components** (`vs-card`, `vs-stat-tile`, `vs-login-form`…) live in the [ViRaSPA-Components](https://github.com/RuzoOwzy/ViRaSPA-Components) repository. A project installs only the ones it uses:
+The [ViRaSPA-Extensions](https://github.com/RuzoOwzy/ViRaSPA-Extensions) repository holds the official optional packages, in two kinds:
+
+- **Components** (`vs-card`, `vs-stat-tile`, `vs-login-form`…): custom elements.
+- **Helpers** (planned: `forms`, `data-entry`, `filter`, `tooltip`): behaviour and APIs without an element of their own, each under one `Viraspa.<namespace>`, e.g. `Viraspa.forms`.
+
+A project installs only the ones it uses:
 
 ```bash
 node node-tools/install.js add component vs-card@0.1.0
@@ -240,6 +245,24 @@ node node-tools/install.js add component vs-card@0.1.0
 - **Where it goes:** `components/vs-card/`, described by its `component-viraspa.json`.
 - **Loading:** like core components, it loads the first time `<vs-card>` appears.
 - **Not installed:** the console says so, with the command to install it.
+
+Helpers install the same way:
+
+```bash
+node node-tools/install.js add helper forms@0.1.0
+```
+
+- **Where it goes:** `helpers/forms/`, described by its `helper-viraspa.json` (`name`, `version`, `releaseDate`, `frameworkVersion`, `namespace`, `scripts`, `styles`, `dependencies`).
+- **Loading:** a component that needs a helper loads it by itself. For your own code, list it in `app/config/startup.js` (`helpers: ["forms"]`); helpers load before extensions and the app's files.
+- **Locked:** once loaded, `Viraspa.<namespace>` can't be replaced.
+
+**Dependencies.** A component or helper manifest may list what it needs:
+
+```json
+"dependencies": [{ "kind": "helper", "name": "forms", "version": "0.1.0" }]
+```
+
+`version` is the lowest version that works. `install.js add` installs and pins missing dependencies from the same download source, warns when a pinned one is older, and `remove` warns when something still needs what you remove.
 
 **Extensions** are third-party bundles in `extensions/<name>/`, described by `extension-viraspa.json`. A minimal manifest:
 
@@ -251,7 +274,7 @@ node node-tools/install.js add component vs-card@0.1.0
   "author": { "name": "Owzy", "email": "…", "website": "https://…", "organization": "…" },
   "contributors": [{ "name": "…", "email": "…", "website": "…" }],
   "tagPrefix": "owzy",
-  "frameworkVersion": { "min": "0.2.0", "max": "0.9.9", "supported": [], "excluded": ["0.2.3"] },
+  "frameworkVersion": { "min": "0.1.0", "max": "0.9.9", "supported": [], "excluded": ["0.1.3"] },
   "components": [{ "tag": "owzy-number-input", "script": "number-input/number-input.js" }],
   "styles": [],
   "scripts": []
@@ -604,18 +627,18 @@ const users = await Viraspa.busy.run(
 
 ### Remote mode
 
-The framework's files are found relative to `viraspa.js`, so the framework can be served from a CDN instead of being installed, e.g. `<script src="https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.2.0/ViRaSPA/viraspa/viraspa.js"></script>`. CDN files carry no token, since the URL already names the version. This works once version tags are published.
+The framework's files are found relative to `viraspa.js`, so the framework can be served from a CDN instead of being installed, e.g. `<script src="https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.1.0/ViRaSPA/viraspa/viraspa.js"></script>`. CDN files carry no token, since the URL already names the version. This works once version tags are published.
 
 ### Cache strategies
 
 Every URL the framework loads carries a token, so browsers never use a stale copy after a release.
 
-- **Framework files** use the framework version (`viraspa/core/router.js?v=0.2.0`).
+- **Framework files** use the framework version (`viraspa/core/router.js?v=0.1.0`).
 - **App files** use the app token, chosen by `Viraspa.settings.cache.strategy` in `index.html`:
 
 | Strategy | App token | Use when |
 | --- | --- | --- |
-| `release` (default) | `app.version` + the digits of `app.releaseDate`, e.g. `0.2.0-20261106120000` | you bump the version and date on each release |
+| `release` (default) | `app.version` + the digits of `app.releaseDate`, e.g. `0.1.0-20261106120000` | you bump the version and date on each release |
 | `custom` | `cache.token` (letters, digits, dots, hyphens) | your release process sets its own token |
 | `auto` | `release.json` (`{"token": "..."}`, written at deploy time), else the server's ETag/Last-Modified of `index.html` | you don't want to bump anything by hand |
 | `revalidate` | none: the browser asks the server about every file | development, or servers that send ETags |
@@ -667,7 +690,7 @@ To turn a copy of *this* repository into a project instead, `node node-tools/cle
 
 - **What a pin holds:** the version, the download source it came from, and a SHA-256 checksum of the installed files. It covers downloaded files only, never `app/`.
 - **The checksum** is computed by `install.js` when it installs something, not as a build step.
-- **What to commit:** `index.html`, `app/` and `node-tools/`. Git ignores `viraspa/`, `components/`, `extensions/` and `lib/`.
+- **What to commit:** `index.html`, `app/` and `node-tools/`. Git ignores `viraspa/`, `components/`, `helpers/`, `extensions/` and `lib/`.
 - **On a new computer:** one command brings back exactly the same files.
 
 ```bash
@@ -676,7 +699,7 @@ node node-tools/install.js restore
 
 | Command | Does |
 | --- | --- |
-| `add component vs-card@0.1.0` | installs and pins (also `extension`, `library`) |
+| `add component vs-card@0.1.0` | installs and pins, with its dependencies (also `helper`, `extension`, `library`) |
 | `update framework@0.3.0` | installs another version and updates the pin. For the framework it also updates `?v=` in `index.html`. |
 | `remove component vs-card` | deletes the files and the pin |
 | `restore` | reinstalls anything missing or changed, and refuses files that don't match their pin |
@@ -685,19 +708,20 @@ node node-tools/install.js restore
 
 **Download sources:**
 
-- **`official`:** the ViRaSPA GitHub repositories through jsDelivr.
+- **`official`:** the ViRaSPA and ViRaSPA-Extensions GitHub repositories through jsDelivr.
 - **`npm`:** npm packages through jsDelivr, for libraries.
 - **Your own:** listed in `downloadSources`:
   ```json
   "downloadSources": [
     { "name": "company", "type": "folder", "location": "D:\\Shared\\ViRaSPA" },
     { "name": "offline", "type": "zip", "location": "D:\\Downloads\\viraspa-bundle.zip" },
-    { "name": "components-repository", "type": "folder", "location": "../ViRaSPA-Components/components/{name}" }
+    { "name": "extensions-repository", "type": "folder", "location": "../ViRaSPA-Extensions/{kind}/{name}" }
   ]
   ```
 - **Layout under a location:**
   - `framework/<version>/`
   - `components/<name>/<version>/`
+  - `helpers/<name>/<version>/`
   - `extensions/<name>/<version>/`
   - `libraries/<name>/<version>/`
 
@@ -812,7 +836,7 @@ node node-tools/deploy.js --target production --prerender
 
 See [Documents/](Documents/README.md):
 
-- [Plans for 0.2.0](Documents/plans/README.md), milestone by milestone, with the [review](Documents/plans/M5-review.md) and the [next plan](Documents/plans/next-plan.md)
+- [Plans for the first version (0.1.0)](Documents/plans/README.md), milestone by milestone, with the [review](Documents/plans/M5-review.md) and the [N plan](Documents/plans/N-plan.md)
 - [Benchmark](Documents/benchmark.md): ViRaSPA measured, compared with published figures for React, Angular, Vue, Svelte, Solid and Lit
 - [Release notes](Documents/release-notes.md)
 - [Framework design model](Documents/Modeling%20my%20Own%20Custom%20SPA%20Web%20Development%20Frontend%20Framework.txt) (a working draft)

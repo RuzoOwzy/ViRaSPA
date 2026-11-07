@@ -12,7 +12,7 @@ It doesn't talk to any server itself: it hands the credentials to your code.
 | | |
 | --- | --- |
 | Version | 0.1.0 (2026-11-06) |
-| Framework | ViRaSPA 0.2.0 or newer |
+| Framework | ViRaSPA 0.1.0 or newer |
 | Isolation | `scoped` (no Shadow DOM, so password managers and autofill work reliably; its styles stay inside it) |
 
 ## Install
@@ -45,7 +45,7 @@ form.addEventListener("vs-login-success", () => Viraspa.core.navigate("/dashboar
 ## Who handles the sign-in
 
 1. **`element.loginHandler(credentials)`**, if set.
-2. **Otherwise `Viraspa.session.login(credentials)`**, when the app has a session (ViRaSPA 0.2.0 M3).
+2. **Otherwise `Viraspa.session.login(credentials)`**, when the app has a session (ViRaSPA M3).
 3. **Otherwise nothing:** listen for the `vs-login` event.
 
 `credentials` is `{ username, password, rememberMe }`. If the handler throws, its message is shown as the error. Provider buttons work the same way, through `element.providerHandler(provider)` or `Viraspa.session.loginWith(provider.id)`.

@@ -57,7 +57,10 @@ test("server rules: every server type mentions the known routes", () => {
 
 test("sources: built-in and template locations", () => {
   const official = sources.findSource("official", {});
-  assert.match(sources.itemBase(official, { kind: "component", name: "vs-card", version: "0.1.0" }), /ViRaSPA-Components@vs-card-v0\.1\.0\/components\/vs-card$/);
+  assert.match(sources.itemBase(official, { kind: "component", name: "vs-card", version: "0.1.0" }), /ViRaSPA-Extensions@vs-card-v0\.1\.0\/components\/vs-card$/);
+  assert.match(sources.itemBase(official, { kind: "helper", name: "forms", version: "0.1.0" }), /ViRaSPA-Extensions@forms-v0\.1\.0\/helpers\/forms$/);
+  const kinded = { name: "y", type: "folder", location: "../ViRaSPA-Extensions/{kind}/{name}" };
+  assert.equal(sources.itemBase(kinded, { kind: "helper", name: "forms", version: "0.1.0" }), "../ViRaSPA-Extensions/helpers/forms");
   const own = { name: "x", type: "folder", location: "D:/Shared" };
   assert.equal(sources.itemBase(own, { kind: "extension", name: "owzy", version: "1.0.0" }), "D:/Shared/extensions/owzy/1.0.0");
 });

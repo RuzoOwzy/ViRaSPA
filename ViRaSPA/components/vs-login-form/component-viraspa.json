@@ -11,12 +11,12 @@
     "website": "https://github.com/RuzoOwzy"
   },
   "frameworkVersion": {
-    "min": "0.2.0"
+    "min": "0.1.0"
   },
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-1f808d9d098e06789b2a38866c90b1cdf425e529f9d5e41046beeebd30321f9d"
+      "checksum": "sha256-bf8defe08303823dc308e5991888c61225bc01348c2e592fb44ce3889094c4f0"
     },
     {
       "path": "vs-login-form.css",

@@ -5,7 +5,7 @@ A key figure for dashboards: a label, a big value, an optional icon and a trend.
 | | |
 | --- | --- |
 | Version | 0.1.0 (2026-11-06) |
-| Framework | ViRaSPA 0.2.0 or newer |
+| Framework | ViRaSPA 0.1.0 or newer |
 | Isolation | `full` (Shadow DOM) |
 
 ## Install

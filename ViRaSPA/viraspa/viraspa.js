@@ -16,7 +16,8 @@
 (function () {
   "use strict";
 
-  var FRAMEWORK = { name: "ViRaSPA", version: "0.2.0", releaseDate: "2026-11-06" };
+  // stage: "development" until the version is released, then "release".
+  var FRAMEWORK = { name: "ViRaSPA", version: "0.1.0", releaseDate: "2026-11-08", stage: "development" };
 
   // Loaded in this order (relative to this file's folder); the browser
   // downloads them in parallel but runs them one after another.
@@ -50,7 +51,7 @@
   // Where the framework is served from: the folder of this script, as
   // written in index.html. Usually "viraspa/" (installed with the site);
   // in remote mode a CDN folder such as
-  // "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.2.0/ViRaSPA/viraspa/".
+  // "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.1.0/ViRaSPA/viraspa/".
   var scriptSrc = (document.currentScript && document.currentScript.getAttribute("src")) || "viraspa/viraspa.js";
   var FRAMEWORK_BASE = scriptSrc.replace(/viraspa\.js(\?.*)?$/, "");
 

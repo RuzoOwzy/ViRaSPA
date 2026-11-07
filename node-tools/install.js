@@ -1,5 +1,5 @@
-// install.js - installs and checks the framework, official components,
-// extensions and libraries a project uses, as pinned in
+// install.js - installs and checks the framework, official components and
+// helpers, extensions and libraries a project uses, as pinned in
 // app/project-viraspa.json. No build step: it only downloads files and
 // checks their SHA-256 checksums.
 "use strict";
@@ -11,19 +11,21 @@ const site = require("./lib/site");
 const files = require("./lib/files");
 const sources = require("./lib/sources");
 
-const KINDS = ["framework", "component", "extension", "library"];
-const LIST_KEY = { component: "components", extension: "extensions", library: "libraries" };
+const KINDS = ["framework", "component", "helper", "extension", "library"];
+const LIST_KEY = { component: "components", helper: "helpers", extension: "extensions", library: "libraries" };
 
 const tool = defineTool({
   name: "install.js",
-  summary: "installs, updates, restores and verifies the framework, components, extensions and libraries.",
+  summary: "installs, updates, restores and verifies the framework, components, helpers, extensions and libraries.",
   description: [
     "What a project uses is pinned in app/project-viraspa.json: each entry has a version, the download",
     "source it came from, and a checksum of its installed files. Git can then ignore viraspa/,",
-    "components/, extensions/ and lib/: on a new computer, `restore` brings back exactly the same files.",
+    "components/, helpers/, extensions/ and lib/: on a new computer, `restore` brings back exactly the same files.",
     "",
-    "Kinds: framework (viraspa/), component (components/<name>/), extension (extensions/<name>/),",
-    "library (lib/<name>/<version>/).",
+    "Kinds: framework (viraspa/), component (components/<name>/), helper (helpers/<name>/),",
+    "extension (extensions/<name>/), library (lib/<name>/<version>/).",
+    "Official components and helpers come from the ViRaSPA-Extensions repository. When one needs",
+    "others (its manifest's \"dependencies\"), add installs and pins them too.",
     'Sources: "official" (ViRaSPA GitHub repositories via jsDelivr), "npm" (libraries via jsDelivr),',
     "or your own in downloadSources: { name, type: web | folder | zip, location }.",
   ].join("\n"),
@@ -62,6 +64,7 @@ const tool = defineTool({
     "node node-tools/install.js restore --download-source company",
     "node node-tools/install.js verify",
     "node node-tools/install.js add component vs-card@0.1.0",
+    "node node-tools/install.js add helper forms@0.1.0",
     "node node-tools/install.js add library chartjs@4.6.1 --package chart.js --package-folder dist --include chart.umd.min.js",
     "node node-tools/install.js update framework@0.3.0",
     "node node-tools/install.js add extension owzy@1.0.0 --from D:\\Downloads\\owzy-1.0.0.zip",
@@ -72,6 +75,7 @@ const tool = defineTool({
 function destinationOf(siteFolder, kind, entry) {
   if (kind === "framework") return path.join(siteFolder, "viraspa");
   if (kind === "component") return path.join(siteFolder, "components", entry.name);
+  if (kind === "helper") return path.join(siteFolder, "helpers", entry.name);
   if (kind === "extension") return path.join(siteFolder, "extensions", entry.name);
   return path.join(siteFolder, "lib", entry.name, entry.version);
 }
@@ -79,7 +83,7 @@ function destinationOf(siteFolder, kind, entry) {
 function pinned(project) {
   const out = [];
   if (project.framework && project.framework.managed !== false) out.push({ kind: "framework", entry: { name: "viraspa", ...project.framework } });
-  for (const kind of ["component", "extension", "library"]) {
+  for (const kind of ["component", "helper", "extension", "library"]) {
     for (const entry of project[LIST_KEY[kind]] || []) out.push({ kind, entry });
   }
   return out;
@@ -237,13 +241,54 @@ async function addOrUpdate(ctx, kindArg, nameArg, isUpdate) {
   if (kind === "extension" && !isUpdate) {
     console.log(`  Next: add "${name}" to the extensions list in app/config/startup.js to load it.`);
   }
+  if (kind === "helper" && !isUpdate) {
+    console.log(`  Components that need "${name}" load it by themselves. To use it in your own code, add "${name}" to the helpers list in app/config/startup.js.`);
+  }
+  if (fetched.manifest) await addDependencies(ctx, fetched.manifest, entry, `${kind} ${name}`);
+}
+
+// Installs what a component or helper needs (manifest "dependencies":
+// [{ kind, name, version }]), from the same download source. Already
+// pinned ones are kept; an older pin than needed gets a warning.
+async function addDependencies(ctx, manifest, parentEntry, what) {
+  const rules = frameworkRules(ctx.siteFolder);
+  for (const dep of manifest.dependencies || []) {
+    const pin = findPinned(ctx.project, dep.kind, dep.name);
+    if (pin) {
+      if (rules && rules.parseVersion(pin.version) && rules.compareVersions(pin.version, dep.version) < 0) {
+        console.warn(`  Warning: ${what} needs ${dep.kind} ${dep.name} ${dep.version} or newer, but ${pin.version} is pinned. Run: install.js update ${dep.kind} ${dep.name}@${dep.version}`);
+      }
+      continue;
+    }
+    console.log(`  ${what} needs ${dep.kind} ${dep.name}@${dep.version}:`);
+    const depCtx = {
+      ...ctx,
+      options: { ...ctx.options, from: undefined, package: undefined, packageFolder: undefined, include: undefined, downloadSource: parentEntry.downloadSource || ctx.options.downloadSource },
+      sources: { ...ctx.sources, downloadSource: "flag" },
+    };
+    await addOrUpdate(depCtx, dep.kind, `${dep.name}@${dep.version}`, false);
+  }
+}
+
+// Pinned components/helpers whose installed manifest depends on kind/name.
+function dependents(ctx, kind, name) {
+  const out = [];
+  for (const k of ["component", "helper"]) {
+    for (const entry of ctx.project[LIST_KEY[k]] || []) {
+      const m = readInstalledManifest(ctx.siteFolder, k, entry);
+      if (m && (m.dependencies || []).some((d) => d.kind === kind && d.name === name)) out.push(`${k} ${entry.name}`);
+    }
+  }
+  return out;
 }
 
 async function remove(ctx, kind, name) {
   if (kind === "framework") throw new Error("The framework can't be removed.");
-  if (!LIST_KEY[kind]) throw new Error(`Unknown kind "${kind}". Use: component, extension, library.`);
+  if (!LIST_KEY[kind]) throw new Error(`Unknown kind "${kind}". Use: component, helper, extension, library.`);
   const entry = findPinned(ctx.project, kind, name);
   if (!entry) throw new Error(`${kind} "${name}" is not pinned.`);
+  const users = dependents(ctx, kind, name);
+  if (users.length) console.warn(`  Warning: ${users.join(", ")} need(s) ${kind} ${name}; they will not work without it.`);
   const destination = destinationOf(ctx.siteFolder, kind, entry);
   console.log(`Removing ${label(kind, entry)}${ctx.options.dryRun ? " (dry run)" : ""}: ${path.relative(ctx.repoRoot, destination)}`);
   if (!ctx.options.dryRun) {
@@ -256,6 +301,7 @@ async function remove(ctx, kind, name) {
   ctx.project[LIST_KEY[kind]] = ctx.project[LIST_KEY[kind]].filter((e) => e !== entry);
   save(ctx);
   if (kind === "extension") console.log(`  Also remove "${name}" from the extensions list in app/config/startup.js.`);
+  if (kind === "helper") console.log(`  If "${name}" is in the helpers list in app/config/startup.js, remove it there too.`);
 }
 
 async function restore(ctx) {

@@ -2,36 +2,37 @@
   "projectName": "ViRaSPA Sample",
   "isFrameworkRepository": true,
   "framework": {
-    "version": "0.2.0",
+    "version": "0.1.0",
     "managed": false
   },
   "downloadSources": [
     {
-      "name": "components-repository",
+      "name": "extensions-repository",
       "type": "folder",
-      "location": "../ViRaSPA-Components/components/{name}"
+      "location": "../ViRaSPA-Extensions/{kind}/{name}"
     }
   ],
   "components": [
     {
       "name": "vs-card",
       "version": "0.1.0",
-      "downloadSource": "components-repository",
-      "checksum": "sha256-72d9c3ae4d91ab322c47e3882ee29227477aac8d5522de66db7b491c0eab8c9d"
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-6a302b15135c4e4039ef47102286990965f13c766b2eec7f1d1bc155fcb65bfd"
     },
     {
       "name": "vs-stat-tile",
       "version": "0.1.0",
-      "downloadSource": "components-repository",
-      "checksum": "sha256-699145926ebf25fb91006f851029e12da68da8f63042291c892974a9a44dcf7f"
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-492f91b97a965fcc480d6ccd6f582e0423265d954e25b19df870665e19a2d68e"
     },
     {
       "name": "vs-login-form",
       "version": "0.1.0",
-      "downloadSource": "components-repository",
-      "checksum": "sha256-a67f9fd04993dd7723acd6b5f3e631a14a316aba92ce104a8c238f709108c95e"
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-5d0cbc7d47a1e1e66fa520acd08da91fc08d970c536f77521af6045e4776e964"
     }
   ],
+  "helpers": [],
   "extensions": [],
   "libraries": [
     {

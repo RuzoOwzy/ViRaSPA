@@ -5,7 +5,7 @@ A content card: a heading, an optional subheading and icon, body content, and an
 | | |
 | --- | --- |
 | Version | 0.1.0 (2026-11-06) |
-| Framework | ViRaSPA 0.2.0 or newer |
+| Framework | ViRaSPA 0.1.0 or newer |
 | Isolation | `full` (Shadow DOM) |
 
 ## Install

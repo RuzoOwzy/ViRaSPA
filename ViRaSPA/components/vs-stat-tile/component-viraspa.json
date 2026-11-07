@@ -11,12 +11,12 @@
     "website": "https://github.com/RuzoOwzy"
   },
   "frameworkVersion": {
-    "min": "0.2.0"
+    "min": "0.1.0"
   },
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-b38de1a609d64395b4b2adacf491f4cf491027b9018fee7db3d1957a476e5e41"
+      "checksum": "sha256-a9937c80946e919e3cdf0f2496388b1d8a33db7a2a396df69bd6c57881f56c2a"
     },
     {
       "path": "vs-stat-tile.css",

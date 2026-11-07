@@ -1,6 +1,6 @@
-# ViRaSPA 0.2.0 plans
+# ViRaSPA plans (first version, 0.1.0, in development)
 
-The 0.2.0 work is split into five milestones. Each one runs the same way:
+The work is split into milestones: M1–M5 (planned under the working number "0.2.0", which was never released and is folded into 0.1.0), then the [N plan](N-plan.md). The M milestones ran this way:
 
 1. Implement the milestone.
 2. Self-verify it in a preview (on a port other than the developer's own server, stopped afterwards).
@@ -18,16 +18,16 @@ After M5, the implemented and not-implemented items are reviewed, and the leftov
 | M3 · App features | [M3-app-features.md](M3-app-features.md) | Done ([report](M3-verification-report.md)) |
 | M4 · Reactivity, i18n, testing | [M4-reactivity-i18n-testing.md](M4-reactivity-i18n-testing.md) | Done ([report](M4-verification-report.md)) |
 | M5 · Benchmark and review | [M5-benchmark-and-review.md](M5-benchmark-and-review.md) | Done ([benchmark](../benchmark.md), [review](M5-review.md)) |
-| Next plan (draft) | [next-plan.md](next-plan.md) | Waiting for approval |
+| N1–N11 | [N-plan.md](N-plan.md) | In progress |
 
 ## Decisions that apply to every milestone
 
 - **Namespace:** `window.Viraspa`, in PascalCase.
-- **No build step:** classic scripts, plain HTML/CSS/JS, served as they are.
+- **No build step:** classic scripts (no ES modules), plain HTML/CSS/JS, served as they are.
 - **Native first:** pages, components and extensions can be written in 100% native HTML, CSS and JS. Every framework helper is opt-in.
 - **Project layout:**
   - `viraspa/` is the framework and is never edited.
-  - `components/` holds the official `vs-*` components.
+  - `components/` holds the official `vs-*` components, and `helpers/` the official helpers (both from ViRaSPA-Extensions).
   - `extensions/` holds third-party bundles.
   - `app/` holds the project's own code, including `app/project-viraspa.json`.
   - `lib/` holds libraries, in versioned folders.
@@ -36,5 +36,5 @@ After M5, the implemented and not-implemented items are reviewed, and the leftov
   - Each tool reads its own section of `app/project-viraspa.json`. Its flags are that section's keys in kebab-case (`outputFolder` ↔ `--output-folder`).
   - Precedence: command-line flag, then environment variable, then config file, then default.
   - `--save` writes the overrides back into the config.
-- **Manifest names:** `project-viraspa.json`, `framework-viraspa.json`, `component-viraspa.json`, `extension-viraspa.json`, `catalog-viraspa.json`.
+- **Manifest names:** `project-viraspa.json`, `framework-viraspa.json`, `component-viraspa.json`, `helper-viraspa.json`, `extension-viraspa.json`, `catalog-viraspa.json`.
 - **Framework events** use the `viraspa:` prefix, e.g. `viraspa:pageShown`.

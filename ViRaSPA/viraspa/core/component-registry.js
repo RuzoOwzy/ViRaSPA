@@ -5,6 +5,8 @@
   //     viraspa/components/<tag>/;
   //   * official components (vs-card...): installed in components/<tag>/,
   //     found by convention, described by component-viraspa.json;
+  //   * official helpers (forms...): installed in helpers/<name>/, listed in
+  //     startup.js (`helpers`) or loaded for a component that depends on them;
   //   * extensions: listed in app/config/startup.js (`extensions`),
   //     installed in extensions/<name>/, described by extension-viraspa.json.
   // So a page can just write <vs-icon icon="lucide:house"></vs-icon>.
@@ -62,6 +64,7 @@
     let entry = entries.get(tag);
     if (!entry && tag.startsWith("vs-")) entry = await loadOfficialEntry(tag);
     if (!entry) return;
+    if (entry.manifest && !(await loadDependencies(entry.manifest, `<${tag}>`))) return;
     await loader().loadScript(entry.script);
     if (!customElements.get(tag)) console.error(`${entry.script} loaded, but it did not define <${tag}>.`);
   }
@@ -142,6 +145,62 @@
     return true;
   }
 
+  // ---- Official helpers ------------------------------------------------------
+  // helpers/<name>/helper-viraspa.json: scripts and styles loaded once, e.g.
+  // the "forms" helper adds Viraspa.forms. Loaded from startup.js `helpers`,
+  // or automatically before an official component that depends on them.
+  const helpers = new Map(); // name -> Promise<boolean>
+
+  async function loadHelperNow(name) {
+    const folder = `helpers/${name}`;
+    let manifest;
+    try {
+      manifest = await loader().fetchJson(`${folder}/helper-viraspa.json`);
+    } catch {
+      console.error(`Helper "${name}" is not installed (no ${folder}/helper-viraspa.json). Install it from the repository root with:\n  node node-tools/install.js add helper ${name}@<version>`);
+      return false;
+    }
+    const result = rules().validateManifest("helper", manifest, { frameworkVersion: Viraspa.framework.version });
+    if (!report(`Helper "${name}" ${manifest.version || ""}`.trim(), result)) return false;
+    if (!(await loadDependencies(manifest, `Helper "${name}"`))) return false;
+    await Promise.all((manifest.styles || []).map((href) => loader().loadStyle(`${folder}/${href}`)));
+    for (const src of manifest.scripts || []) await loader().loadScript(`${folder}/${src}`);
+    if (manifest.namespace) {
+      const api = Viraspa[manifest.namespace];
+      if (!api) {
+        console.error(`Helper "${name}" loaded, but it did not define Viraspa.${manifest.namespace}.`);
+      } else {
+        // Like the framework's own namespaces: app code can't replace it by accident.
+        Object.defineProperty(Viraspa, manifest.namespace, { value: Object.freeze(api), writable: false, configurable: false });
+      }
+    }
+    return true;
+  }
+
+  // Loads a helper once; resolves true when it is ready.
+  function loadHelper(name) {
+    if (!helpers.has(name)) {
+      helpers.set(
+        name,
+        loadHelperNow(name).catch((err) => {
+          console.error(`Helper "${name}" could not be loaded:`, err);
+          return false;
+        })
+      );
+    }
+    return helpers.get(name);
+  }
+
+  // A manifest's helper dependencies, loaded before it. (Component
+  // dependencies load by themselves when their tag appears.)
+  async function loadDependencies(manifest, what) {
+    const needed = (manifest.dependencies || []).filter((d) => d && d.kind === "helper");
+    const results = await Promise.all(needed.map((d) => loadHelper(d.name)));
+    const failed = needed.filter((d, i) => !results[i]).map((d) => d.name);
+    if (failed.length) console.error(`${what} needs the helper(s) ${failed.join(", ")}, which could not be loaded.`);
+    return failed.length === 0;
+  }
+
   // May `tag` use a reserved prefix (vs-, viraspa-)? Only core and official
   // components can.
   function mayUseReservedPrefix(tag) {
@@ -156,6 +215,8 @@
     scan,
     watch,
     loadExtension,
+    loadHelper,
+    loadedHelpers: () => [...helpers.keys()],
     mayUseReservedPrefix,
     info: (tag) => entries.get(tag) || null,
   };

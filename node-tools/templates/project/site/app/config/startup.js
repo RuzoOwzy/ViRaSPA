@@ -2,6 +2,10 @@
 // group; files within a group load together. Pages are not listed here:
 // they load on demand, from app/config/routes.js.
 window.Viraspa.startup = {
+  // Official helpers installed in helpers/<name>/ (install.js add helper ...)
+  // that your own code uses, e.g. ["forms"]. (Components load the helpers
+  // they need by themselves.)
+  helpers: [],
   // Extensions installed in extensions/<name>/ (install.js add extension ...).
   extensions: [],
   groups: [

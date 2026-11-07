@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-07.
 
-This review checks every item of M1–M5, and the decisions agreed while planning, against what was built. It lists what was not done and why. The leftovers carry into [the next plan](next-plan.md).
+This review checks every item of M1–M5, and the decisions agreed while planning, against what was built. It lists what was not done and why. The leftovers carry into [the N plan](N-plan.md).
 
 Verification reports: [M1](M1-verification-report.md), [M2](M2-verification-report.md), [M3](M3-verification-report.md), [M4](M4-verification-report.md). Benchmark: [Documents/benchmark.md](../benchmark.md).
 Automated tests at the end of M5: **56 passing** (24 Node + 32 browser), also passing in GitHub Actions (headless Chrome on Linux).
@@ -65,7 +65,7 @@ Automated tests at the end of M5: **56 passing** (24 Node + 32 browser), also pa
 | --- | --- |
 | Benchmark from published figures (nothing downloaded), each comparison point explained | Done: [benchmark.md](../benchmark.md) |
 | ViRaSPA measured on its own sample (sizes, requests, time to first page, navigation) | Done |
-| Review, and the next plan with the leftovers, the head-injection hook and the component migration | This file and [next-plan.md](next-plan.md) |
+| Review, and the next plan with the leftovers, the head-injection hook and the component migration | This file and [N-plan.md](N-plan.md) |
 
 ## Decisions from planning: checked
 

@@ -11,12 +11,12 @@
     "website": "https://github.com/RuzoOwzy"
   },
   "frameworkVersion": {
-    "min": "0.2.0"
+    "min": "0.1.0"
   },
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-1a0e1fd71ee7f2dc43508fd06c271f9c2b385ec8349398be956b5bd58474abd9"
+      "checksum": "sha256-3d0b7bdc176bc0f0b2a9ce7edd18a5a9a167d552597ad2064584e0e63681ef58"
     },
     {
       "path": "vs-card.css",

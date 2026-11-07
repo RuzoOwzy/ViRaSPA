@@ -32,16 +32,18 @@
   }
 
   async function boot() {
-    const { name, version, releaseDate } = Viraspa.framework;
+    const { name, version, releaseDate, stage } = Viraspa.framework;
     const app = Viraspa.settings.app;
-    console.info(`${name} v${version} (released ${releaseDate}) · ${app.name || "app"} v${app.version || "?"}`);
+    const when = stage === "development" ? `in development, ${releaseDate}` : `released ${releaseDate}`;
+    console.info(`${name} v${version} (${when}) · ${app.name || "app"} v${app.version || "?"}`);
 
     await Viraspa.cache.ready; // the app token ("auto" strategy may fetch it)
     lockFrameworkNamespaces();
     await Viraspa.utility.assetLoader.loadScript(STARTUP_FILE);
     const startup = Viraspa.startup || {};
 
-    // Extensions first, so the app's own files can use their components.
+    // Official helpers, then extensions, so the app's own files can use them.
+    await Promise.all((startup.helpers || []).map((name) => Viraspa.core.components.loadHelper(name)));
     for (const name of startup.extensions || []) {
       await Viraspa.core.components.loadExtension(name);
     }

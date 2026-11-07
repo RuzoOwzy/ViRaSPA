@@ -1,4 +1,4 @@
-# ViRaSPA benchmark (0.2.0)
+# ViRaSPA benchmark (0.1.0, in development)
 
 **Date:** 2026-11-07.
 
@@ -67,7 +67,7 @@ The sources disagree, so ranges are given. Sizes are min+gzip framework runtimes
 | Svelte 5 | about 2–8 KB | about 1.05× | yes (compiler) | [DEV](https://dev.to/sendotltd/porting-the-landing-to-svelte-5-runes-61-smaller-gzip-and-why-the-compiler-approach-wins-here-23e3), [arc.dev](https://arc.dev/employer-blog/svelte-vs-vue-vs-solidjs/), [siliconbased.dev](https://siliconbased.dev/framework-performance-benchmark) |
 | Solid 1.x | about 6–8 KB | about 1.04–1.1× | yes (JSX compiler) | [tech-insider](https://tech-insider.org/solidjs-vs-react-vs-svelte-2026/), [frontend-framework-size-analysis](https://github.com/gautemo/frontend-framework-size-analysis) |
 | Lit 3 | about 5.5 KB | not found | no (plain JS works; TypeScript optional) | [DEV: Lit 3 port](https://dev.to/sendotltd/lit-3-port-970-kb-on-par-with-solid-because-web-components-are-legitimately-viable-now-2041) |
-| **ViRaSPA 0.2.0** | **47 KB gzip / 40 KB brotli** (unminified, with comments), plus about 2 KB per core component used | not measured (see 4) | **no** | this report |
+| **ViRaSPA 0.1.0 (dev)** | **47 KB gzip / 40 KB brotli** (unminified, with comments), plus about 2 KB per core component used | not measured (see 4) | **no** | this report |
 
 The official [js-framework-benchmark](https://github.com/krausest/js-framework-benchmark) results page didn't come up in the searches. The speed multiples above come from third-party write-ups of it, and the [vani.js suite](https://vanijs.dev/benchmarks/) uses a different method, so the numbers are not directly comparable.
 

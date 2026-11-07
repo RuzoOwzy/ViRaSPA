@@ -1,17 +1,17 @@
 // Download sources for install.js: where the framework, components,
-// extensions and libraries are fetched from.
+// helpers, extensions and libraries are fetched from.
 //
 // A source is { name, type, location }:
 //   type "web"     location is a URL
 //   type "folder"  location is a folder (relative paths: from the repository root)
 //   type "zip"     location is a .zip file
 // Layout under a location: framework/<version>/, components/<name>/<version>/,
-// extensions/<name>/<version>/, libraries/<name>/<version>/. A location with
+// helpers/<name>/<version>/, extensions/<name>/<version>/, libraries/<name>/<version>/. A location with
 // placeholders - {kind} {name} {version} - is used as written instead, e.g.
-// "../ViRaSPA-Components/components/{name}".
+// "../ViRaSPA-Extensions/{kind}/{name}".
 //
 // Built in (need no entry in app/project-viraspa.json):
-//   "official"  the ViRaSPA GitHub repositories through the jsDelivr CDN
+//   "official"  the ViRaSPA and ViRaSPA-Extensions GitHub repositories through the jsDelivr CDN
 //   "npm"       npm packages through jsDelivr (libraries)
 "use strict";
 
@@ -22,9 +22,10 @@ const files = require("./files");
 const MANIFEST_FILE = {
   framework: "framework-viraspa.json",
   component: "component-viraspa.json",
+  helper: "helper-viraspa.json",
   extension: "extension-viraspa.json",
 };
-const KIND_FOLDER = { framework: "framework", component: "components", extension: "extensions", library: "libraries" };
+const KIND_FOLDER = { framework: "framework", component: "components", helper: "helpers", extension: "extensions", library: "libraries" };
 
 const BUILT_IN = {
   official: {
@@ -32,7 +33,8 @@ const BUILT_IN = {
     type: "web",
     templates: {
       framework: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v{version}/ViRaSPA/viraspa",
-      component: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Components@{name}-v{version}/components/{name}",
+      component: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/components/{name}",
+      helper: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/helpers/{name}",
     },
   },
   npm: { name: "npm", type: "npm" },

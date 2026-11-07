@@ -1,20 +1,30 @@
 # ViRaSPA release notes
 
-Versions follow `x.x.x` (major.minor.patch). The current release is recorded in
+Versions follow `x.x.x` (major.minor.patch). The version is recorded in
 [`ViRaSPA/viraspa/viraspa.js`](../ViRaSPA/viraspa/viraspa.js) (`FRAMEWORK`), which
 must match the newest entry below.
 
-## Unreleased (0.2.0)
+## 0.1.0 · in development (first version, not released yet)
 
-**Breaking for projects built on 0.1.0.** Work is split into milestones,
-see [plans/](plans/README.md).
+ViRaSPA has not been released yet: everything below is the first version,
+still in development. Work is split into milestones, see [plans/](plans/README.md).
+(Milestones M1–M5 were planned under the working number "0.2.0"; that number
+was never released and is folded into 0.1.0.)
+
+### Milestone N1 · Housekeeping
+
+- **Version:** the framework is 0.1.0 in development (`Viraspa.framework.stage: "development"`); the console says "in development". Official components now require framework 0.1.0 or newer.
+- **ViRaSPA-Extensions:** the components repository is renamed (it was ViRaSPA-Components) and holds official components and official helpers. The `official` download source points at it.
+- **Helpers,** a new installable kind: `helpers/<name>/helper-viraspa.json` (`namespace`, `scripts`, `styles`); `install.js add helper …`; `startup.js` `helpers: []`; `Viraspa.core.components.loadHelper(name)`; a helper's `Viraspa.<namespace>` is locked once loaded.
+- **Dependencies** in component and helper manifests (`[{ kind, name, version }]`): `install.js add` installs missing ones from the same source, warns about older pins, and `remove` warns about packages that still need what is removed. At runtime a component's helpers load before it.
+- **Plans:** the approved [N plan](plans/N-plan.md) replaces the draft next plan.
 
 ### Milestone M5 · Benchmark and review
 
 - **[benchmark.md](benchmark.md):**
   - ViRaSPA's measured runtime size (about 47 KB gzip / 40 KB brotli, unminified), startup requests, time to first page and navigation times;
   - next to published figures for React, Angular, Vue, Svelte, Solid and Lit, with each comparison point explained.
-- **Review** of every plan item ([plans/M5-review.md](plans/M5-review.md)) and a draft of the [next plan](plans/next-plan.md).
+- **Review** of every plan item ([plans/M5-review.md](plans/M5-review.md)) and the next plan (now [N-plan.md](plans/N-plan.md)).
 - **Added during the review:**
   - `allowedIsolation`: a component may let pages choose its isolation mode with `isolation="…"`;
   - extensions may not style the framework's `.vs-*` classes;
@@ -238,13 +248,13 @@ pages call endpoints from `config/endpoints.js` instead of `this.route.api`.
 - A route whose page files are missing or misnamed now logs a clear error and
   shows the not-found page instead of a blank page.
 
-## 0.1.0 (2026-10-28)
+### Starting point (2026-10-28)
 
-First release from the dedicated ViRaSPA repository. The framework was first
-built inside the VSales-Frontend-Web project and moved here unchanged, apart
-from the items listed under "Added in this repository".
+The framework was first built inside the VSales-Frontend-Web project and moved
+into this repository unchanged, apart from the items listed under "Added in this
+repository". (This was a starting point, not a release.)
 
-### Included
+#### Included
 - Page and component folders (`.html`, `.css`, `.js`, `.model.json`) with
   `Before`/`On`/`After` lifecycle events.
 - Minimal kernel in `index.html`, with the rest of the framework loaded
@@ -264,6 +274,6 @@ from the items listed under "Added in this repository".
   the x-responsive grid.
 - `node-server.js` static dev server with an SPA fallback.
 
-### Added in this repository
+#### Added in this repository
 - `core/framework.js`: framework-internal name, version and release date,
   exposed as `Viraspa.framework` and logged to the console at boot.

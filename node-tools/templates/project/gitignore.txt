@@ -2,6 +2,7 @@
 # never edit or commit them. On a new computer: node node-tools/install.js restore
 %%SITE%%/viraspa/
 %%SITE%%/components/
+%%SITE%%/helpers/
 %%SITE%%/extensions/
 %%SITE%%/lib/
 

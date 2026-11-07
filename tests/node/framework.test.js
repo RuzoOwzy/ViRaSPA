@@ -200,3 +200,14 @@ test("manifest rules: isolation values", () => {
   const bad = rules.validateManifest("extension", { ...base, components: [{ tag: "owzy-a", script: "a.js", allowedIsolation: ["shadow"] }] });
   assert.match(bad.errors.join(), /allowedIsolation/);
 });
+
+test("manifest rules: helpers and dependencies", () => {
+  const base = { name: "forms", version: "0.1.0", releaseDate: "2026-11-08" };
+  assert.equal(rules.validateManifest("helper", { ...base, scripts: ["forms.js"], namespace: "forms" }).errors.length, 0);
+  assert.match(rules.validateManifest("helper", { ...base, scripts: [] }).errors.join(), /scripts/);
+  assert.match(rules.validateManifest("helper", { ...base, scripts: ["a.js"], namespace: "session" }).errors.join(), /belongs to the framework/);
+  const deps = [{ kind: "helper", name: "forms", version: "0.1.0" }];
+  const component = { name: "vs-x", tag: "vs-x", version: "0.1.0", releaseDate: "2026-11-08", script: "vs-x.js" };
+  assert.equal(rules.validateManifest("component", { ...component, dependencies: deps }).errors.length, 0);
+  assert.match(rules.validateManifest("component", { ...component, dependencies: [{ kind: "library", name: "x", version: "1" }] }).errors.join(), /kind.*version/s);
+});

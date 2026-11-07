@@ -1,7 +1,8 @@
 {
   "name": "viraspa",
-  "version": "0.2.0",
-  "releaseDate": "2026-11-06",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "stage": "development",
   "description": "ViRaSPA - a no-build SPA framework in plain HTML, CSS and JavaScript.",
   "author": {
     "name": "RuzoOwzy",
@@ -135,7 +136,7 @@
     },
     {
       "path": "core/bootstrap.js",
-      "checksum": "sha256-4eb33ffcaf2cfe67e016c3dd6f3fc061144b5eee453ecc3829a1feadbb7476a1"
+      "checksum": "sha256-3e0707d44ae1f01297fbb972485e0e7cee5607150a5e1dcd7e0c489ad7fd96be"
     },
     {
       "path": "core/busy.js",
@@ -143,7 +144,7 @@
     },
     {
       "path": "core/component-registry.js",
-      "checksum": "sha256-59249acfb77e727367e4564c515c929ece9fbe0f31b12f117d6d827d0c3760d2"
+      "checksum": "sha256-ce82ec02b1fe262b794e36c8acb7e347ae60e1af9dd5eb2ad69561101b0b5f09"
     },
     {
       "path": "core/component.js",
@@ -179,7 +180,7 @@
     },
     {
       "path": "core/manifest-rules.js",
-      "checksum": "sha256-c0fa542d87acdef8d1f2a500eac6acb94d300c0a28694c4422989df54e104240"
+      "checksum": "sha256-4d40a29ae123a8f885774260bba8efd2bab3850b9c5a69e4ef3676821fc97742"
     },
     {
       "path": "core/page-loader.js",
@@ -235,7 +236,7 @@
     },
     {
       "path": "viraspa.js",
-      "checksum": "sha256-4eacb319df534cac40fc9703b9f320544e0a904f2ebe5decf416bfedb4528721"
+      "checksum": "sha256-286ae5d4c31a8bfc30328cb89773c45033f25e0a01785cf6dfa78d7e5c0243f7"
     }
   ]
 }
