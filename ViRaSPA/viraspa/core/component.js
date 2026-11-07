@@ -23,6 +23,9 @@
     // Shared stylesheets adopted into "full" shadow roots (see
     // Viraspa.core.styleIsolation.registerSharedStyle).
     static sharedStyles = ["base"];
+    // Other modes a page may choose with <tag isolation="scoped">, e.g.
+    // ["full", "scoped"]. Without it, only `isolation` is used.
+    static allowedIsolation = null;
     // Set to false when the folder has no .model.json / no .css file.
     static hasModel = true;
     static hasStyles = true;
@@ -31,7 +34,16 @@
       super();
       this.props = this.props || {};
       this.html = "";
-      this.isolation = ISOLATION_MODES.includes(this.constructor.isolation) ? this.constructor.isolation : "full";
+      // The author's mode, or one the page asks for with isolation="..." -
+      // only if the author lists it in static allowedIsolation.
+      const Class = this.constructor;
+      const own = ISOLATION_MODES.includes(Class.isolation) ? Class.isolation : "full";
+      const requested = this.getAttribute("isolation");
+      const allowed = (Class.allowedIsolation || [own]).filter((m) => ISOLATION_MODES.includes(m));
+      if (requested && !allowed.includes(requested)) {
+        console.warn(`<${Class.tag}> doesn't allow isolation="${requested}" (allowed: ${allowed.join(", ")}); using "${own}".`);
+      }
+      this.isolation = requested && allowed.includes(requested) ? requested : own;
       // Where the component's own content lives, in every mode: the shadow
       // root for "full", the element itself for "scoped" and "none".
       this.componentRoot = this.isolation === "full" ? this.attachShadow({ mode: "open" }) : this;
@@ -107,7 +119,7 @@
     attributeProps() {
       const props = {};
       for (const { name, value } of Array.from(this.attributes)) {
-        if (name === "data-vs-component") continue;
+        if (name === "data-vs-component" || name === "isolation") continue;
         props[name.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase())] = value;
       }
       return props;

@@ -149,8 +149,9 @@
     const info = Viraspa.core.components.info(Class.tag);
     if (!info || info.source !== "extension") return true;
     const css = await Viraspa.utility.assetLoader.fetchStyleText(href).catch(() => "");
-    if (!Viraspa.manifestRules.definesReservedCssVariable(css)) return true;
-    console.error(`<${Class.tag}> (extension "${info.owner}"): ${href} defines --vs-* variables, which are reserved for ViRaSPA; its styles were not applied.`);
+    const problem = Viraspa.manifestRules.reservedCssProblem(css);
+    if (!problem) return true;
+    console.error(`<${Class.tag}> (extension "${info.owner}"): ${href} ${problem}, which are reserved for ViRaSPA; its styles were not applied.`);
     return false;
   }
 

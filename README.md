@@ -4,7 +4,7 @@
 
 It keeps the structure that makes frameworks like Angular pleasant to work in (pages, components, lifecycle events, services, routing) but drops the build step. There is no TypeScript to transpile and no bundler: what you write is exactly what the browser runs, served by a small static dev server.
 
-> **Status:** 0.2.0 in progress (milestone M4 of 5, see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
+> **Status:** 0.2.0 complete, all five milestones done, waiting for the release tag (see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
 
 ## Why ViRaSPA
 
@@ -187,6 +187,7 @@ The same rules apply in every mode:
 - **CSS:** `:host` means the component element and `::slotted(x)` means slotted content.
 - **Slots:** `<slot>` / `<slot name="x">` work. In `scoped` and `none`, the framework moves the matching children into each slot, or keeps the slot's fallback content.
 - **Parts:** mark them with `part="title"`. Pages style them with `::part(title)` in `full` mode, or `app-note [part="title"]` otherwise.
+- **Letting the page choose:** the author picks the mode. With `static allowedIsolation = ["full", "scoped"]` the author also lets a page choose, e.g. `<owzy-box isolation="scoped">` to let a CSS framework reach in. Modes that aren't allowed are refused, with a console warning.
 
 ### Core components
 
@@ -267,7 +268,7 @@ node node-tools/install.js add component vs-card@0.1.0
   - its framework version doesn't fit;
   - its `tagPrefix` is reserved (`vs`, `viraspa`) or already used by another extension;
   - a component tag doesn't start with its prefix.
-- **Theme variables:** extensions may *use* `--vs-*` variables but not *define* them. Styles that do are not applied.
+- **Theme variables and framework classes:** extensions may *use* `--vs-*` variables but not *define* them, and may not style the framework's own `.vs-*` classes. Styles that do are not applied.
 - **Locked namespaces:** `Viraspa.core`, `services`, `utility`, `icons`, `toast`, `extensions`, `cache`, `session`, `busy`, `head`, `state`, `expressions`, `format` and `i18n` are frozen after startup, so no code can replace framework functions. Use the APIs instead, e.g. `Viraspa.core.setGuard(fn)`.
 
 ### Templates and bindings
@@ -811,6 +812,7 @@ node node-tools/deploy.js --target production --prerender
 
 See [Documents/](Documents/README.md):
 
-- [Plans for 0.2.0](Documents/plans/README.md), milestone by milestone
+- [Plans for 0.2.0](Documents/plans/README.md), milestone by milestone, with the [review](Documents/plans/M5-review.md) and the [next plan](Documents/plans/next-plan.md)
+- [Benchmark](Documents/benchmark.md): ViRaSPA measured, compared with published figures for React, Angular, Vue, Svelte, Solid and Lit
 - [Release notes](Documents/release-notes.md)
 - [Framework design model](Documents/Modeling%20my%20Own%20Custom%20SPA%20Web%20Development%20Frontend%20Framework.txt) (a working draft)

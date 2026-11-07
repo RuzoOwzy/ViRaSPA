@@ -182,6 +182,8 @@
     }
     emit("pageShown", detail, entry.element);
     emit("routeChanged", { route: entry.route, path: location.pathname });
+    // For performance tools: performance.getEntriesByName("viraspa:pageShown").
+    if (window.performance && performance.mark) performance.mark("viraspa:pageShown", { detail: { route: entry.route.name } });
   }
 
   async function showRoute(route, navId, fromHistory) {

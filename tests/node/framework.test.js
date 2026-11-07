@@ -189,4 +189,14 @@ test("manifest rules: reserved prefixes and --vs- definitions", () => {
   assert.equal(rules.validateManifest("extension", { ...base, tagPrefix: "owzy" }).errors.length, 0);
   assert.equal(rules.definesReservedCssVariable(":host{--vs-color-primary:red}"), true);
   assert.equal(rules.definesReservedCssVariable("a{color:var(--vs-color-primary)}"), false);
+  assert.match(rules.reservedCssProblem(".vs-page{display:none}"), /class names/);
+  assert.equal(rules.reservedCssProblem(".owzy-box .title{color:red} a.myvs-x{}"), "");
+});
+
+test("manifest rules: isolation values", () => {
+  const base = { name: "x", version: "1.0.0", releaseDate: "2026-11-07", tagPrefix: "owzy" };
+  const ok = rules.validateManifest("extension", { ...base, components: [{ tag: "owzy-a", script: "a.js", isolation: "scoped", allowedIsolation: ["full", "scoped"] }] });
+  assert.equal(ok.errors.length, 0);
+  const bad = rules.validateManifest("extension", { ...base, components: [{ tag: "owzy-a", script: "a.js", allowedIsolation: ["shadow"] }] });
+  assert.match(bad.errors.join(), /allowedIsolation/);
 });

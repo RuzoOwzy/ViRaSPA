@@ -24,6 +24,22 @@
     assert.ok(icon.shadowRoot.querySelector("svg"));
   });
 
+  test("allowedIsolation lets a page choose another mode; others are refused", async () => {
+    class Flexible extends Viraspa.core.Component {
+      static tag = "app-flexible-test";
+      static isolation = "full";
+      static allowedIsolation = ["full", "scoped"];
+    }
+    Viraspa.core.defineComponent(Flexible);
+    const area = document.getElementById("vs-test-area");
+    area.innerHTML = '<app-flexible-test isolation="scoped"></app-flexible-test><app-flexible-test isolation="none"></app-flexible-test><app-flexible-test></app-flexible-test>';
+    const [scoped, refused, plain] = area.children;
+    assert.equal(scoped.isolation, "scoped");
+    assert.equal(scoped.shadowRoot, null);
+    assert.equal(refused.isolation, "full");
+    assert.equal(plain.isolation, "full");
+  });
+
   test("components can't take the reserved vs- prefix", async () => {
     await assert.throws(() => Viraspa.core.defineComponent(class extends Viraspa.core.Component { static tag = "vs-test-thing"; }), /reserved/);
   });

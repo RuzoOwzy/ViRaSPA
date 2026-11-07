@@ -143,11 +143,11 @@
     },
     {
       "path": "core/component-registry.js",
-      "checksum": "sha256-19804ace1fbc9d5f28d511102e26155c9d7fbbb0fa7131049c8beda12897b9bb"
+      "checksum": "sha256-59249acfb77e727367e4564c515c929ece9fbe0f31b12f117d6d827d0c3760d2"
     },
     {
       "path": "core/component.js",
-      "checksum": "sha256-3fe1008f5c23556d920f4751e38467dbf3958285c36f64cf47dfbadd800e3197"
+      "checksum": "sha256-a34f07a64276fcfdc8bb36a0d9dcd04d8ad33f73b6b3c062df4332c06627b179"
     },
     {
       "path": "core/events.js",
@@ -179,7 +179,7 @@
     },
     {
       "path": "core/manifest-rules.js",
-      "checksum": "sha256-5f3b0a6760e3927ef6cfeb638a99a4eecbbf2ed2e1657efe98bc84d09b26b236"
+      "checksum": "sha256-c0fa542d87acdef8d1f2a500eac6acb94d300c0a28694c4422989df54e104240"
     },
     {
       "path": "core/page-loader.js",
@@ -191,7 +191,7 @@
     },
     {
       "path": "core/router.js",
-      "checksum": "sha256-64b825bcb362e2c0bcdfadc3451bdaebb00ae909972f8b1c316d27817aefddfc"
+      "checksum": "sha256-a0d657c453b6f69e796cb51db734d202e10c3d5cc7782752379d4c75bc769371"
     },
     {
       "path": "core/session.js",
@@ -203,7 +203,7 @@
     },
     {
       "path": "core/style-isolation.js",
-      "checksum": "sha256-4ef2ca86b19b6020b90e75b8a2e2d3a0df1c03b78a72363917d1e987b51158d6"
+      "checksum": "sha256-56bd1d4a2cb49acf6445776952f814e62d2321081dba9ef9309fa7ce5937484d"
     },
     {
       "path": "core/testing.js",

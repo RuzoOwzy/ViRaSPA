@@ -9,6 +9,18 @@ must match the newest entry below.
 **Breaking for projects built on 0.1.0.** Work is split into milestones,
 see [plans/](plans/README.md).
 
+### Milestone M5 · Benchmark and review
+
+- **[benchmark.md](benchmark.md):**
+  - ViRaSPA's measured runtime size (about 47 KB gzip / 40 KB brotli, unminified), startup requests, time to first page and navigation times;
+  - next to published figures for React, Angular, Vue, Svelte, Solid and Lit, with each comparison point explained.
+- **Review** of every plan item ([plans/M5-review.md](plans/M5-review.md)) and a draft of the [next plan](plans/next-plan.md).
+- **Added during the review:**
+  - `allowedIsolation`: a component may let pages choose its isolation mode with `isolation="…"`;
+  - extensions may not style the framework's `.vs-*` classes;
+  - `manifestRules.reservedCssProblem` and isolation checks in manifests;
+  - a `performance.mark("viraspa:pageShown")` on every page shown.
+
 ### Milestone M4 · Reactivity, i18n, testing
 
 #### Added

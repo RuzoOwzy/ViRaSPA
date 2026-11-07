@@ -131,8 +131,9 @@
     }
     for (const href of manifest.styles || []) {
       const css = await loader().fetchStyleText(`${folder}/${href}`).catch(() => "");
-      if (rules().definesReservedCssVariable(css)) {
-        console.error(`${what}: ${href} defines --vs-* variables, which are reserved for ViRaSPA; the stylesheet was not applied.`);
+      const problem = rules().reservedCssProblem(css);
+      if (problem) {
+        console.error(`${what}: ${href} ${problem}, which are reserved for ViRaSPA; the stylesheet was not applied.`);
       } else {
         loader().loadStyle(`${folder}/${href}`);
       }

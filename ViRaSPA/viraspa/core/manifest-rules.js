@@ -78,6 +78,22 @@
     if (person.website && !/^https?:\/\//i.test(person.website)) errors.push(`${where}.website must start with http:// or https://.`);
   }
 
+  const ISOLATION_MODES = ["full", "scoped", "none"];
+
+  // isolation: "full" | "scoped" | "none"; allowedIsolation: a list of them.
+  function checkIsolation(entry, where, errors) {
+    if (!entry) return;
+    if (entry.isolation !== undefined && !ISOLATION_MODES.includes(entry.isolation)) {
+      errors.push(`${where}: isolation "${entry.isolation}" must be full, scoped or none.`);
+    }
+    if (entry.allowedIsolation !== undefined) {
+      const list = entry.allowedIsolation;
+      if (!Array.isArray(list) || !list.every((m) => ISOLATION_MODES.includes(m))) {
+        errors.push(`${where}: allowedIsolation must be a list of full, scoped, none.`);
+      }
+    }
+  }
+
   // kind: "framework" | "component" | "extension".
   // options: { frameworkVersion, takenPrefixes: [] }
   // Returns { errors: [], warnings: [] } - any error means "reject".
@@ -107,6 +123,7 @@
     }
 
     if (kind === "component") {
+      checkIsolation(m, "the component", errors);
       if (!TAG.test(m.tag || "") || !m.tag.startsWith("vs-")) errors.push(`tag "${m.tag}" must start with "vs-" (official components only).`);
       if (m.tag && m.name && m.tag !== m.name) errors.push(`tag "${m.tag}" must equal name "${m.name}".`);
       if (!m.script) errors.push("script (the component's .js file) is required.");
@@ -124,6 +141,7 @@
           if (!TAG.test((c && c.tag) || "")) errors.push(`component tag "${c && c.tag}" is not a valid custom element name.`);
           else if (!c.tag.startsWith(`${prefix}-`)) errors.push(`component tag "${c.tag}" must start with "${prefix}-".`);
           if (!c || !c.script) errors.push(`component "${c && c.tag}" needs a script.`);
+          checkIsolation(c, `component "${c && c.tag}"`, errors);
         }
     }
 
@@ -135,5 +153,30 @@
     return /--vs-[\w-]+\s*:/.test(String(css).replace(/\/\*[\s\S]*?\*\//g, "").replace(/var\(\s*--vs-[\w-]+/g, ""));
   }
 
-  return Object.freeze({ RESERVED, parseVersion, compareVersions, checkFrameworkVersion, validateManifest, isReservedTag, definesReservedCssVariable });
+  // True when CSS text styles the framework's own class names (.vs-page,
+  // .vs-visually-hidden, .vs-denied...) - reserved, like --vs- variables.
+  function definesReservedClass(css) {
+    const clean = String(css).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\{[^{}]*\}/g, "{}");
+    return /(^|[\s,>+~(])\.vs-[\w-]+/.test(clean);
+  }
+
+  // What an extension's CSS may not do; a reason, or "" when it is fine.
+  function reservedCssProblem(css) {
+    if (definesReservedCssVariable(css)) return "defines --vs-* variables";
+    if (definesReservedClass(css)) return "styles the framework's .vs-* class names";
+    return "";
+  }
+
+  return Object.freeze({
+    RESERVED,
+    ISOLATION_MODES,
+    parseVersion,
+    compareVersions,
+    checkFrameworkVersion,
+    validateManifest,
+    isReservedTag,
+    definesReservedCssVariable,
+    definesReservedClass,
+    reservedCssProblem,
+  });
 });
