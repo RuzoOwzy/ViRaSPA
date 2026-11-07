@@ -237,7 +237,7 @@ An icon is an object, so its source is always explicit. In HTML, a short `set:na
 The [ViRaSPA-Extensions](https://github.com/RuzoOwzy/ViRaSPA-Extensions) repository holds the official optional packages, in two kinds:
 
 - **Components** (`vs-card`, `vs-stat-tile`, `vs-login-form`…): custom elements.
-- **Helpers** (planned: `forms`, `data-entry`, `filter`, `tooltip`): behaviour and APIs without an element of their own, each under one `Viraspa.<namespace>`, e.g. `Viraspa.forms`.
+- **Helpers:** behaviour and APIs without an element of their own, each under one `Viraspa.<namespace>`: `forms` (`Viraspa.forms`: required marks, validation messages, read-only mode, values), `data-entry` (`Viraspa.dataEntry`: Enter to the next field), `filter` (`Viraspa.filter`: type to filter lists and tables) and `tooltip` (`data-tooltip="…"`). The sample installs all four; see its `/data-entry` page.
 
 A project installs only the ones it uses:
 
@@ -295,7 +295,7 @@ node node-tools/install.js add helper forms@0.1.0
   - its `tagPrefix` is reserved (`vs`, `viraspa`) or already used by another extension;
   - a component tag doesn't start with its prefix.
 - **Theme variables and framework classes:** extensions may *use* `--vs-*` variables but not *define* them, and may not style the framework's own `.vs-*` classes. Styles that do are not applied.
-- **Locked namespaces:** `Viraspa.core`, `services`, `utility`, `icons`, `toast`, `extensions`, `cache`, `session`, `busy`, `head`, `state`, `expressions`, `format` and `i18n` are frozen after startup, so no code can replace framework functions. Use the APIs instead, e.g. `Viraspa.core.setGuard(fn)`.
+- **Locked namespaces:** `Viraspa.core`, `services`, `utility`, `icons`, `toast`, `extensions`, `cache`, `session`, `busy`, `head`, `state`, `expressions`, `routePaths`, `format`, `i18n`, `templates`, `keyboard` and `data` are frozen after startup (helpers' namespaces once loaded), so no code can replace framework functions. Use the APIs instead, e.g. `Viraspa.core.setGuard(fn)`.
 
 ### Templates and bindings
 
@@ -326,9 +326,20 @@ A plain value is filled in once. A **signal** stays live: when it changes, only 
 
 - values, `a.b`, `a[0]`, calls, and `{ object }` and `[array]` literals;
 - `! - + * / %`, comparisons, `&& || ??` and `a ? b : c`;
-- **pipes:** `{{ total | currency }}`, `{{ d | date:"invoiceDate" }}`, `number`, `percent`, `time`, `relative`, `upper`, `lower`, `default`, `join`, `t`. Add your own with `Viraspa.format.addPipe(name, fn)`.
+- **pipes:** `{{ total | currency }}`, `{{ d | date:"invoiceDate" }}`, `number`, `percent`, `time`, `relative`, `upper`, `lower`, `default`, `join`, `t`.
 
-Anything more complex belongs in a `computed` in JavaScript.
+**Your own helpers** for every template: one registry, usable as a call and as a pipe.
+
+```js
+Viraspa.templates.add("fullName", (user) => `${user.first} ${user.last}`);
+Viraspa.templates.add("initials", (name, count = 2) => name.split(" ").map((w) => w[0]).slice(0, count).join(""));
+```
+
+```html
+<p>{{ fullName(user) }}</p>   <b>{{ user.name | initials:3 }}</b>
+```
+
+A helper that reads signals keeps its binding live. A page's or component's own method with the same name wins in that page. `Viraspa.format.addPipe(name, fn)` still adds a pipe-only function. Long expressions used in several places belong in a helper (shared) or a `computed` (one page).
 
 **Safety:** text is always escaped. URL attributes (`href`, `src`, `action`, `formaction`, `poster`) never take `javascript:`, `vbscript:` or non-image `data:` values. Templates are parsed inert (in a `<template>`), so nothing loads before binding.
 
@@ -350,13 +361,86 @@ batch(() => { count.value = 5; count.value = 6; }); // the screen updates once
 - **Size:** about 2 KB of plain JavaScript.
 - **Example:** see `app/pages/live-demo/` (`/live-demo`), a cart with a computed total, a keyed list, two-way inputs and events.
 
-A simple shared **store** is just a module of signals:
+A shared **store** is just a file of signals in `app/state/` (see [Your own code](#your-own-code-utils-services-state)).
+
+### Your own code: utils, services, state
+
+`Viraspa.app` is the app's own namespace (the framework never freezes it). Three folders keep shared code out of the pages:
+
+| Folder | What goes there | Example |
+| --- | --- | --- |
+| `app/utils/` | small helpers with no server calls | `Viraspa.app.utils.initials(name)`, also registered with `Viraspa.templates.add` |
+| `app/services/` | business logic and server calls, shared by pages | `Viraspa.app.services.customers.get(id, { signal })` |
+| `app/state/` | shared signals (stores) | `Viraspa.app.state.cart.total` |
 
 ```js
-// app/state/cart.js
-Viraspa.app = Viraspa.app || {};
-Viraspa.app.cart = { items: Viraspa.state.signal([]), get count() { return this.items.value.length; } };
+// app/services/people.js
+(function (Viraspa) {
+  const { call } = Viraspa.services.communication;
+  Viraspa.app.services.people = {
+    get: (id, { signal } = {}) => call(Viraspa.endpoints.users.get, { params: { id }, signal }),
+  };
+})(window.Viraspa);
 ```
+
+List the files in a group of `app/config/startup.js` (`{ name: "app", scripts: ["app/utils/names.js", "app/services/people.js"] }`). Pages then stay thin: `const person = await Viraspa.app.services.people.get(this.params.id, { signal: this.signal });`. The project template has a README in each folder; the sample has `app/utils/names.js` and `app/services/people.js`.
+
+### Keyboard
+
+Every app gets the basics, and apps where people type all day can go further, without the mouse.
+
+**Always on:** a "Skip to content" link first in the Tab order; a visible focus ring; focus moves to the new page's `<h1>` after a navigation; `?` lists the shortcuts in use (`Viraspa.keyboard.configure({ helpKey: false, skipLink: false })` turns them off).
+
+**Shortcuts:**
+
+```js
+this.shortcut("alt+n", () => this.newLine(), { description: "New line" });   // in a page or component: removed with it
+const off = Viraspa.keyboard.shortcut("mod+k", openSearch, { description: "Search" }); // app-wide ("mod" = Ctrl, or Cmd on a Mac)
+```
+
+**The rules, so the framework never gets in your way:**
+
+1. **Your handler wins:** the framework handles keys last; if your code calls `event.preventDefault()`, it does nothing.
+2. **`data-keys="native"`** on any element switches framework keys off inside it.
+3. **Typing is safe:** a shortcut without Ctrl/Alt/Cmd doesn't fire while the user types in a field (unless `{ inFields: true }`).
+4. **The most specific wins:** a component's or page's shortcut beats an app-wide one.
+5. **Browser keys stay the browser's** unless you register them.
+
+**Component keys are named actions** with default keys, which an app, a page or one element can move or switch off:
+
+```js
+Viraspa.keyboard.configure({ components: { "vs-table-entry": { addRow: false, deleteRow: "ctrl+delete" } } });   // app-wide
+table.keys = { addRow: "alt+enter" };                                                                         // one element
+```
+
+```html
+<vs-table-entry keys='{"addRow": false}'></vs-table-entry>
+```
+
+In a component: `const keys = this.keymap({ addRow: "enter" })`, then `Viraspa.keyboard.actionFor(event, keys)` gives the action name. Text areas and the rich text editor keep normal editor keys (Enter is a new line).
+
+**Data-entry mode** (the official `data-entry` helper): Enter moves to the next field and Shift+Enter back, inside any `data-entry-mode` area; see the sample's `/data-entry` page.
+
+**Focus helpers** for components: `Viraspa.keyboard.trapFocus(container)` (keeps Tab inside a popup, returns focus when released), `roving(container, { orientation })` (arrow keys between items, one Tab stop), `tabbables(container)`, `matches(event, "ctrl+s")`, `label("ctrl+s")`.
+
+### Data from the server (or memory)
+
+Components that may need the server (tables, search boxes, trees) take a function from you, and handle the rest: waiting until the user stops typing, cancelling outdated requests, ignoring late answers, loading state, errors and retry.
+
+```js
+table.source = async ({ page, pageSize, search, sort, filters, signal }) => {
+  const r = await Viraspa.app.services.sales.list({ page, pageSize, search, sort, filters }, { signal });
+  return { rows: r.items, total: r.count };
+};
+```
+
+- **The request:** `page` (from 1), `pageSize`, `search`, `sort` (`[{ column, direction }]`), `filters` (`{ column: value }`) and `signal` (pass it on, so outdated requests are cancelled). **The answer:** `{ rows, total }`.
+- **Built on** `Viraspa.data.createSource(handler, { debounce })`: `load(request, { debounce: true })`, `reload()`, `cancel()`, and the signals `loading`, `error`, `result`.
+- **Data already in the browser:** `Viraspa.data.localSource(rows, { searchFields })` answers the same requests in memory (accent- and case-insensitive search, filters, multi-column sort, paging).
+
+### Form fields in components
+
+A component with `static formAssociated = true` takes part in a `<form>` like a native input: its `name`, its value on submit (`this.setFormValue(value)`), `required` and validity (`this.setValidity({ valueMissing: true }, "message")`), `form.reset()` (`onFormReset()`), disabled fieldsets (`onFormDisabled(disabled)`), and `form`, `validity`, `checkValidity()`, `reportValidity()`. The official input components use it.
 
 ### Languages (i18n)
 
@@ -539,7 +623,7 @@ const user = await Viraspa.services.communication.call(Viraspa.endpoints.users.g
 ### Startup and the app shell
 
 1. `index.html` holds the project settings (`Viraspa.settings`) and one framework script, `viraspa/viraspa.js?v=<framework version>`.
-2. The loader checks the browser, loads `base.css` and the framework files, then `app/config/startup.js`, which lists the app's extensions and own files in groups.
+2. The loader checks the browser, loads `base.css` and the framework files, then `app/config/startup.js`, which lists the official helpers (`helpers`), extensions and the app's own files in groups. A group script is a path, or `{ src, type: "module" }` for a library that ships only as an ES module (the framework and app code stay classic scripts).
 3. The shell is plain markup in `index.html`. It's built once; only `#page-root` changes per route:
    ```html
    <vs-header sticky>
@@ -641,8 +725,9 @@ const users = await Viraspa.busy.run(
 );
 ```
 
-- **Indicator:** a `<vs-busy-indicator>` covers the `target`, or shows a small indicator at the top of the window when there's no target.
-- **Delay:** it appears only after `delay` ms (default 200), so quick work never flashes a spinner.
+- **Indicator:** a `<vs-busy-indicator>` covers the `target`. Without a target, a thin line runs across the top of the window and creeps forward while the work runs (as on YouTube). The same line shows while the router loads a page.
+- **Settings:** `Viraspa.busy.configure({ style: "top-line" | "overlay" | "both", navigation: true, topLineDelay: 150 })`; colour `--vs-top-line-color`, height `--vs-top-line-height`. Your own code can drive it too: `Viraspa.busy.topLine.start()` / `done()`.
+- **Delay:** it appears only after `delay` ms (default 200; the top line 150), so quick work never flashes anything.
 - **Several runs:** runs on the same target share one indicator.
 - **Cancelling:** the work gets a `signal` that aborts when the page's signal aborts (the user left) or when `Viraspa.busy.cancelAll()` runs.
 

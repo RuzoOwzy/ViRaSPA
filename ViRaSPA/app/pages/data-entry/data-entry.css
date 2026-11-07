@@ -1,0 +1,66 @@
+.entry-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem 1rem;
+  max-width: 820px;
+  margin: 1rem 0 2rem;
+}
+
+.entry-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.entry-form .field-wide,
+.entry-form .actions {
+  grid-column: 1 / -1;
+}
+
+.entry-form input,
+.entry-form textarea {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  font: inherit;
+}
+
+.entry-form .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.entry-form button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--vs-color-primary);
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-primary);
+  color: #fff;
+  font: inherit;
+}
+
+.entry-form button.secondary {
+  background: transparent;
+  color: var(--vs-color-primary);
+}
+
+.filter-box {
+  width: min(100%, 420px);
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  font: inherit;
+}
+
+.entries {
+  width: 100%;
+  max-width: 820px;
+  border-collapse: collapse;
+}
+
+.entries th,
+.entries td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--vs-color-border);
+  text-align: left;
+}

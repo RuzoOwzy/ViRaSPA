@@ -1,0 +1,10 @@
+/* Matches found by the filter helper (browsers with the CSS Highlight API). */
+::highlight(vs-filter) {
+  background: var(--vs-filter-highlight, #fff2a8);
+  color: inherit;
+}
+
+.vs-filter-empty {
+  color: var(--vs-color-text-muted, #5b6b66);
+  font-style: italic;
+}

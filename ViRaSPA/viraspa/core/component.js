@@ -56,6 +56,62 @@
       // the page (and set up again if it comes back).
       this._scope = Viraspa.state.createScope();
       this._bindingScope = null;
+      // Form fields: a component with `static formAssociated = true` takes
+      // part in <form> like a native input (name, value on submit, required,
+      // reset, disabled fieldsets) through this.internals.
+      this.internals = this.constructor.formAssociated && this.attachInternals ? this.attachInternals() : null;
+    }
+
+    // ---- form fields (static formAssociated = true) ---------------------
+    get form() {
+      return this.internals ? this.internals.form : null;
+    }
+    get name() {
+      return this.getAttribute("name") || "";
+    }
+    get validity() {
+      return this.internals ? this.internals.validity : null;
+    }
+    get validationMessage() {
+      return this.internals ? this.internals.validationMessage : "";
+    }
+    checkValidity() {
+      return this.internals ? this.internals.checkValidity() : true;
+    }
+    reportValidity() {
+      return this.internals ? this.internals.reportValidity() : true;
+    }
+    // The value sent with the form (a string, File, FormData or null).
+    setFormValue(value, state) {
+      if (this.internals) this.internals.setFormValue(value, state);
+    }
+    // setValidity({ valueMissing: true }, "Please fill in this field.", inputElement); setValidity({}) clears it.
+    setValidity(flags = {}, message = "", anchor) {
+      if (!this.internals) return;
+      if (Object.values(flags).some(Boolean)) this.internals.setValidity(flags, message || " ", anchor);
+      else this.internals.setValidity({});
+    }
+    formDisabledCallback(disabled) {
+      this.toggleAttribute("data-form-disabled", disabled);
+      if (typeof this.onFormDisabled === "function") this.onFormDisabled(disabled);
+    }
+    formResetCallback() {
+      if (typeof this.onFormReset === "function") this.onFormReset();
+    }
+
+    // ---- keyboard ----------------------------------------------------------
+    // A shortcut active while focus is inside this component, removed with it.
+    shortcut(keys, handler, options = {}) {
+      const off = Viraspa.keyboard.shortcut(keys, handler, { within: this, ...options });
+      this._scope.add(off);
+      return off;
+    }
+
+    // This component's keys: its defaults, then the app's settings for its
+    // tag (Viraspa.keyboard.configure({ components })), then the element's own
+    // `keys` property or attribute. An action set to false is off.
+    keymap(defaults) {
+      return Viraspa.keyboard.keymap(this.constructor.tag, defaults, this);
     }
 
     connectedCallback() {

@@ -1,0 +1,34 @@
+{
+  "name": "forms",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Required marks, validation messages, read-only mode, snapshots and values for forms.",
+  "namespace": "forms",
+  "scripts": [
+    "forms.js"
+  ],
+  "styles": [
+    "forms.css"
+  ],
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-2a3d73a08ff17ba6bf65c27ecf52bca1fb29fd425dfad89324ae90b80801a4fa"
+    },
+    {
+      "path": "forms.css",
+      "checksum": "sha256-674bb60916629daff53905293a4ef7f55e9dd3269a64b6d3e3d666163fdb712b"
+    },
+    {
+      "path": "forms.js",
+      "checksum": "sha256-cecb314fe09ea75d278e679d00dab95110130b7adf2e84913e913e829aaf850c"
+    }
+  ]
+}

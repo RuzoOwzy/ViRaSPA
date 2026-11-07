@@ -14,6 +14,8 @@ window.Viraspa.startup = {
     { name: "environment", scripts: ["app/config/environment.js"] },
     { name: "config", scripts: ["app/config/endpoints.js"] },
     { name: "init", scripts: ["app/config/init.js"] },
+    // Your utils, services and state (see app/utils/README.md...), e.g.
+    // { name: "app", scripts: ["app/utils/names.js", "app/services/customers.js", "app/state/cart.js"] },
     { name: "routes", scripts: ["app/config/routes.js"] },
     // Your own components, e.g. { name: "components", scripts: ["app/components/x/x.js"] },
   ],

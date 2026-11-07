@@ -1,0 +1,20 @@
+/* The tooltip helper's bubble. Theme it with these variables. */
+.vs-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147482000;
+  max-width: min(20rem, calc(100vw - 8px));
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  background: var(--vs-tooltip-background, #1d2a26);
+  color: var(--vs-tooltip-color, #fff);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.vs-tooltip[hidden] {
+  display: none;
+}

@@ -1,0 +1,28 @@
+{
+  "name": "data-entry",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Data-entry mode: Enter moves to the next field, Shift+Enter back, the last field can add a row or submit.",
+  "namespace": "dataEntry",
+  "scripts": [
+    "data-entry.js"
+  ],
+  "styles": [],
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-8184d01c38ccbbc927a190b671ff6736dd174023e0247ceb2c239f7be29ba3c6"
+    },
+    {
+      "path": "data-entry.js",
+      "checksum": "sha256-67ff10d8ad376b217a26325919e7e2eead40399f48ae1ed402baa25cae170939"
+    }
+  ]
+}

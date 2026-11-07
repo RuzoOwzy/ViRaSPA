@@ -161,3 +161,84 @@ a.vs-denied {
   white-space: nowrap;
   border: 0;
 }
+
+/* ---- Keyboard: skip link and shortcut help (core/keyboard.js) ------------- */
+.vs-skip-link {
+  position: fixed;
+  top: var(--vs-space-2, 0.5rem);
+  left: var(--vs-space-2, 0.5rem);
+  z-index: 2147483001;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--vs-radius);
+  background: var(--vs-color-primary);
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.vs-skip-link:focus {
+  transform: none;
+}
+
+.vs-keyboard-help {
+  margin: auto; /* centred (the base reset removes the dialog's own margins) */
+  max-width: min(32rem, calc(100vw - 2rem));
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+  color: var(--vs-color-text);
+  background: var(--vs-color-surface, #fff);
+}
+
+.vs-keyboard-help::backdrop {
+  background: rgba(15, 25, 22, 0.35);
+}
+
+.vs-keyboard-help h2 {
+  margin-top: 0;
+}
+
+.vs-keyboard-help td {
+  padding: 0.25rem 1rem 0.25rem 0;
+  vertical-align: top;
+}
+
+.vs-keyboard-help kbd {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--vs-color-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font: 0.85em ui-monospace, Consolas, monospace;
+  white-space: nowrap;
+}
+
+.vs-keyboard-help-note {
+  color: var(--vs-color-text-muted);
+  font-size: 0.9em;
+}
+
+/* ---- Busy: the top line (core/busy.js) ------------------------------------ */
+.vs-top-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483000;
+  width: 100%;
+  height: var(--vs-top-line-height, 3px);
+  background: var(--vs-top-line-color, var(--vs-color-primary));
+  transform: scaleX(var(--vs-top-line-progress, 0));
+  transform-origin: 0 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s ease-out, opacity 0.3s ease;
+}
+
+.vs-top-line.is-active {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-top-line {
+    transition: opacity 0.3s ease;
+  }
+}

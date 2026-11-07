@@ -98,7 +98,7 @@
   const CORE_NAMESPACES = [
     "core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions",
     "manifestRules", "state", "expressions", "routePaths", "format", "i18n", "templates", "keyboard", "settings",
-    "framework", "startup", "routes", "pages", "endpoints", "app", "testing", "helpers",
+    "framework", "startup", "routes", "pages", "endpoints", "app", "testing", "helpers", "data", "popup",
   ];
   const DEPENDENCY_KINDS = ["component", "helper"];
 

@@ -1,0 +1,34 @@
+{
+  "name": "filter",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Type to filter a list, a table or a select, ignoring case and accents, with highlighting.",
+  "namespace": "filter",
+  "scripts": [
+    "filter.js"
+  ],
+  "styles": [
+    "filter.css"
+  ],
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-f4a4053ee2ef54a0fbf18ba04f2256ec9acc33db9563faa46152492cea23a273"
+    },
+    {
+      "path": "filter.css",
+      "checksum": "sha256-5a99fae21831afc0fb5bcbb41f6fa63ea824562881cf519ebc6fb58c1717ab7e"
+    },
+    {
+      "path": "filter.js",
+      "checksum": "sha256-88a91035f2d9cbc5173430964c830e31d43bdcd2d938c0bcf822e74bbba94729"
+    }
+  ]
+}

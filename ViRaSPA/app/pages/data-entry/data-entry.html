@@ -1,0 +1,46 @@
+<div class="x-container page-data-entry">
+  <h1>Data Entry</h1>
+  <p class="text-muted">Use only the keyboard: <kbd>Enter</kbd> moves to the next field, <kbd>Shift</kbd>+<kbd>Enter</kbd> goes back, and <kbd>Enter</kbd> on the last field saves. <kbd>Alt</kbd>+<kbd>N</kbd> starts a new entry and <kbd>?</kbd> lists the shortcuts.</p>
+
+  <form id="sale-form" class="entry-form" data-entry-mode data-entry-submit novalidate>
+    <div class="field">
+      <label for="customer">Customer</label>
+      <input id="customer" name="customer" required autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="product">Product</label>
+      <input id="product" name="product" required list="product-list" autocomplete="off">
+      <datalist id="product-list"></datalist>
+    </div>
+    <div class="field">
+      <label for="quantity">Quantity</label>
+      <input id="quantity" name="quantity" type="number" min="1" step="1" value="1" required inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="price">Unit price (TZS)</label>
+      <input id="price" name="price" type="number" min="0" step="50" required inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="discount">Discount (read-only)</label>
+      <input id="discount" name="discount" value="0" readonly>
+    </div>
+    <div class="field field-wide">
+      <label for="note">Note</label>
+      <textarea id="note" name="note" rows="2" data-enter="next" placeholder="Enter moves on here too (data-enter=&quot;next&quot;)"></textarea>
+    </div>
+    <div class="actions">
+      <button type="submit" data-tooltip="Save this entry (Enter on the last field)">Save</button>
+      <button type="button" class="secondary" data-action="lock" data-readonly-keep data-tooltip="Switch the whole form to read-only and back">Lock / Unlock</button>
+    </div>
+  </form>
+
+  <h2>Saved entries</h2>
+  <p><input type="search" class="filter-box" data-filter-for="#entries" data-filter-empty="No entry matches." placeholder="Filter the entries (try a customer or product)…" aria-label="Filter the entries"></p>
+  <table id="entries" class="entries">
+    <thead><tr><th>Customer</th><th>Product</th><th>Quantity</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Amina Juma</td><td>Rice 5 kg</td><td>2</td><td>TZS 36,000</td></tr>
+      <tr><td>Élodie Mushi</td><td>Cooking oil 3 L</td><td>1</td><td>TZS 21,500</td></tr>
+    </tbody>
+  </table>
+</div>

@@ -9,7 +9,7 @@
       await super.onLoad();
       const box = Viraspa.utility.dom.qs("#person-details", this.container);
       try {
-        const user = await Viraspa.services.communication.call(Viraspa.endpoints.users.get, { params: { id: this.params.id }, signal: this.signal });
+        const user = await Viraspa.app.services.people.get(this.params.id, { signal: this.signal });
         this.setHeadData({ name: user.name, company: user.company && user.company.name });
         Viraspa.utility.dom.qs("h1", this.container).textContent = user.name;
         box.innerHTML = "";

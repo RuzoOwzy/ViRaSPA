@@ -14,7 +14,7 @@
       Viraspa.core.emit("pageBeforeRequest", { page: this, endpoint });
       try {
         // this.signal cancels the request if the user leaves the page first.
-        const users = await Viraspa.services.communication.call(endpoint, { query: { _limit: 5 }, signal: this.signal });
+        const users = await Viraspa.app.services.people.list({ limit: 5 }, { signal: this.signal });
         Viraspa.core.emit("pageOnRequest", { page: this, result: users });
 
         // x-col sizes: full width on phones, half on tablets, a third from

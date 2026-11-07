@@ -11,6 +11,19 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N7 · Migration study and foundations
+
+- **[Migration inventory](plans/N7-migration-inventory.md):** the features of every old component and helper, from the newest sources, with what each new package keeps, improves or drops.
+- **`Viraspa.keyboard`:** shortcuts (`this.shortcut()` in pages and components) with rules that let the developer always win (`preventDefault`, `data-keys="native"`, no plain keys while typing, the most specific wins); component key maps (`keymap`, `actionFor`, `configure({ components })`, a `keys` property or attribute); focus helpers (`trapFocus`, `roving`, `tabbables`); a "Skip to content" link; a `?` overlay listing the shortcuts in use.
+- **`Viraspa.templates.add(name, fn)`:** template helpers usable as a call (`{{ fullName(user) }}`) and as a pipe (`{{ name | initials:3 }}`).
+- **`Viraspa.data`:** `createSource(handler)` (debounce, cancelling, late answers ignored, loading/error signals, retry) and `localSource(rows)` (search, filters, sort, paging in memory) - the contract for components that may need the server.
+- **Top-line loader:** a thin line at the top of the window during navigation and global `Viraspa.busy.run` (`Viraspa.busy.configure({ style, navigation, topLineDelay })`).
+- **Form fields:** components with `static formAssociated = true` take part in forms (value, validity, reset, disabled).
+- **`Viraspa.app`** (`utils`, `services`, `state`) with folders and READMEs in the project template; the sample's `app/utils/names.js` and `app/services/people.js`.
+- **ES-module libraries:** a startup script may be `{ src, type: "module" }`; `loadScript(src, { type: "module" })`.
+- **Official helpers** (ViRaSPA-Extensions): `forms`, `data-entry`, `filter`, `tooltip`; the sample installs them and shows them on its new `/data-entry` page.
+- **Fixed:** `vs-menu`'s collapsed labels used `data-tooltip`, which the tooltip helper would have picked up (now `data-menu-label`).
+
 ### Milestone N6 · Dynamic pages: route parameters and head injection
 
 - **Route parameters:** `path: "/customers/:id"`; `this.params` and `this.query` in pages, `event.detail.params` for native pages; routes without parameters win; values keep their letter case; `keepAlive` per address; menus skip such routes; head placeholders are filled from the parameters. Shared rules in `viraspa/core/route-paths.js` (`Viraspa.routePaths`), mirrored in the tools (dev server 404s, server rules for IIS, Apache and nginx, `check-server.js`); prerender skips them.

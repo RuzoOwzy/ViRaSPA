@@ -1,0 +1,21 @@
+/* The forms helper's marks and messages. Colours follow the app theme. */
+.vs-required-mark {
+  margin-inline-start: 0.2em;
+  color: var(--vs-color-danger, #c0392b);
+  font-weight: 600;
+}
+
+.vs-field-error {
+  margin-top: 0.25rem;
+  color: var(--vs-color-danger, #c0392b);
+  font-size: 0.875em;
+}
+
+[aria-invalid="true"] {
+  border-color: var(--vs-color-danger, #c0392b);
+}
+
+[data-readonly] input[readonly],
+[data-readonly] textarea[readonly] {
+  background: var(--vs-color-surface-muted, #f2f4f3);
+}

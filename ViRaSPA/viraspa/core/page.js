@@ -37,6 +37,14 @@
       this._scope.add(() => target.removeEventListener(type, handler, options));
     }
 
+    // A keyboard shortcut active while this page is on screen, removed with
+    // the page: this.shortcut("alt+n", () => this.addLine(), { description: "New line" }).
+    shortcut(keys, handler, options = {}) {
+      const off = Viraspa.keyboard.shortcut(keys, handler, { within: this.container, ...options });
+      this._scope.add(off);
+      return off;
+    }
+
     // Called by the router when the page is removed.
     dispose() {
       if (this._bindingScope) this._bindingScope.dispose();

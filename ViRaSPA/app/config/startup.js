@@ -6,7 +6,7 @@ window.Viraspa.startup = {
   // Official helpers installed in helpers/<name>/ (install.js add helper ...)
   // that your own code uses, e.g. ["forms"]. (Components load the helpers
   // they need by themselves.)
-  helpers: [],
+  helpers: ["forms", "data-entry", "filter", "tooltip"],
   // Extensions installed in extensions/<name>/ (install.js add extension ...),
   // loaded before the groups below.
   extensions: [],
@@ -16,6 +16,8 @@ window.Viraspa.startup = {
     { name: "environment", scripts: ["app/config/environment.js"], styles: ["app/assets/app.css"] },
     { name: "config", scripts: ["app/config/endpoints.js", "app/config/session.js"] },
     { name: "init", scripts: ["app/config/init.js"] },
+    // The app's own utilities and services (Viraspa.app.utils / .services).
+    { name: "app", scripts: ["app/utils/names.js", "app/services/people.js"] },
     {
       // The responsive grid used by the sample pages (an app asset, not part
       // of the framework). It builds on jQuery, an explicit include in index.html.

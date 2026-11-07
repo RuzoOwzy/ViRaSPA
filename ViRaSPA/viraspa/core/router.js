@@ -303,7 +303,18 @@
     await runHook(page, "afterLoad");
   }
 
-  async function loadRoute({ fromHistory = false } = {}) {
+  // The top-line loader runs while a navigation loads (Viraspa.busy settings).
+  async function loadRoute(options) {
+    const showLine = Viraspa.busy && Viraspa.busy.settings().navigation;
+    if (showLine) Viraspa.busy.topLine.start();
+    try {
+      return await loadRouteNow(options);
+    } finally {
+      if (showLine) Viraspa.busy.topLine.done();
+    }
+  }
+
+  async function loadRouteNow({ fromHistory = false } = {}) {
     const navId = ++navCounter;
     // Back/Forward: remember where the page we're leaving was scrolled to
     // (navigate() does this itself before pushing the new address).

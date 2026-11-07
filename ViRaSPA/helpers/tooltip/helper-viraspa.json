@@ -1,0 +1,34 @@
+{
+  "name": "tooltip",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "Tooltips from a data-tooltip attribute: hover, keyboard focus and long press, screen-reader friendly.",
+  "namespace": "tooltip",
+  "scripts": [
+    "tooltip.js"
+  ],
+  "styles": [
+    "tooltip.css"
+  ],
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-356ee9ea6e3995e995a6d16fee270fc4dc6cbc702577681dbd8fdb02adffc9d3"
+    },
+    {
+      "path": "tooltip.css",
+      "checksum": "sha256-978052668929ab1269dfe0edab25075f6e15cc1e0b61a29e49af1812bb26b317"
+    },
+    {
+      "path": "tooltip.js",
+      "checksum": "sha256-6cc235b45f628a3e123fc4b38ecdbb51a642cb050123dd0eaecdbb2b5e22bb6b"
+    }
+  ]
+}

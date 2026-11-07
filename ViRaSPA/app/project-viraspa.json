@@ -32,7 +32,32 @@
       "checksum": "sha256-5d0cbc7d47a1e1e66fa520acd08da91fc08d970c536f77521af6045e4776e964"
     }
   ],
-  "helpers": [],
+  "helpers": [
+    {
+      "name": "forms",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-5ccf01828d2c6fb439e447e21ae1f9fc634e2b978bbd3e3c340b387bc10edcee"
+    },
+    {
+      "name": "data-entry",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-c85b5035c7da9bbc3c743a62e06ae1b0a3082578cb5494a4121a84efb377dd94"
+    },
+    {
+      "name": "filter",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-a123443fa996c1444d4ff33e127cd4b4e736b26edf63e8d9e23c9118b7e8c554"
+    },
+    {
+      "name": "tooltip",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-18483a9b9c982dc9ab1078858015b703d1ea1a4fec3abffc9e8a4020f4becece"
+    }
+  ],
   "extensions": [],
   "libraries": [
     {

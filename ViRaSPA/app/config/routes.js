@@ -38,6 +38,15 @@ window.Viraspa.routes = [
     ],
   },
   {
+    path: "/data-entry",
+    name: "data-entry",
+    page: "app/pages/data-entry",
+    title: "Data Entry · ViRaSPA",
+    head: { description: "Keyboard-only data entry with the forms, data-entry, filter and tooltip helpers." },
+    layout: "public",
+    nav: { label: "Data Entry", icon: "lucide:keyboard", menus: ["main"], order: 4 },
+  },
+  {
     // A route with a parameter: /people/1, /people/2... (this.params.id).
     path: "/people/:id",
     name: "person",

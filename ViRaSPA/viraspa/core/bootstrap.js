@@ -6,9 +6,10 @@
 
   const STARTUP_FILE = "app/config/startup.js";
 
+  // A script is a path, or { src, type: "module" } for an ES-module library.
   async function loadGroup(group) {
     const { loadScript, loadStyle } = Viraspa.utility.assetLoader;
-    await Promise.all([...(group.styles || []).map((href) => loadStyle(href)), ...(group.scripts || []).map(loadScript)]);
+    await Promise.all([...(group.styles || []).map((href) => loadStyle(href)), ...(group.scripts || []).map((s) => (typeof s === "string" ? loadScript(s) : loadScript(s.src, s)))]);
   }
 
   // The framework's own namespaces are frozen once loaded, so app or
@@ -25,7 +26,7 @@
   }
 
   function lockFrameworkNamespaces() {
-    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules", "state", "expressions", "routePaths", "format", "i18n"]) {
+    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules", "state", "expressions", "routePaths", "format", "i18n", "templates", "keyboard", "data"]) {
       deepFreeze(Viraspa[name]);
       Object.defineProperty(Viraspa, name, { value: Viraspa[name], writable: false, configurable: false });
     }
@@ -39,6 +40,10 @@
 
     await Viraspa.cache.ready; // the app token ("auto" strategy may fetch it)
     lockFrameworkNamespaces();
+    // The app's own namespace (never frozen): app/utils, app/services and
+    // app/state files add to it, e.g. Viraspa.app.services.customers.
+    Viraspa.app = Viraspa.app || {};
+    for (const part of ["utils", "services", "state"]) Viraspa.app[part] = Viraspa.app[part] || {};
     await Viraspa.utility.assetLoader.loadScript(STARTUP_FILE);
     const startup = Viraspa.startup || {};
 

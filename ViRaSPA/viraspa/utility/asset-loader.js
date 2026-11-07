@@ -27,12 +27,16 @@
     }
   }
 
-  // Loads a classic script once; later calls get the same promise.
-  function loadScript(src) {
+  // Loads a script once; later calls get the same promise. Classic scripts
+  // by default; { type: "module" } for a library that ships only as an ES
+  // module (it runs in its own scope: use what it puts on window, or
+  // import() it yourself). The framework and app code stay classic.
+  function loadScript(src, { type } = {}) {
     const url = Viraspa.core.v(src);
     if (!scripts.has(url)) {
       const pending = new Promise((resolve, reject) => {
         const script = document.createElement("script");
+        if (type === "module") script.type = "module";
         script.src = url;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error(`Failed to load script: ${url}`));

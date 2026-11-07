@@ -84,7 +84,7 @@
           // App paths ("/about") get the site's sub-folder, if it has one.
           const href = item.href && !item.external ? Viraspa.core.toUrlPath(item.href) : item.href;
           return (
-            `<li class="item"><a class="link" href="${escapeHtml(href || "#")}" data-tooltip="${escapeHtml(item.label)}"${external} part="link">` +
+            `<li class="item"><a class="link" href="${escapeHtml(href || "#")}" data-menu-label="${escapeHtml(item.label)}"${external} part="link">` +
             (icon ? `<vs-icon class="icon" icon="${escapeHtml(icon)}"></vs-icon>` : "") +
             `<span class="label">${escapeHtml(item.label)}</span></a></li>`
           );

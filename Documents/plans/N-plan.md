@@ -12,7 +12,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | **N4** | Browsers and phones: Playwright with Chromium, Firefox, WebKit and phone profiles; a DevTools phone-mode checklist | done, see [N4 report](N4-report.md) |
 | **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | built and pushed; Pages and the rename wait for the owner, see [N5 report](N5-report.md) |
 | **N6** | Dynamic page previews: the optional Node helper (plus route parameters and an ASP.NET Core reference) | done, see [N6 report](N6-report.md) |
-| **N7** | Study and foundations | planned |
+| **N7** | Study and foundations | done, see [N7 report](N7-report.md) and the [inventory](N7-migration-inventory.md) |
 | **N8** | Basic components (13) | planned |
 | **N9** | Composite components (5) and the list-page example | planned |
 | **N10** | Media viewer, image cropper, rich text editor v1 | planned |

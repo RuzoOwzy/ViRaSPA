@@ -16,7 +16,7 @@
   //
   // Names are looked up in: the block's own names (repeat items), the model,
   // then the page or component itself (its fields, signals and methods), then
-  // the helpers t() and format. Signals are read automatically and the
+  // the app's template helpers (Viraspa.templates), t() and format. Signals are read automatically and the
   // screen updates where they are used - nothing else is re-rendered.
   // URL attributes (href, src, action, formaction, poster) never accept
   // javascript:, vbscript: or non-image data: values.
@@ -38,16 +38,20 @@
   // ---- evaluation context --------------------------------------------
   function helpers() {
     return {
+      ...(Viraspa.templates ? Viraspa.templates.scope() : {}),
       t: (...args) => (Viraspa.i18n ? Viraspa.i18n.t(...args) : String(args[0] ?? "")),
       format: Viraspa.format,
     };
   }
 
+  // A pipe: an app template helper (Viraspa.templates), else a built-in one.
+  const findPipe = (name) => (Viraspa.templates && Viraspa.templates.get(name)) || (Viraspa.format && Viraspa.format.pipe(name));
+
   function makeContext(scopes) {
     return {
       scopes,
       unwrap: (v) => Viraspa.state.unwrap(v),
-      pipe: (name) => Viraspa.format && Viraspa.format.pipe(name),
+      pipe: findPipe,
     };
   }
 
@@ -90,7 +94,7 @@
               if (Viraspa.state.isSignal(v)) live = true;
               return Viraspa.state.unwrap(v);
             },
-            pipe: (name) => Viraspa.format && Viraspa.format.pipe(name),
+            pipe: findPipe,
           });
         } catch (err) {
           console.warn(`Template expression {{{ ${part.expr} }}} failed: ${err.message}`);

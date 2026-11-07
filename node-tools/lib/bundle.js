@@ -197,6 +197,12 @@ function bundleApp(site, report, { packFile }) {
       else styles.push(rel);
     }
     for (const src of group.scripts || []) {
+      if (typeof src !== "string") {
+        // { src, type: "module" }: an ES-module library keeps its own place.
+        flush();
+        chunks.push({ remote: src });
+        continue;
+      }
       const rel = clean(src);
       if (isLocal(src) && site[rel]) current.push(rel);
       else if (isLocal(src)) throw new Error(`app: ${startupFile} lists ${src}, which does not exist.`);

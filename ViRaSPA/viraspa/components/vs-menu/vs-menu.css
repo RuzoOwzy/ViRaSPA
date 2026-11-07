@@ -96,7 +96,7 @@
 
 :host([collapsed]) .vertical .link:hover::after,
 :host([collapsed]) .vertical .link:focus-visible::after {
-  content: attr(data-tooltip);
+  content: attr(data-menu-label);
   position: absolute;
   left: calc(100% + 0.5rem);
   top: 50%;
