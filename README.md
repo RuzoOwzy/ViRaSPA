@@ -370,7 +370,7 @@ Viraspa.i18n.configure({
 
 **Where translations live:**
 - **The app's:** `app/i18n/<code>.json`, e.g. `{ "Sign In": "Ingia" }`.
-- **A page's own:** for a route with `i18n: true`, beside its files as `<name>.i18n.<code>.json`.
+- **A page's own:** for a route with `i18n: true`, beside its files as `<name>.i18n.<code>.json`, one per language except the default (whose texts are the keys). To give the default language a file too (e.g. for plural forms), list the languages instead: `i18n: ["en", "sw"]`.
 - **The default language** needs a file only for its plural forms (`file: true`).
 
 **Plurals:** `{ "{count} item": { "one": "{count} item", "other": "{count} items" } }`, chosen with `Intl.PluralRules`. Exact counts such as `"=0"` work too.
@@ -417,7 +417,8 @@ node node-tools/test.js
 
 - **Node tests:** `tests/node/*.test.js` run with `node --test`. They cover signals, expressions, formats, translations, manifest rules and the tools.
 - **Browser tests:** `ViRaSPA/tests/browser/*.test.js` run in `ViRaSPA/tests/run.html`, in the installed Edge or Chrome in headless mode. You can also open `/tests/run.html` while `serve.js` runs.
-- **CI:** a GitHub Actions workflow (`.github/workflows/tests.yml`) runs both on every push.
+- **Other engines and phones:** `--engine firefox,webkit` and `--device "iPhone 15,Pixel 7"` run the browser tests through Playwright, installed once outside the project (`--playwright-folder`). `--bundled` runs them on a bundled copy. See [Documents/mobile-testing.md](Documents/mobile-testing.md), which also has a DevTools device-mode checklist and how to test on a real phone.
+- **CI:** a GitHub Actions workflow (`.github/workflows/tests.yml`) runs them on every push: Node tests, headless Chrome (plain and bundled), Firefox, WebKit, iPhone 15 and Pixel 7.
 
 **Browser test helpers** (`Viraspa.testing`):
 

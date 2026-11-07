@@ -31,3 +31,32 @@ jobs:
       # bundle always behaves like the separate files.
       - name: Run browser tests on the bundled copy
         run: node node-tools/test.js --no-node --bundled
+
+  # The browser tests in Firefox and WebKit (Safari's engine), and on phone
+  # profiles (iPhone: WebKit; Pixel: Chrome), through Playwright - installed
+  # outside the project, so the project itself stays free of npm packages.
+  other-browsers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Restore pinned libraries
+        run: node node-tools/install.js restore
+
+      - name: Install Playwright with Firefox and WebKit (outside the project)
+        run: |
+          mkdir -p "$RUNNER_TEMP/playwright"
+          cd "$RUNNER_TEMP/playwright"
+          npm init -y > /dev/null
+          npm install --no-audit --no-fund playwright@1.65.0
+          PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/playwright/browsers" npx playwright install --with-deps firefox webkit
+
+      - name: Browser tests in Firefox and WebKit
+        run: node node-tools/test.js --no-node --engine firefox,webkit --playwright-folder "$RUNNER_TEMP/playwright"
+
+      - name: Browser tests on phone profiles
+        run: node node-tools/test.js --no-node --device "iPhone 15,Pixel 7" --playwright-folder "$RUNNER_TEMP/playwright"

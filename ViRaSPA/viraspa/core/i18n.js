@@ -9,6 +9,7 @@
   //
   //   app/i18n/sw.json                 { "Sign In": "Ingia", "Welcome back, {name}.": "Karibu tena, {name}." }
   //   app/pages/users/users.i18n.sw.json  (route i18n: true) - the page's own texts
+  //     (i18n: true = every language but the default; or a list: i18n: ["en", "sw"])
   //   plurals: { "{count} user": { "one": "Mtumiaji {count}", "other": "Watumiaji {count}" } }
   //
   //   <h1 data-i18n>Users</h1>                         element text
@@ -84,8 +85,13 @@
   const loadAppTranslations = (code) => loadFile(code, `${options.folder}/${code}.json`, { required: true });
 
   // A page's own translations, for routes with i18n: true.
+  // A page's own file: route i18n: true means one file per language except
+  // the default (its texts are the keys); a list, e.g. ["en", "sw"], names
+  // exactly the languages that have a file.
   function loadPageTranslations(route, code = locale.peek()) {
     if (!route || !route.i18n || !route.page) return Promise.resolve();
+    const wanted = Array.isArray(route.i18n) ? route.i18n.includes(code) : code !== options.defaultLocale;
+    if (!wanted) return Promise.resolve();
     const folder = route.page.replace(/\/+$/, "");
     const base = `${folder}/${folder.split("/").pop()}`;
     return loadFile(code, `${base}.i18n.${code}.json`, { required: true });

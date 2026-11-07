@@ -11,6 +11,13 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N4 · Browsers and phones
+
+- **`test.js --engine firefox,webkit|chromium` and `--device "iPhone 15,Pixel 7"`:** the browser tests through Playwright, installed outside the project (`--playwright-folder`); Chromium uses the installed Edge or Chrome. Combines with `--bundled`.
+- **Results:** all 32 browser tests pass in Firefox 159, WebKit 27.2, on iPhone 15 (WebKit) and Pixel 7 (Chromium), plain and bundled. CI runs Firefox, WebKit and both phones on every push.
+- **[mobile-testing.md](mobile-testing.md):** the three levels (automatic, DevTools device mode with a checklist, a real phone on the network).
+- **Fixed:** the header's language picker was unreadable in Safari (white text on Safari's light native background); a page with `i18n: true` asked for a file in the default language that doesn't exist (a 404 on every visit) - `i18n: true` now means every language but the default, and a list such as `["en", "sw"]` names the files exactly; the test page now loads jQuery like `index.html`.
+
 ### Milestone N3 · Real web servers
 
 - **Tested on real servers:** nginx 1.30.6 and Apache 2.4.70 on Windows, with deployed releases (prerendered pages; with and without `--bundle`): every check passes and the app works in the browser. IIS is prepared (`setup-iis.ps1` for an administrator) but not yet run.
