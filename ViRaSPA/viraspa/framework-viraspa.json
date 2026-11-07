@@ -20,7 +20,7 @@
     },
     {
       "path": "components/vs-brand/vs-brand.js",
-      "checksum": "sha256-1269e11cea83b772b3a511eb72f562d7c8b32f1011d44cf0c292c0f7f0d03262"
+      "checksum": "sha256-71a700268d354edf9710ed18b9f83bc1ea344fce1bd135b2e5b75419fd06b46a"
     },
     {
       "path": "components/vs-brand/vs-brand.model.json",
@@ -84,7 +84,7 @@
     },
     {
       "path": "components/vs-menu/vs-menu.js",
-      "checksum": "sha256-e72b03ff4e5fc106cffe703467134d081872aee25eaae7e0952895d00c643549"
+      "checksum": "sha256-b4dedc1b7076ced4a7f668459035bd403b74a13b43a25099f74c2fc649335df7"
     },
     {
       "path": "components/vs-menu/vs-menu.model.json",
@@ -128,7 +128,7 @@
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.js",
-      "checksum": "sha256-0103cb9311e08943b0fb44346c34b4580cae8101683023b7327b778c3e779e4c"
+      "checksum": "sha256-3899436fb53f68466af6c60a9a2b5ed5e87ec87ed142068d53e92500026bbe55"
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.model.json",
@@ -192,11 +192,11 @@
     },
     {
       "path": "core/router.js",
-      "checksum": "sha256-a0d657c453b6f69e796cb51db734d202e10c3d5cc7782752379d4c75bc769371"
+      "checksum": "sha256-8be3a4bab0340ae47c95ac8007afecc677bff1084f585efb280bbfed8532e670"
     },
     {
       "path": "core/session.js",
-      "checksum": "sha256-61ad016dbe67137e937956c41200fb5e329058944173d9a1a3885e695d77088b"
+      "checksum": "sha256-1abddcd8e6e1974d08ff686e0cfcafaf2766da031f03fca7dc21d6154f4c1e54"
     },
     {
       "path": "core/state.js",

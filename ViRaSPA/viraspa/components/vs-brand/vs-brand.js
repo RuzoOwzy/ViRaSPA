@@ -16,6 +16,8 @@
         model.logoHtml = `<vs-icon class="logo" icon="${escapeHtml(icon)}" part="logo"></vs-icon>`;
       }
       else model.logoHtml = "";
+      // An app path ("/") gets the site's sub-folder, if it has one.
+      model.href = Viraspa.core.toUrlPath(model.href || "/");
       return model;
     }
   }

@@ -79,8 +79,10 @@
           const item = { ...original, label: t(original.label) };
           const icon = item.icon ? (typeof item.icon === "object" ? JSON.stringify(item.icon) : item.icon) : "";
           const external = item.external ? ' target="_blank" rel="noopener external"' : "";
+          // App paths ("/about") get the site's sub-folder, if it has one.
+          const href = item.href && !item.external ? Viraspa.core.toUrlPath(item.href) : item.href;
           return (
-            `<li class="item"><a class="link" href="${escapeHtml(item.href || "#")}" data-tooltip="${escapeHtml(item.label)}"${external} part="link">` +
+            `<li class="item"><a class="link" href="${escapeHtml(href || "#")}" data-tooltip="${escapeHtml(item.label)}"${external} part="link">` +
             (icon ? `<vs-icon class="icon" icon="${escapeHtml(icon)}"></vs-icon>` : "") +
             `<span class="label">${escapeHtml(item.label)}</span></a></li>`
           );
@@ -135,9 +137,10 @@
 
     highlightActive() {
       const normalize = Viraspa.core.normalizePath;
-      const here = normalize(location.pathname);
+      const appPath = (p) => normalize(Viraspa.core.toAppPath(p));
+      const here = appPath(location.pathname);
       for (const link of this.componentRoot.querySelectorAll("a.link")) {
-        const active = link.origin === location.origin && normalize(link.pathname) === here;
+        const active = link.origin === location.origin && appPath(link.pathname) === here;
         link.classList.toggle("active", active);
         if (active) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");

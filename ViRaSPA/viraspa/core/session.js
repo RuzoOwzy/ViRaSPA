@@ -146,7 +146,7 @@
         console.warn("The session adapter's logout() failed:", err);
       }
     }
-    if (navigate && isPrivatePath(location.pathname)) Viraspa.core.navigate(loginPath(location.pathname + location.search));
+    if (navigate && isPrivatePath(here())) Viraspa.core.navigate(loginPath(here() + location.search));
   }
 
   const isSignedIn = () => Boolean(state);
@@ -187,6 +187,9 @@
     return value && value.startsWith("/") && !value.startsWith("//") ? value : options.homeRoute || "/";
   }
 
+  // The current address as an app path (without the site's sub-folder).
+  const here = () => (Viraspa.core.toAppPath ? Viraspa.core.toAppPath(location.pathname) : location.pathname);
+
   function isPrivatePath(pathname) {
     const path = Viraspa.core.normalizePath(pathname);
     const route = (Viraspa.routes || []).find((r) => r.path && Viraspa.core.normalizePath(r.path) === path);
@@ -196,7 +199,7 @@
   // The framework's guard: true, or a path to go to instead.
   async function guard(route) {
     if (canAccess(route)) return true;
-    if (!isSignedIn()) return loginPath(location.pathname + location.search);
+    if (!isSignedIn()) return loginPath(here() + location.search);
     return options.forbiddenRoute || false;
   }
 
@@ -301,7 +304,7 @@
     const stored = read();
     state = stored && !stored.expired ? stored : null;
     changed("other-tab");
-    if (before && !state && isPrivatePath(location.pathname)) Viraspa.core.navigate(loginPath(location.pathname + location.search));
+    if (before && !state && isPrivatePath(here())) Viraspa.core.navigate(loginPath(here() + location.search));
   });
 
   configure();

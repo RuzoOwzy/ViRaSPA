@@ -24,6 +24,39 @@
     return (trimmed || "/").toLowerCase();
   }
 
+  // ---- sites served from a sub-folder -----------------------------------------
+  // Route paths ("/about") are app paths. The address bar adds the site's
+  // folder from <base href>: "/" normally (nothing changes), "/shop/" for a
+  // site served from https://example.com/shop/ (GitHub Pages, an IIS
+  // virtual directory...).
+  function siteFolder() {
+    const path = new URL(document.baseURI).pathname;
+    return path.endsWith("/") ? path : path.replace(/[^/]*$/, "");
+  }
+
+  // "/shop/about" -> "/about" (a path outside the site folder stays as it is).
+  function toAppPath(pathname) {
+    const base = siteFolder();
+    if (base === "/") return pathname;
+    const lower = pathname.toLowerCase();
+    if (lower === base.slice(0, -1).toLowerCase()) return "/";
+    return lower.startsWith(base.toLowerCase()) ? `/${pathname.slice(base.length)}` : pathname;
+  }
+
+  // "/about" -> "/shop/about" (relative and already-full paths stay as they are).
+  function toUrlPath(path) {
+    const base = siteFolder();
+    if (base === "/" || !path.startsWith("/") || path.startsWith("//") || path.toLowerCase().startsWith(base.toLowerCase())) return path;
+    return base + path.slice(1);
+  }
+
+  // An app path ("/about?x=1"), a relative one ("about") or a full URL, as a URL.
+  function toUrl(path) {
+    return path.startsWith("/") && !path.startsWith("//") ? new URL(toUrlPath(path), location.origin) : new URL(path, document.baseURI);
+  }
+
+  const currentAppPath = () => normalizePath(toAppPath(location.pathname));
+
   function matchRoute(path) {
     return Viraspa.routes.find((route) => route.path && normalizePath(route.path) === path);
   }
@@ -159,7 +192,7 @@
     if (!entry.element.isConnected) document.getElementById("page-root").appendChild(entry.element);
     entry.element.hidden = false;
     entry.shown = true;
-    entry.path = normalizePath(location.pathname);
+    entry.path = currentAppPath();
     entry.search = location.search;
     current = entry;
     if (pending === entry) pending = null;
@@ -181,7 +214,7 @@
       emit("pageCreated", detail, entry.element);
     }
     emit("pageShown", detail, entry.element);
-    emit("routeChanged", { route: entry.route, path: location.pathname });
+    emit("routeChanged", { route: entry.route, path: toAppPath(location.pathname) });
     // For performance tools: performance.getEntriesByName("viraspa:pageShown").
     if (window.performance && performance.mark) performance.mark("viraspa:pageShown", { detail: { route: entry.route.name } });
   }
@@ -268,7 +301,7 @@
       pending = null;
     }
 
-    const path = normalizePath(location.pathname);
+    const path = currentAppPath();
     // Same page, only the #hash changed (an in-page link, or Back/Forward
     // between such links): just scroll, don't rebuild the page.
     if (current && current.shown && current.path === path && current.search === location.search) {
@@ -281,8 +314,8 @@
     // Show the matched route's own spelling in the address bar (e.g.
     // "/About/" becomes "/about"), without adding a history entry. A wrong
     // URL is left as typed, so the user can see what didn't match.
-    if (matched && location.pathname !== path) {
-      history.replaceState(history.state, "", path + location.search + location.hash);
+    if (matched && location.pathname !== toUrlPath(path)) {
+      history.replaceState(history.state, "", toUrlPath(path) + location.search + location.hash);
     }
 
     const route = matched || Viraspa.notFoundRoute;
@@ -302,8 +335,9 @@
     // A path: go there instead (e.g. the login page), replacing this entry.
     // A path pointing back at this same page counts as "not allowed".
     if (typeof allowed === "string") {
-      if (normalizePath(new URL(allowed, document.baseURI).pathname) !== path) {
-        history.replaceState({ vsKey: currentKey() || newKey() }, "", allowed);
+      const target = toUrl(allowed);
+      if (normalizePath(toAppPath(target.pathname)) !== path) {
+        history.replaceState({ vsKey: currentKey() || newKey() }, "", target.pathname + target.search + target.hash);
         return loadRoute();
       }
     }
@@ -326,8 +360,9 @@
 
   // Navigates like a normal link (real URL, Back/Forward both work) but
   // without a full page reload.
+  // `path` is an app path ("/about"), a relative one or a same-site URL.
   function navigate(path) {
-    const url = new URL(path, document.baseURI);
+    const url = toUrl(path);
     const samePath = normalizePath(url.pathname) === normalizePath(location.pathname);
     if (samePath && url.search === location.search && url.hash === location.hash) return;
     if (shownKey) scrollPositions.set(shownKey, window.scrollY);
@@ -343,7 +378,7 @@
       return false;
     }
     if (link.origin !== location.origin) return false;
-    return Boolean(matchRoute(normalizePath(link.pathname)));
+    return Boolean(matchRoute(normalizePath(toAppPath(link.pathname))));
   }
 
   function onDocumentClick(event) {
@@ -373,6 +408,8 @@
 
   Viraspa.core.navigate = navigate;
   Viraspa.core.normalizePath = normalizePath;
+  Viraspa.core.toAppPath = toAppPath;
+  Viraspa.core.toUrlPath = toUrlPath;
   // A prerendered copy (node-tools/prerender.js, renderLevel fullPage) arrives
   // with the page's content already inside #page-root. It stays on screen
   // until the app's own page is ready, then is replaced like any page.

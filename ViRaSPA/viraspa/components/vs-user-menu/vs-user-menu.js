@@ -56,7 +56,7 @@
           const icon = item.icon ? (typeof item.icon === "object" ? JSON.stringify(item.icon) : item.icon) : "";
           const inner = (icon ? `<vs-icon class="icon" icon="${escapeHtml(icon)}"></vs-icon>` : "") + `<span>${escapeHtml(Viraspa.i18n.t(item.label))}</span>`;
           return item.href
-            ? `<a class="item" role="menuitem" tabindex="-1" href="${escapeHtml(item.href)}" data-index="${index}" part="item">${inner}</a>`
+            ? `<a class="item" role="menuitem" tabindex="-1" href="${escapeHtml(Viraspa.core.toUrlPath(item.href))}" data-index="${index}" part="item">${inner}</a>`
             : `<button class="item" type="button" role="menuitem" tabindex="-1" data-index="${index}" part="item">${inner}</button>`;
         })
         .join("");
