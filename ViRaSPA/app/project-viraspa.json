@@ -92,6 +92,14 @@
     "liveSiteAddress": "",
     "renderLevel": "headTagsOnly"
   },
+  "bundle": {
+    "outputFolder": "bundled",
+    "framework": true,
+    "app": true,
+    "pack": true,
+    "compact": true,
+    "preload": true
+  },
   "deploy": {
     "targets": [
       {

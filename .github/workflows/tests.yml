@@ -26,3 +26,8 @@ jobs:
 
       - name: Run tests
         run: node node-tools/test.js
+
+      # The same browser tests against a bundled copy (bundle.js), so the
+      # bundle always behaves like the separate files.
+      - name: Run browser tests on the bundled copy
+        run: node node-tools/test.js --no-node --bundled

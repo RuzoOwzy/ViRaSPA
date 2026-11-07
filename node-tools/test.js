@@ -26,8 +26,9 @@ const tool = defineTool({
     { key: "browser", type: "boolean", default: true, description: "Run the browser tests (--no-browser to skip)." },
     { key: "browserPath", type: "string", valueName: "path", default: "", description: "Edge or Chrome to use (found automatically when omitted)." },
     { key: "waitMs", type: "number", default: 30000, description: "How long the browser tests may take (virtual time)." },
+    { key: "bundled", type: "boolean", default: false, description: "Run the browser tests against a bundled copy of the site (bundle.js, all steps) instead." },
   ],
-  examples: ["node node-tools/test.js", "node node-tools/test.js --no-browser", "node node-tools/test.js --browser-path /usr/bin/chromium"],
+  examples: ["node node-tools/test.js", "node node-tools/test.js --bundled", "node node-tools/test.js --no-browser", "node node-tools/test.js --browser-path /usr/bin/chromium"],
 });
 
 function runNodeTests(repoRoot) {
@@ -84,7 +85,26 @@ if (require.main === module) {
     const repoRoot = path.dirname(siteFolder);
     let ok = true;
     if (options.node) ok = runNodeTests(repoRoot) && ok;
-    if (options.browser) ok = (await runBrowserTests(siteFolder, options)) && ok;
+    if (options.browser) {
+      let folder = siteFolder;
+      let temp = null;
+      if (options.bundled) {
+        const { bundleSite } = require("./lib/bundle");
+        const { readSite } = require("./bundle");
+        const files = require("./lib/files");
+        temp = fs.mkdtempSync(path.join(os.tmpdir(), "viraspa-bundled-"));
+        const { site, report } = bundleSite(readSite(siteFolder));
+        files.replaceFolder(path.join(temp, "site"), site);
+        folder = path.join(temp, "site");
+        console.log(`\nBundled copy for the browser tests (${report.length} steps):`);
+        for (const line of report) console.log(`  ${line}`);
+      }
+      try {
+        ok = (await runBrowserTests(folder, options)) && ok;
+      } finally {
+        if (temp) fs.rmSync(temp, { recursive: true, force: true, maxRetries: 3 });
+      }
+    }
     console.log(ok ? "\nAll tests passed." : "\nSome tests failed.");
     if (!ok) process.exitCode = 1;
   });

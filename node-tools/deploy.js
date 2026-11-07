@@ -24,7 +24,8 @@ const tool = defineTool({
     "  1. Checks that the framework, components and libraries are installed as pinned (restores them if not).",
     "  2. Prerenders public pages, with --prerender.",
     "  3. Copies the site, leaving out app/project-viraspa.json, *.md, *.d.ts, *.map, tests/ and your `exclude`.",
-    "  4. Writes app/config/environment.js from the chosen environment's settings (e.g. the API address).",
+    "  4. Writes app/config/environment.js from the chosen environment's settings (e.g. the API address);",
+    "     with --bundle, then bundles the release (bundle.js: fewer requests, smaller files; the site is unchanged).",
     '  5. Writes release.json (the cache strategy "auto" uses it) and the server rules: web.config (IIS),',
     "     .htaccess (Apache) or <destination>-nginx.conf beside it (nginx).",
     "  6. Copies into <destination>.new, then swaps: the old release becomes <destination>.previous-<time>.",
@@ -52,6 +53,7 @@ const tool = defineTool({
     { key: "keepPrevious", type: "number", default: 2, description: "How many previous releases to keep for rollback." },
     { key: "zip", type: "string", valueName: "file", default: "", configurable: false, description: "Also (or only) write the release as a .zip." },
     { key: "prerender", type: "boolean", default: false, description: "Run prerender.js first (with its own settings)." },
+    { key: "bundle", type: "boolean", default: false, description: "Bundle the release (bundle.js, with its own settings from the \"bundle\" section)." },
     { key: "rollback", type: "boolean", default: false, configurable: false, description: "Put the newest previous release back." },
     { key: "force", type: "boolean", default: false, configurable: false, description: "Deploy into a non-empty folder that doesn't hold a ViRaSPA release." },
     { key: "dryRun", type: "boolean", default: false, configurable: false, description: "Show what would happen; change nothing." },
@@ -59,6 +61,7 @@ const tool = defineTool({
   examples: [
     "node node-tools/deploy.js --target staging",
     "node node-tools/deploy.js --target production --prerender",
+    "node node-tools/deploy.js --target production --bundle",
     "node node-tools/deploy.js --destination \\\\srv01\\wwwroot\\vsales --server-type iis --environment production",
     "node node-tools/deploy.js --zip D:\\releases\\vsales.zip --environment production --server-type apache",
     "node node-tools/deploy.js --target production --rollback",
@@ -209,7 +212,7 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
     log("4. Environment: unchanged (the site's own app/config/environment.js).");
   }
 
-  // 5. Release stamp and server rules.
+  // The release stamp (written in step 5; the bundle's preloads need its token).
   const releaseInfo = {
     token: stamp(),
     releasedAt: new Date().toISOString(),
@@ -217,6 +220,20 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
     environment: target.environment || "",
     frameworkVersion: site.frameworkVersion(siteFolder),
   };
+
+  // 4b. Bundle.
+  if (options.bundle) {
+    const { bundleSite } = require("./lib/bundle");
+    const settings = { ...(project.bundle || {}) };
+    for (const key of Object.keys(settings)) if (!["framework", "app", "pack", "compact", "preload"].includes(key)) delete settings[key];
+    const result = bundleSite(release, { ...settings, releaseToken: releaseInfo.token });
+    for (const key of Object.keys(release)) delete release[key];
+    Object.assign(release, result.site);
+    log("4b. Bundled:");
+    for (const line of result.report) log(`    ${line}`);
+  }
+
+  // 5. Release stamp and server rules.
   release["release.json"] = Buffer.from(JSON.stringify(releaseInfo, null, 2) + "\n", "utf8");
   const { routes } = routesLib.loadRoutes(siteFolder);
   const knownPaths = routes.filter((r) => r.path).map((r) => routesLib.normalizePath(r.path));

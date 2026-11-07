@@ -144,7 +144,7 @@
     },
     {
       "path": "core/component-registry.js",
-      "checksum": "sha256-ce82ec02b1fe262b794e36c8acb7e347ae60e1af9dd5eb2ad69561101b0b5f09"
+      "checksum": "sha256-1b879ea4c256a1ecdc881873d83ccdc6bb2a5a69e168195c098c63acdf0ea615"
     },
     {
       "path": "core/component.js",
@@ -228,7 +228,7 @@
     },
     {
       "path": "utility/asset-loader.js",
-      "checksum": "sha256-3af521cd3dc81c640628e2caeb638cb9a9b4a37d15a9a67acd4df61aae484746"
+      "checksum": "sha256-04ad478958a4c3d6279cf6b23ac57fa36aa5ded43d00d479cb0477fef01d7c86"
     },
     {
       "path": "utility/dom.js",

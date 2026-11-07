@@ -55,6 +55,21 @@ So ViRaSPA's numbers are **measured**, and the others are **reported** by their 
 | Visiting a page again (files cached in memory) | 6–15 ms |
 | Returning to a keep-alive page (Home) | 3–5 ms |
 
+### With the optional bundle tool (N2, 2026-11-08)
+
+`node node-tools/bundle.js` (all steps on). Measured in one session, the source site and its bundled copy side by side on two local ports, three loads each of `/about` (this session's browser pane was slower than the one above, so compare the two columns with each other):
+
+| Measure | Separate files | Bundled |
+| --- | --- | --- |
+| Requests before the first page shows (all, including 10 SVG icons and jQuery) | 88 | 22 |
+| First page on screen | 900–1242 ms | 191–427 ms |
+| Framework download | 25 files, 47.1 KB gzip (one stream) | 1 file, 32.5 KB gzip / 28.0 KB brotli (with the 9 core components) |
+| App startup files | 9 scripts + 2 stylesheets | `app.bundle.js` 16.8 KB gzip (with 3 official components) + `app.bundle.css` 1.0 KB gzip |
+| Templates, models, component CSS | one request each | `viraspa-pack.js`, 12.2 KB gzip (65 files) |
+| A page's first visit | 4 requests (`.js`, `.css`, `.html`, `.model.json`) | 2 requests (`.js`, `.css`) |
+
+Compaction alone (comments, indentation, blank lines) takes the framework's and app's `.js`/`.css` from 531 KB to 375 KB raw.
+
 ## 3. Published figures for other frameworks
 
 The sources disagree, so ranges are given. Sizes are min+gzip framework runtimes; app code comes on top.

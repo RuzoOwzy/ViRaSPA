@@ -13,6 +13,9 @@ const routes = require("../../node-tools/lib/routes");
 const { defineTool, kebab } = require("../../node-tools/lib/options");
 const sources = require("../../node-tools/lib/sources");
 const { withHeadTags } = require("../../node-tools/prerender");
+const { compactJs, compactCss, topLevelDeclarations } = require("../../node-tools/lib/compact");
+const { bundleSite } = require("../../node-tools/lib/bundle");
+const vm = require("vm");
 
 const SITE = path.join(__dirname, "..", "..", "ViRaSPA");
 
@@ -74,4 +77,53 @@ test("prerender: head tags are added and escaped", () => {
   });
   assert.match(html, /<title>A &quot;quoted&quot; &lt;title&gt;<\/title>/);
   assert.match(html, /og:image" content="https:\/\/x\/i\.png"/);
+});
+
+test("compact: comments and indentation go, strings, templates and regexes stay", () => {
+  const source = [
+    "// first remark",
+    "(function () {",
+    "  /* block */ const url = \"http://x // not a comment\";",
+    "  const re = /\\/\\*[^*]*\\*\\//g; // regex with comment-like text",
+    "  const t = `  keep   ${ 1 + 1 }  spaces // here`;",
+    "  return a / b / c; /*! licence */",
+    "})();",
+  ].join("\n");
+  const out = compactJs(source);
+  assert.ok(!out.includes("first remark") && !out.includes("block"));
+  assert.ok(out.includes('"http://x // not a comment"'));
+  assert.ok(out.includes("/\\/\\*[^*]*\\*\\//g"));
+  assert.ok(out.includes("`  keep   ${ 1 + 1 }  spaces // here`"));
+  assert.ok(out.includes("/*! licence */"));
+  assert.ok(!/^\s/m.test(out), "no indentation left");
+  new vm.Script(out);
+  assert.equal(compactCss("a {\n  color: red; /* x */\n  content: \"/* y */\";\n}\n"), 'a {\ncolor: red;\ncontent: "/* y */";\n}\n');
+});
+
+test("compact: every framework and app file still parses", () => {
+  for (const rel of files.listFiles(SITE)) {
+    if (!rel.endsWith(".js") || rel.startsWith("lib/")) continue;
+    const out = compactJs(fs.readFileSync(path.join(SITE, rel), "utf8"));
+    assert.doesNotThrow(() => new vm.Script(out, { filename: rel }), rel);
+    assert.equal(compactJs(out), out, `${rel}: compacting twice changes nothing`);
+  }
+});
+
+test("compact: top-level declarations", () => {
+  assert.deepEqual(topLevelDeclarations("(function () { var a = 1; })(); window.x = function () {};"), []);
+  assert.deepEqual(topLevelDeclarations("const a = 1;\nfunction b() {}\nclass C {}").map((d) => d.name), ["a", "b", "C"]);
+});
+
+test("bundle: framework, app, pack and preload on an in-memory site", () => {
+  const site = {};
+  for (const rel of files.listFiles(SITE)) if (!rel.startsWith("lib/")) site[rel] = fs.readFileSync(path.join(SITE, rel));
+  const { site: out, report } = bundleSite(site);
+  assert.ok(out["viraspa/viraspa.bundle.js"] && out["app/app.bundle.js"] && out["app/viraspa-pack.js"]);
+  assert.match(out["viraspa/viraspa.js"].toString(), /FRAMEWORK_SCRIPTS = \["viraspa\.bundle\.js"\]/);
+  assert.match(out["app/config/startup.js"].toString(), /app\/app\.bundle\.js/);
+  assert.match(out["index.html"].toString(), /rel="preload" href="viraspa\/viraspa\.bundle\.js\?v=/);
+  assert.match(out["viraspa/viraspa.bundle.js"].toString(), /components\.provide\("vs-header"/);
+  for (const name of ["viraspa/viraspa.bundle.js", "app/app.bundle.js", "app/viraspa-pack.js"]) new vm.Script(out[name].toString(), { filename: name });
+  assert.equal(site["viraspa/viraspa.js"].toString().includes("viraspa.bundle.js"), false, "the input is not changed");
+  assert.ok(!report.some((line) => /not isolated/.test(line)), report.join("\n"));
 });

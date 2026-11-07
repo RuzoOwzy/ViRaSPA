@@ -7,6 +7,8 @@
 %%SITE%%/lib/
 
 # Generated output
+bundled/
+releases/
 %%SITE%%/prerendered/
 %%SITE%%/release.json
 *.installing/

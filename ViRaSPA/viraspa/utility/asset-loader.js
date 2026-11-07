@@ -3,6 +3,30 @@
   const styles = new Map(); // url -> { link, loaded }
   const styleTexts = new Map(); // url -> Promise<string>
 
+  // Files packed by node-tools/bundle.js (app/viraspa-pack.js): site-relative
+  // path -> text. Served from memory instead of the network.
+  const pack = new Map();
+
+  function addPack(entries) {
+    for (const [rel, body] of Object.entries(entries || {})) pack.set(rel, String(body));
+  }
+
+  // The packed text for a URL, or undefined. Paths are compared relative to
+  // the document's <base>, without query strings (cache tokens).
+  function packed(path) {
+    if (!pack.size) return undefined;
+    try {
+      const url = new URL(path, document.baseURI);
+      const base = new URL(document.baseURI);
+      if (url.origin !== base.origin) return undefined;
+      const basePath = base.pathname.replace(/[^/]*$/, "");
+      if (!url.pathname.startsWith(basePath)) return undefined;
+      return pack.get(decodeURIComponent(url.pathname.slice(basePath.length)));
+    } catch {
+      return undefined;
+    }
+  }
+
   // Loads a classic script once; later calls get the same promise.
   function loadScript(src) {
     const url = Viraspa.core.v(src);
@@ -62,11 +86,13 @@
     const url = Viraspa.core.v(href);
     if (!styleTexts.has(url)) {
       const fileUrl = new URL(href, document.baseURI);
-      const pending = fetch(url)
-        .then((res) => {
-          if (!res.ok) throw new Error(`Failed to load ${href}: ${res.status}`);
-          return res.text();
-        })
+      const fromPack = packed(href);
+      const pending = (fromPack !== undefined
+        ? Promise.resolve(fromPack)
+        : fetch(url).then((res) => {
+            if (!res.ok) throw new Error(`Failed to load ${href}: ${res.status}`);
+            return res.text();
+          }))
         .then((css) =>
           css.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, (match, quote, ref) =>
             /^([a-z][a-z0-9+.-]*:|\/|#)/i.test(ref) ? match : `url("${new URL(ref, fileUrl).href}")`
@@ -79,6 +105,8 @@
   }
 
   async function fetchText(path, { signal } = {}) {
+    const fromPack = packed(path);
+    if (fromPack !== undefined) return fromPack;
     const res = await fetch(Viraspa.core.v(path), { signal });
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
     return res.text();
@@ -88,6 +116,8 @@
   // edited on the server outside of a release (e.g. per-installation
   // settings read by init code).
   async function fetchJson(path, { fresh = false, signal } = {}) {
+    const fromPack = fresh ? undefined : packed(path);
+    if (fromPack !== undefined) return JSON.parse(fromPack);
     const res = fresh ? await fetch(path, { cache: "no-store", signal }) : await fetch(Viraspa.core.v(path), { signal });
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
     return res.json();
@@ -102,5 +132,7 @@
     fetchStyleText,
     fetchText,
     fetchJson,
+    addPack,
+    isPacked: (path) => packed(path) !== undefined,
   };
 })(window.Viraspa);

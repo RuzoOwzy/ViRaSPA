@@ -35,6 +35,9 @@ ViRaSPA/release.json
 # Releases written by node-tools/deploy.js (sample targets in project-viraspa.json)
 releases/
 
+# The bundled copy written by node-tools/bundle.js
+bundled/
+
 # Libraries are pinned in ViRaSPA/app/project-viraspa.json and restored with
 #   node node-tools/install.js restore
 # (official components in ViRaSPA/components/ stay tracked until the

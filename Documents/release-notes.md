@@ -11,6 +11,14 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N2 · Bundle tool (optional)
+
+- **`node-tools/bundle.js`** writes a faster copy of the site, and **`deploy.js --bundle`** bundles a release. Steps, each optional: `framework` (`viraspa/viraspa.bundle.js`, with the core components), `app` (`app/app.bundle.js` + `.css` from `startup.js`, with the official components), `pack` (templates, models, component CSS and manifests in `app/viraspa-pack.js`), `compact` (comments and indentation removed; nothing renamed) and `preload`.
+- **Same behaviour as separate files:** each bundled file runs in its own error boundary; component code is handed to the registry (`Viraspa.core.components.provide`) and still starts only when first used; syntax errors stop the bundle at build time.
+- **`Viraspa.utility.assetLoader.addPack()`** and `isPacked()`: `fetchText`, `fetchJson` and `fetchStyleText` serve packed files from memory.
+- **`test.js --bundled`** runs the browser tests on a bundled copy; CI runs it too. New Node tests for compaction and bundling.
+- **Measured** (sample, `/about`): 88 requests become 22; the first page shows in 0.2–0.4 s instead of 0.9–1.2 s ([benchmark](benchmark.md)).
+
 ### Milestone N1 · Housekeeping
 
 - **Version:** the framework is 0.1.0 in development (`Viraspa.framework.stage: "development"`); the console says "in development". Official components now require framework 0.1.0 or newer.

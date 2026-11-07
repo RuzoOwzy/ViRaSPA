@@ -60,12 +60,26 @@
     return entry;
   }
 
+  // Component code bundled by node-tools/bundle.js: tag -> function that runs
+  // the component's .js file. It runs when the component would otherwise be
+  // downloaded (same timing, no request).
+  const provided = new Map();
+  function provide(tag, run) {
+    if (!provided.has(tag)) provided.set(tag, run);
+  }
+
   async function loadTag(tag) {
     let entry = entries.get(tag);
     if (!entry && tag.startsWith("vs-")) entry = await loadOfficialEntry(tag);
     if (!entry) return;
     if (entry.manifest && !(await loadDependencies(entry.manifest, `<${tag}>`))) return;
-    await loader().loadScript(entry.script);
+    if (provided.has(tag)) {
+      const run = provided.get(tag);
+      provided.delete(tag);
+      run();
+    } else {
+      await loader().loadScript(entry.script);
+    }
     if (!customElements.get(tag)) console.error(`${entry.script} loaded, but it did not define <${tag}>.`);
   }
 
@@ -217,6 +231,7 @@
     loadExtension,
     loadHelper,
     loadedHelpers: () => [...helpers.keys()],
+    provide,
     mayUseReservedPrefix,
     info: (tag) => entries.get(tag) || null,
   };

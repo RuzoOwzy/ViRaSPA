@@ -26,6 +26,7 @@ node-tools/           <- command-line tools (Node.js), outside the served folder
   install.js          <- installs, restores and verifies what app/project-viraspa.json pins
   prerender.js        <- ready-made public pages for search engines and link previews
   deploy.js           <- copies a release to a server folder or .zip, with environments and rollback
+  bundle.js           <- optional faster copy: bundles, packed templates, compaction, preloads
   create-project.js   <- starts a new project
   clean-sample.js     <- removes the sample app from a copy of this repository
   stamp.js            <- for publishers: writes file lists and checksums into manifests
@@ -808,7 +809,7 @@ node node-tools/deploy.js --target production --prerender
 1. **Checks** that the framework, components and libraries match their pins, and restores them if not. So it also works on a server where nothing is installed yet (with Node.js there).
 2. **Prerenders** public pages, with `--prerender`.
 3. **Copies the site,** leaving out `app/project-viraspa.json`, `*.md`, `*.d.ts`, `*.map`, `tests/` and your `exclude` list.
-4. **Writes `app/config/environment.js`** from the chosen environment's settings, e.g. the API address. The sample's `init.js` points the endpoints at `apiBaseAddress`.
+4. **Writes `app/config/environment.js`** from the chosen environment's settings, e.g. the API address. The sample's `init.js` points the endpoints at `apiBaseAddress`. With `--bundle`, the release is then bundled (see [Bundling](#bundling-optional-bundlejs)).
 5. **Writes `release.json`** (the `auto` cache strategy uses it) **and the server rules:** `web.config` for IIS, `.htaccess` for Apache, or `<destination>-nginx.conf` beside it for nginx. The rules give you prerendered pages, the `index.html` fallback, real 404s, `no-cache` for `index.html`, and they hide the tool settings.
 6. **Copies into `<destination>.new`, then swaps it in at once.** The old release becomes `<destination>.previous-<its token>`; the newest `keepPrevious` are kept. If Windows or IIS holds the folder open, it copies over it in place instead.
 
@@ -827,8 +828,33 @@ node node-tools/deploy.js --target production --prerender
 ```
 
 - **Remote uploads:** FTP, SSH and cloud uploads are not built in. Use `--zip` and your provider's own tools.
-- **No minification or bundling:** that would make it a build step.
 - **Checking a release:** `node node-tools/serve.js --site-folder <release folder> --port 8030` serves a deployed release.
+
+### Bundling (optional): bundle.js
+
+A faster copy of the site, with the same behaviour. It is never required: the site works the same without it, and the source folder is never changed.
+
+```bash
+node node-tools/bundle.js
+```
+
+```bash
+node node-tools/deploy.js --target production --bundle
+```
+
+The first writes the copy to `bundled/` (`--output-folder`); the second bundles the release while deploying it. Each step can be turned off (`--no-compact`, `--no-pack`…), or set in the `bundle` section of `app/project-viraspa.json`:
+
+| Step | What it does |
+| --- | --- |
+| `framework` | `viraspa/viraspa.bundle.js`: the framework's files in the loader's order, plus the core components (handed to the component registry, so they still start only when first used). |
+| `app` | `app/app.bundle.js` and `app/app.bundle.css`: the files listed in `app/config/startup.js`, in their order, plus the installed official components; `startup.js` is rewritten to load them. A remote (CDN) file keeps its place in the order. |
+| `pack` | `app/viraspa-pack.js`: page and component templates, models, component CSS and manifests, served from memory (`assetLoader.addPack`) instead of one request each. Pages' own `.js` and `.css` still load when the page is opened. |
+| `compact` | Comments, indentation and blank lines removed from `.js` and `.css`. Nothing is renamed or rewritten, line breaks stay, and strings, template literals and regular expressions are untouched. |
+| `preload` | `<link rel="preload">` tags in `index.html`, so the bundles download while the loader starts. |
+
+- **Same behaviour:** each file in a bundle runs in its own error boundary, so an error in one file doesn't stop the others (as with separate files). A file that declares names at its top level (`var`, `const`, `function`… outside any function) can't be wrapped; the report lists it. A syntax error stops the bundle with a clear message.
+- **Checked:** `node node-tools/test.js --bundled` runs the browser tests against a bundled copy, and CI does it on every push.
+- **Measured on the sample** (local server, About page): 88 requests become 22, and the first page shows in about 0.2–0.4 s instead of 0.9–1.2 s. The framework bundle is 32 KB gzip (28 KB brotli). Details in [the benchmark](Documents/benchmark.md).
 
 **Secrets:** anything the frontend fetches is public, including `environment.js`, so never put secrets there. One frontend can also read a settings file an admin edits on each server: use `Viraspa.utility.assetLoader.fetchJson(path, { fresh: true })` in `init.js`.
 
