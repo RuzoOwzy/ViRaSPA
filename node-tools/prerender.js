@@ -221,4 +221,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { tool, prerender, withHeadTags };
+module.exports = { tool, prerender, withHeadTags, findBrowser };

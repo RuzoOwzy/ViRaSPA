@@ -40,6 +40,10 @@
       // Resolves once the component has loaded (or failed to).
       this.ready = new Promise((resolve) => (this._resolveReady = resolve));
       this._started = false;
+      // Effects, listeners and bindings, disposed when the component leaves
+      // the page (and set up again if it comes back).
+      this._scope = Viraspa.state.createScope();
+      this._bindingScope = null;
     }
 
     connectedCallback() {
@@ -47,13 +51,44 @@
       this._started = true;
       this.setAttribute("data-vs-component", this.isolation);
       // Light-DOM children given by the user of the component, captured
-      // before rendering so "scoped"/"none" can place them into <slot>s.
-      this._lightChildren = this.isolation === "full" ? [] : Array.from(this.childNodes);
+      // (once) before rendering so "scoped"/"none" can place them into <slot>s.
+      if (!this._lightChildren) this._lightChildren = this.isolation === "full" ? [] : Array.from(this.childNodes);
       this._load();
+    }
+
+    // Leaving the page disposes effects and listeners. Moving an element
+    // (removed and added back at once) doesn't: that is checked a moment later.
+    disconnectedCallback() {
+      queueMicrotask(() => {
+        if (this.isConnected || !this._started) return;
+        this.dispose();
+        this._started = false; // loads again if it is added back later
+      });
+    }
+
+    dispose() {
+      if (this._bindingScope) this._bindingScope.dispose();
+      this._bindingScope = null;
+      this._scope.dispose();
+      this._scope = Viraspa.state.createScope();
+    }
+
+    // Runs fn now and whenever the signals it reads change, while the
+    // component is on the page. fn may return a cleanup function.
+    effect(fn) {
+      return this._scope.effect(fn);
+    }
+
+    // addEventListener that is removed when the component leaves the page.
+    listen(target, type, handler, options) {
+      target.addEventListener(type, handler, options);
+      this._scope.add(() => target.removeEventListener(type, handler, options));
     }
 
     async _load() {
       const { emit, runHook } = Viraspa.core;
+      if (this._loadedOnce) this.ready = new Promise((resolve) => (this._resolveReady = resolve));
+      this._loadedOnce = true;
       try {
         emit("componentBeforeLoad", { component: this }, this);
         await runHook(this, "beforeLoad");
@@ -111,13 +146,17 @@
     renderTemplate(template, model) {
       const { emit } = Viraspa.core;
       emit("componentBeforeDataBinding", { component: this }, this);
-      this.html = Viraspa.services.databinding.bindTemplate(template, model);
+      if (this._bindingScope) this._bindingScope.dispose();
+      this._bindingScope = Viraspa.state.createScope();
+      // Names in {{ }}: the model first, then the component itself (its
+      // signals, computed values and methods).
+      this.html = Viraspa.services.databinding.render(this.componentRoot, template, model, { owner: this, scope: this._bindingScope });
       emit("componentOnDataBinding", { component: this, model }, this);
-      this.componentRoot.innerHTML = this.html;
       if (this.isolation !== "full") this._fillSlots();
       // Autoload components used inside (vs-icon...); `ready` waits for them.
       this._childrenLoaded = Viraspa.core.components.scan(this.componentRoot);
       Viraspa.session.applyPrivileges(this.componentRoot);
+      Viraspa.i18n.translate(this.componentRoot);
       emit("componentAfterDataBinding", { component: this }, this);
       return this.html;
     }

@@ -23,8 +23,12 @@
   var FRAMEWORK_SCRIPTS = [
     "core/manifest-rules.js",
     "core/events.js",
+    "core/state.js",
+    "core/expressions.js",
     "utility/dom.js",
     "utility/asset-loader.js",
+    "core/format.js",
+    "core/i18n.js",
     "services/databinding/data-binding-service.js",
     "services/communication/http-service.js",
     "core/page-loader.js",

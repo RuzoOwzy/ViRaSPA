@@ -4,6 +4,40 @@
   // load. Register work with Viraspa.core.onInit(async () => { ... }); the
   // framework waits for it (and logs, then continues, if it fails).
 
+  // Languages: English is the default (its texts are the translation keys);
+  // Swahili translations live in app/i18n/sw.json and pages' *.i18n.sw.json.
+  Viraspa.i18n.configure({
+    defaultLocale: "en",
+    locales: [
+      { code: "en", name: "English", file: true }, // app/i18n/en.json: English plural forms
+      { code: "sw", name: "Kiswahili" },
+    ],
+  });
+
+  // Named formats, used as format.date(d, "invoiceDate") or {{ d | date:"invoiceDate" }}.
+  Viraspa.format.configure({
+    dateFormats: [
+      { name: "short", pattern: "dd/MM/yyyy" },
+      { name: "invoiceDate", pattern: "dd-MMM-yyyy" },
+      { name: "long", preset: "long" },
+    ],
+    numberFormats: [{ name: "default", minDecimalPlaces: 0, maxDecimalPlaces: 2 }],
+    currencies: [
+      { code: "TZS", decimalPlaces: 0, display: "code" },
+      { code: "USD", decimalPlaces: 2, display: "symbol" },
+    ],
+    defaults: { currency: "TZS", dateFormat: "medium" },
+  });
+
+  // The language picker in the header.
+  Viraspa.core.onInit(() => {
+    const picker = document.querySelector(".language-picker");
+    if (!picker) return;
+    for (const { code, name } of Viraspa.i18n.locales()) picker.add(new Option(name, code));
+    document.addEventListener("viraspa:appInit", () => (picker.value = Viraspa.i18n.locale.value));
+    picker.addEventListener("change", () => Viraspa.i18n.setLocale(picker.value));
+  });
+
   // The backend address for this environment (see app/config/environment.js).
   Viraspa.core.onInit(() => {
     const address = Viraspa.environment && Viraspa.environment.settings.apiBaseAddress;

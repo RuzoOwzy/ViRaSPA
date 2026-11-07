@@ -14,6 +14,7 @@
 //              in a vs-menu (menus defaults to ["main"]), or a list of such entries
 //   keepAlive  true keeps the page (its DOM and state) when the user leaves
 //   native     true for a plain page: .html, .css and a plain .js
+//   i18n       true: the page has its own translations (<name>.i18n.<language>.json)
 //
 // Backend endpoints don't belong here - see app/config/endpoints.js.
 window.Viraspa.routes = [
@@ -45,6 +46,20 @@ window.Viraspa.routes = [
     nav: [
       { label: "Features", icon: "lucide:sparkles", menus: ["main"], order: 2 },
       { label: "Features", icon: "lucide:sparkles", menus: ["side"], order: 50, divider: "before" },
+    ],
+  },
+  {
+    // Signals, template bindings, translations and formats.
+    path: "/live-demo",
+    name: "live-demo",
+    page: "app/pages/live-demo",
+    title: "ViRaSPA — Live Demo",
+    head: { description: "Signals, live template bindings, translations and formats in action." },
+    i18n: true, // has live-demo.i18n.<language>.json files
+    prerender: true,
+    nav: [
+      { label: "Live Demo", icon: "lucide:zap", menus: ["main"], order: 2.5 },
+      { label: "Live Demo", icon: "lucide:zap", menus: ["side"], order: 55 },
     ],
   },
   {

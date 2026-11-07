@@ -1,0 +1,17 @@
+{
+  "Live Demo": "Onyesho Hai",
+  "Everything below updates by itself when its values change: the page's code only changes signals.": "Kila kitu hapa chini kinajisasisha thamani zake zinapobadilika: msimbo wa ukurasa hubadilisha ishara (signals) tu.",
+  "Shopping Cart": "Kikapu cha Ununuzi",
+  "Item name": "Jina la bidhaa",
+  "Price": "Bei",
+  "Add": "Ongeza",
+  "Item": "Bidhaa",
+  "Actions": "Vitendo",
+  "Remove": "Ondoa",
+  "The cart is empty.": "Kikapu ni tupu.",
+  "Total": "Jumla",
+  "Free delivery": "Usafirishaji bure",
+  "Orders from {amount} are delivered free.": "Oda kuanzia {amount} husafirishwa bure.",
+  "Formats": "Miundo",
+  "Named formats from app/config/init.js, in the chosen language.": "Miundo yenye majina kutoka app/config/init.js, kwa lugha uliyochagua."
+}

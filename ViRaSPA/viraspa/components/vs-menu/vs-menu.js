@@ -70,9 +70,13 @@
         (item, i, all) => !item.divider || (i > 0 && i < all.length - 1 && !all[i - 1].divider && all.slice(0, i).some((x) => !x.divider))
       );
       model.orientation = model.orientation === "vertical" ? "vertical" : "horizontal";
+      const t = Viraspa.i18n.t; // labels are natural keys: translated when a dictionary has them
+      model.label = t(model.label);
+      model.toggleLabel = t(model.toggleLabel);
       model.itemsHtml = items
-        .map((item) => {
-          if (item.divider) return '<li class="divider" role="separator" part="divider"></li>';
+        .map((original) => {
+          if (original.divider) return '<li class="divider" role="separator" part="divider"></li>';
+          const item = { ...original, label: t(original.label) };
           const icon = item.icon ? (typeof item.icon === "object" ? JSON.stringify(item.icon) : item.icon) : "";
           const external = item.external ? ' target="_blank" rel="noopener external"' : "";
           return (
@@ -86,18 +90,18 @@
     }
 
     async afterLoad() {
-      this._onRouteChanged = () => this.highlightActive();
-      document.addEventListener("viraspa:routeChanged", this._onRouteChanged);
-      // Signing in or out changes which routes are listed.
-      document.addEventListener("viraspa:sessionChanged", () => {
-        if (!this._items && this.isConnected) this.render();
-      });
-      this.componentRoot.addEventListener("click", (event) => this.onClick(event));
+      // this.listen: removed automatically when the menu leaves the page.
+      this.listen(document, "viraspa:routeChanged", () => this.highlightActive());
+      // Signing in or out changes which routes are listed; a new language
+      // changes the labels.
+      this.listen(document, "viraspa:sessionChanged", () => !this._items && this.render());
+      this.listen(document, "viraspa:localeChanged", () => this.render());
+      this.listen(this.componentRoot, "click", (event) => this.onClick(event));
       // The folded (small-screen) menu closes on a click elsewhere or Escape.
-      document.addEventListener("click", (event) => {
+      this.listen(document, "click", (event) => {
         if (!event.composedPath().includes(this)) this.setOpen(false);
       });
-      document.addEventListener("keydown", (event) => {
+      this.listen(document, "keydown", (event) => {
         if (event.key === "Escape") this.setOpen(false);
       });
       this.highlightActive();
@@ -111,24 +115,6 @@
 
     attributeChangedCallback() {
       if (this._started) this.render();
-    }
-
-    disconnectedCallback() {
-      if (this._onRouteChanged) document.removeEventListener("viraspa:routeChanged", this._onRouteChanged);
-      this._onRouteChanged = null;
-      this._started = false;
-    }
-
-    connectedCallback() {
-      if (this._onRouteChanged === null) {
-        // Moved in the page: listen again, no need to reload.
-        this._started = true;
-        this._onRouteChanged = () => this.highlightActive();
-        document.addEventListener("viraspa:routeChanged", this._onRouteChanged);
-        this.highlightActive();
-        return;
-      }
-      super.connectedCallback();
     }
 
     onClick(event) {

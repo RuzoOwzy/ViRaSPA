@@ -9,6 +9,44 @@ must match the newest entry below.
 **Breaking for projects built on 0.1.0.** Work is split into milestones,
 see [plans/](plans/README.md).
 
+### Milestone M4 · Reactivity, i18n, testing
+
+#### Added
+- **Signals** (`Viraspa.state`, about 2 KB): `signal`, `computed` (lazy, cached), `effect` (with cleanup), `batch`, `untracked` and scopes. Pages and components get `this.effect()` and `this.listen()`, disposed automatically.
+- **Safe template expressions** (`Viraspa.expressions`):
+  - a parser, with no `eval` (CSP-safe);
+  - values, members, calls, object and array literals, operators, ternaries and pipes;
+  - prototype access is blocked.
+- **Live template bindings:**
+  - `{{x}}` stays live for signals; attribute interpolation; boolean attributes;
+  - `data-bind-show-if`, `<template data-bind-if>` and keyed `<template data-bind-repeat>`;
+  - `data-bind-two-way` and `data-bind-on-*`;
+  - templates are parsed inert before binding.
+- **`Viraspa.i18n`:**
+  - natural keys, plurals (`Intl.PluralRules`, `=N`) and interpolation;
+  - app files (`app/i18n/<code>.json`) and per-page files (route `i18n: true`);
+  - `data-i18n` and `data-i18n-attr`;
+  - `<html lang>` and `dir` with right-to-left detection;
+  - the language is saved and picked from the browser;
+  - live `t()` in templates and the `viraspa:localeChanged` event.
+- **`Viraspa.format`:**
+  - named `dateFormats`, `numberFormats` and `currencies` with plain-language options (`minDecimalPlaces`, `decimalPlaces`, `display`);
+  - presets, patterns and `intlOptions`;
+  - `number`, `currency`, `percent`, `date`, `time`, `dateTime` and `relative`;
+  - user preferences and pipes, with `addPipe`.
+- **Testing:**
+  - `Viraspa.testing` (`viraspa/core/testing.js`): `test`, `assert`, `mount`, `render`, `mockEndpoint`, `fakeClock`, `reset` and `run`;
+  - `tests/run.html` with 31 browser tests;
+  - `tests/node` with 23 Node tests;
+  - `node-tools/test.js` (Node tests plus headless browser tests);
+  - the GitHub Actions workflow `tests.yml`.
+- **Sample:** the Live Demo page (cart: signals, computed values, a keyed list, two-way inputs, events, formats); English and Swahili with a header language picker; translated menus and the user menu.
+
+#### Changed
+- **Rendering:** pages and components now render through the binding service (`Viraspa.services.databinding.render`). Plain `{{key}}` templates behave as before.
+- **Component cleanup:** components dispose of their effects and listeners when removed from the page, and load again if added back.
+- **Core components:** `vs-menu`, `vs-user-menu` and `vs-sidebar` use `this.listen` and translate their labels.
+
 ### Milestone M3 · App features
 
 #### Added

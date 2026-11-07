@@ -131,6 +131,7 @@
     emit("pageRemoved", { route: entry.route, page: entry.page }, entry.element);
     entry.element.remove();
     entry.controller.abort();
+    if (entry.page && typeof entry.page.dispose === "function") entry.page.dispose(); // its effects and bindings
   }
 
   function keep(entry) {
@@ -204,6 +205,8 @@
     };
     pending = entry;
     const styleReady = loadStyle(`${basePath}.css`, { active: false }).then((link) => (entry.styleLink = link));
+    // The page's own translations (routes with i18n: true), before it renders.
+    await Viraspa.i18n.prepareRoute(route);
 
     // Native page: plain .html/.css/.js - no class, no model, no {{ }}.
     if (route.native) {
@@ -213,6 +216,7 @@
       entry.element.innerHTML = template;
       Viraspa.core.components.scan(entry.element);
       Viraspa.session.applyPrivileges(entry.element);
+      Viraspa.i18n.translate(entry.element);
       swapTo(entry, fromHistory, { announce: false });
       // The script runs once (on the first visit); it listens for the
       // viraspa:pageCreated / pageShown events to set up each page instance.

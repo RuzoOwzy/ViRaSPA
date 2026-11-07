@@ -1,0 +1,21 @@
+{
+  "Language": "Lugha",
+  "Main": "Kuu",
+  "App": "Programu",
+  "Menu": "Menyu",
+  "Home": "Mwanzo",
+  "Features": "Vipengele",
+  "Live Demo": "Onyesho Hai",
+  "About": "Kuhusu",
+  "Contact": "Wasiliana",
+  "Website": "Tovuti",
+  "Dashboard": "Dashibodi",
+  "Users": "Watumiaji",
+  "Settings": "Mipangilio",
+  "Sign In": "Ingia",
+  "Profile": "Wasifu",
+  "Change Credentials": "Badilisha Nenosiri",
+  "Sign Out": "Toka",
+  "{count} item": { "one": "Bidhaa {count}", "other": "Bidhaa {count}" },
+  "{count} user": { "one": "Mtumiaji {count}", "other": "Watumiaji {count}" }
+}

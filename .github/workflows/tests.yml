@@ -1,0 +1,28 @@
+# Runs the ViRaSPA tests on every push and pull request:
+# the Node tests and the browser tests (headless Chrome, preinstalled on the runner).
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Libraries (Font Awesome, Lucide, Chart.js, jQuery) are pinned in
+      # ViRaSPA/app/project-viraspa.json and not kept in git.
+      - name: Restore pinned libraries
+        run: node node-tools/install.js restore
+
+      - name: Run tests
+        run: node node-tools/test.js

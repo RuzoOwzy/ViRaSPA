@@ -4,7 +4,7 @@
 
 It keeps the structure that makes frameworks like Angular pleasant to work in (pages, components, lifecycle events, services, routing) but drops the build step. There is no TypeScript to transpile and no bundler: what you write is exactly what the browser runs, served by a small static dev server.
 
-> **Status:** 0.2.0 in progress (milestone M3 of 5, see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
+> **Status:** 0.2.0 in progress (milestone M4 of 5, see [Documents/plans](Documents/plans/README.md)). The framework model is still a working draft, see [Documentation](#documentation).
 
 ## Why ViRaSPA
 
@@ -29,6 +29,7 @@ node-tools/           <- command-line tools (Node.js), outside the served folder
   create-project.js   <- starts a new project
   clean-sample.js     <- removes the sample app from a copy of this repository
   stamp.js            <- for publishers: writes file lists and checksums into manifests
+  test.js             <- runs the Node tests and the browser tests
   help.js             <- lists the tools
   lib/, templates/    <- shared code and the new-project template
 ViRaSPA/              <- the served folder ("site folder")
@@ -51,6 +52,8 @@ ViRaSPA/              <- the served folder ("site folder")
     components/       <- the app's own components
     assets/           <- icons, images, the x-responsive grid, jQuery extensions
   lib/                <- libraries in versioned folders, installed by install.js (not in git)
+tests/node/           <- Node tests (node node-tools/test.js); browser tests are in ViRaSPA/tests/
+.github/workflows/    <- CI: runs the tests on every push
 Documents/            <- developer documentation, plans, release notes, design model
 jsconfig.json         <- VS Code editor settings (autocomplete); not part of the framework
 ```
@@ -265,17 +268,146 @@ node node-tools/install.js add component vs-card@0.1.0
   - its `tagPrefix` is reserved (`vs`, `viraspa`) or already used by another extension;
   - a component tag doesn't start with its prefix.
 - **Theme variables:** extensions may *use* `--vs-*` variables but not *define* them. Styles that do are not applied.
-- **Locked namespaces:** `Viraspa.core`, `services`, `utility`, `icons`, `toast`, `extensions` and `cache` are frozen after startup, so no code can replace framework functions. Use the APIs instead, e.g. `Viraspa.core.setGuard(fn)`.
+- **Locked namespaces:** `Viraspa.core`, `services`, `utility`, `icons`, `toast`, `extensions`, `cache`, `session`, `busy`, `head`, `state`, `expressions`, `format` and `i18n` are frozen after startup, so no code can replace framework functions. Use the APIs instead, e.g. `Viraspa.core.setGuard(fn)`.
 
-### Templates and escaping
+### Templates and bindings
 
-| Placeholder | Result |
+One rule: **anything inside `{{ }}` is code; everything outside it is plain text.** It works the same in text, in attributes and in binding attributes.
+
+Names are looked up in this order:
+
+1. the block's own names (repeat items);
+2. the page's or component's model (`.model.json` and props);
+3. the page or component itself (its fields, signals, computed values and methods);
+4. the helpers `t()` and `format`.
+
+A plain value is filled in once. A **signal** stays live: when it changes, only the places that use it update.
+
+| Syntax | Does |
 | --- | --- |
-| `{{key}}` | the value as text, HTML-escaped. Paths work: `{{user.address.city}}`. |
-| `{{{key}}}` | the value as raw HTML: only for HTML you trust |
-| `\{{` | a literal `{{` |
+| `{{x}}` | inserts a value as text, always escaped. Paths work: `{{user.address.city}}`. |
+| `{{{x}}}` | inserts trusted raw HTML |
+| `\{{` | writes a literal `{{` |
+| `attribute="…{{x}}…"` | sets any attribute. A lone true/false toggles it: `disabled="{{ !canSave }}"`. |
+| `data-bind-show-if="{{expr}}"` | hides or shows an element; it stays in the page |
+| `<template data-bind-if="{{expr}}">` | adds or removes a block |
+| `<template data-bind-repeat="{{list}}" data-bind-item="user" data-bind-key="{{user.id}}" data-bind-index="i">` | one block per item. With a key, blocks are reused when the list changes. |
+| `data-bind-two-way="{{name}}"` | input ↔ value (text, number, checkbox, radio, select) |
+| `data-bind-on-click="{{save}}"`, `data-bind-on-input="{{ remove(user) }}"` | calls a method on any event; `$event` is available |
 
-In URL attributes (`href`, `src`, `action`, `formaction`, `poster`), a `{{key}}` value starting with `javascript:`, `vbscript:` or a non-image `data:` becomes `about:blank`.
+**Expressions** are read by a small built-in parser, not `eval`, so templates work under a strict Content Security Policy. They can only reach the values listed above, never `window`, `document` or prototypes. They support:
+
+- values, `a.b`, `a[0]`, calls, and `{ object }` and `[array]` literals;
+- `! - + * / %`, comparisons, `&& || ??` and `a ? b : c`;
+- **pipes:** `{{ total | currency }}`, `{{ d | date:"invoiceDate" }}`, `number`, `percent`, `time`, `relative`, `upper`, `lower`, `default`, `join`, `t`. Add your own with `Viraspa.format.addPipe(name, fn)`.
+
+Anything more complex belongs in a `computed` in JavaScript.
+
+**Safety:** text is always escaped. URL attributes (`href`, `src`, `action`, `formaction`, `poster`) never take `javascript:`, `vbscript:` or non-image `data:` values. Templates are parsed inert (in a `<template>`), so nothing loads before binding.
+
+**Opt-in:** native pages (`native: true`) and native components are never processed.
+
+### Signals
+
+```js
+const { signal, computed, effect, batch } = Viraspa.state;
+const count = signal(0);
+const double = computed(() => count.value * 2); // lazy, cached
+effect(() => console.log(count.value, double.value)); // runs now and on every change
+count.value++;
+batch(() => { count.value = 5; count.value = 6; }); // the screen updates once
+```
+
+- **In pages and components:** fields that are signals are visible to the template. `this.effect(fn)` and `this.listen(target, type, fn)` are cleaned up automatically when the page is removed or the component leaves the page.
+- **Other helpers:** `untracked(fn)` reads without subscribing; `signal.peek()` reads the current value; `signal.update(fn)` changes it.
+- **Size:** about 2 KB of plain JavaScript.
+- **Example:** see `app/pages/live-demo/` (`/live-demo`), a cart with a computed total, a keyed list, two-way inputs and events.
+
+A simple shared **store** is just a module of signals:
+
+```js
+// app/state/cart.js
+Viraspa.app = Viraspa.app || {};
+Viraspa.app.cart = { items: Viraspa.state.signal([]), get count() { return this.items.value.length; } };
+```
+
+### Languages (i18n)
+
+**Natural keys:** the text in your default language *is* the key, so templates stay readable and untranslated text still shows.
+
+```js
+Viraspa.i18n.configure({
+  defaultLocale: "en",
+  locales: [{ code: "en", name: "English", file: true }, { code: "sw", name: "Kiswahili" }],
+});
+```
+
+**Where translations live:**
+- **The app's:** `app/i18n/<code>.json`, e.g. `{ "Sign In": "Ingia" }`.
+- **A page's own:** for a route with `i18n: true`, beside its files as `<name>.i18n.<code>.json`.
+- **The default language** needs a file only for its plural forms (`file: true`).
+
+**Plurals:** `{ "{count} item": { "one": "{count} item", "other": "{count} items" } }`, chosen with `Intl.PluralRules`. Exact counts such as `"=0"` work too.
+
+**Using translations:**
+- **In HTML:** `<h1 data-i18n>Users</h1>`, and `data-i18n-attr="placeholder,title"` for attributes.
+- **In templates:** `{{ t("Welcome back, {name}.", { name: user.name }) }}`, which stays live.
+- **In code:** `Viraspa.i18n.t(...)`.
+
+**Changing the language:** `await Viraspa.i18n.setLocale("sw")`.
+- The choice is remembered.
+- It updates `<html lang>` and `dir`; right-to-left languages such as Arabic and Hebrew get `rtl`.
+- It updates translations, menus, `data-i18n` and every live binding, and emits `viraspa:localeChanged`.
+
+At startup the language is the saved choice, else the browser's languages, else the default.
+
+### Formats
+
+Formats are named once, in plain-language terms, and follow the current language:
+
+```js
+Viraspa.format.configure({
+  dateFormats: [{ name: "invoiceDate", pattern: "dd-MMM-yyyy" }, { name: "long", preset: "long" }],
+  numberFormats: [{ name: "default", minDecimalPlaces: 0, maxDecimalPlaces: 2 }],
+  currencies: [{ code: "TZS", decimalPlaces: 0, display: "code" }],
+  defaults: { currency: "TZS", dateFormat: "medium" },
+});
+format.date(invoice.date, "invoiceDate"); // 07-Nov-2026 / 07-Nov-2026 (sw: month names from Intl)
+format.currency(1250000);                 // TZS 1,250,000
+format.relative(lastSeen);                // 3 days ago / siku 3 zilizopita
+```
+
+- **What a date format accepts:** a name, a preset (`short`, `medium`, `long`, `full`) or a pattern.
+- **Pattern tokens:** `yyyy yy MMMM MMM MM M dd d EEEE EEE HH H hh h mm ss a 'text'`.
+- **Other functions:** `number`, `percent`, `time`, `dateTime`.
+- **Who wins:** a value given in the call, then the user's preference (`Viraspa.format.setPreferences({ dateFormat, currency })`), then the app's `configure`.
+- **Rare cases:** `intlOptions` on any entry is passed straight to `Intl`.
+
+### Testing
+
+```bash
+node node-tools/test.js
+```
+
+- **Node tests:** `tests/node/*.test.js` run with `node --test`. They cover signals, expressions, formats, translations, manifest rules and the tools.
+- **Browser tests:** `ViRaSPA/tests/browser/*.test.js` run in `ViRaSPA/tests/run.html`, in the installed Edge or Chrome in headless mode. You can also open `/tests/run.html` while `serve.js` runs.
+- **CI:** a GitHub Actions workflow (`.github/workflows/tests.yml`) runs both on every push.
+
+**Browser test helpers** (`Viraspa.testing`):
+
+```js
+const { test, assert, mount, render, mockEndpoint, fakeClock } = Viraspa.testing;
+test("the card shows its heading", async () => {
+  const card = await mount("vs-card", { heading: "Hello" });
+  assert.equal(card.shadowRoot.querySelector(".heading").textContent, "Hello");
+});
+test("users load", async () => {
+  mockEndpoint(Viraspa.endpoints.users.list, [{ id: 1, name: "A" }]); // no network
+  const clock = fakeClock(); // controls Date.now and timers: clock.tick(ms)
+});
+```
+
+`reset()` runs before every test: it signs out, clears saved settings, removes mounted elements and undoes mocks and clocks.
 
 ### Lifecycle events
 

@@ -32,7 +32,7 @@
     }
 
     async afterLoad() {
-      this.componentRoot.querySelector(".collapse").addEventListener("click", () => this.toggle());
+      this.listen(this.componentRoot.querySelector(".collapse"), "click", () => this.toggle());
       this.syncChildren();
     }
 

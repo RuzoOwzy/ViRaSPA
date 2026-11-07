@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
+  <title>ViRaSPA Browser Tests</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #152420; }
+    #test-results .passed { color: #0f6e48; }
+    #test-results .failed { color: #c0392b; }
+    #test-results ul { list-style: none; padding: 0; }
+    #vs-test-area { position: absolute; left: -10000px; top: 0; width: 800px; }
+    .test-shell { display: none; }
+  </style>
+</head>
+<body>
+  <h1>ViRaSPA browser tests</h1>
+  <p>Runs the tests in tests/browser/ against the real framework and the sample app's configuration.
+     From the command line: <code>node node-tools/test.js</code>.</p>
+  <div id="test-results">Running...</div>
+
+  <!-- The app boots as usual (its routes and settings are what the tests use);
+       its shell stays hidden. -->
+  <div class="test-shell"><main id="page-root"></main></div>
+
+  <script>
+    window.Viraspa = {
+      settings: {
+        app: { name: "ViRaSPA Tests", version: "0.0.0", releaseDate: "" },
+        cache: { strategy: "revalidate" },
+        pageCache: { maxPages: 5 },
+      },
+    };
+  </script>
+  <script src="viraspa/viraspa.js"></script>
+  <script>
+    // Once the app has started: load the test helpers and the tests, then run.
+    document.addEventListener("viraspa:routeChanged", async function start() {
+      document.removeEventListener("viraspa:routeChanged", start);
+      const load = (src) => Viraspa.utility.assetLoader.loadScript(src);
+      await load("viraspa/core/testing.js");
+      for (const file of [
+        "tests/browser/bindings.test.js",
+        "tests/browser/components.test.js",
+        "tests/browser/session.test.js",
+        "tests/browser/i18n.test.js",
+        "tests/browser/router.test.js",
+      ]) {
+        await load(file);
+      }
+      await Viraspa.testing.run();
+    });
+  </script>
+</body>
+</html>

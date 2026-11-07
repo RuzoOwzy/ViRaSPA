@@ -5,6 +5,7 @@
   <nav class="features-toc" aria-label="On this page">
     <a href="/features#pages">Pages and Routing</a>
     <a href="/features#components">Components</a>
+    <a href="/features#reactivity">Reactivity and Languages</a>
     <a href="/features#session">Session and Privileges</a>
     <a href="/features#feedback">Busy and Messages</a>
     <a href="/features#head">Head Information and SEO</a>
@@ -44,6 +45,17 @@
         <native-counter label="Count"></native-counter>
       </li>
       <li><strong>Extensions</strong> — third-party bundles with their own tag prefix, checked for framework version and reserved names.</li>
+    </ul>
+  </section>
+
+  <section id="reactivity">
+    <h2>Reactivity and Languages</h2>
+    <ul class="feature-list">
+      <li><strong>Signals</strong> — <code>signal</code>, <code>computed</code>, <code>effect</code>, <code>batch</code>: values that update the screen where they are used, and nothing else. <a href="/live-demo">Try the Live Demo</a>.</li>
+      <li><strong>Template bindings</strong> — one rule: inside <code>\{{ }}</code> is code. Live text and attributes, show/hide, <code>&lt;template&gt;</code> blocks for conditions and lists, two-way inputs, events — with a safe expression parser (no <code>eval</code>).</li>
+      <li><strong>Translations</strong> — natural keys, plurals, per-page files, <code>lang</code> and right-to-left direction. Switch the language in the header.</li>
+      <li><strong>Formats</strong> — named date, number and currency formats in the chosen language, overridable by the user and per call.</li>
+      <li><strong>Testing</strong> — <code>node node-tools/test.js</code> runs the Node tests and the browser tests (<code>/tests/run.html</code>).</li>
     </ul>
   </section>
 

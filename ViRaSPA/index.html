@@ -32,8 +32,9 @@
     <vs-header sticky>
       <vs-brand slot="brand" name="ViRaSPA" logo="app/assets/icons/favicon.svg"></vs-brand>
       <vs-menu menu="main" data-layout-only="public"></vs-menu>
-      <a slot="end" href="/login" class="header-action" data-layout-only="public" data-visible-when="signed-out">Sign In</a>
-      <a slot="end" href="/dashboard" class="header-action" data-layout-only="public" data-visible-when="signed-in">Dashboard</a>
+      <select slot="end" class="language-picker" aria-label="Language" data-i18n-attr="aria-label"></select>
+      <a slot="end" href="/login" class="header-action" data-layout-only="public" data-visible-when="signed-out" data-i18n>Sign In</a>
+      <a slot="end" href="/dashboard" class="header-action" data-layout-only="public" data-visible-when="signed-in" data-i18n>Dashboard</a>
       <vs-user-menu slot="end" source="session" data-visible-when="signed-in"></vs-user-menu>
     </vs-header>
     <div class="app-body">

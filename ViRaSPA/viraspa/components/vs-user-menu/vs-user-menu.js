@@ -54,7 +54,7 @@
         .map((item, index) => {
           if (item.divider) return '<div class="divider" role="separator"></div>';
           const icon = item.icon ? (typeof item.icon === "object" ? JSON.stringify(item.icon) : item.icon) : "";
-          const inner = (icon ? `<vs-icon class="icon" icon="${escapeHtml(icon)}"></vs-icon>` : "") + `<span>${escapeHtml(item.label)}</span>`;
+          const inner = (icon ? `<vs-icon class="icon" icon="${escapeHtml(icon)}"></vs-icon>` : "") + `<span>${escapeHtml(Viraspa.i18n.t(item.label))}</span>`;
           return item.href
             ? `<a class="item" role="menuitem" tabindex="-1" href="${escapeHtml(item.href)}" data-index="${index}" part="item">${inner}</a>`
             : `<button class="item" type="button" role="menuitem" tabindex="-1" data-index="${index}" part="item">${inner}</button>`;
@@ -65,18 +65,19 @@
 
     async afterLoad() {
       const root = this.componentRoot;
-      root.addEventListener("click", (event) => {
+      this.listen(root, "click", (event) => {
         if (event.target.closest(".trigger")) this.setOpen(!this.isOpen());
         const item = event.target.closest(".item");
         if (item) this.choose(Number(item.dataset.index));
       });
-      root.addEventListener("keydown", (event) => this.onKeyDown(event));
-      document.addEventListener("click", (event) => {
+      this.listen(root, "keydown", (event) => this.onKeyDown(event));
+      this.listen(document, "click", (event) => {
         if (!event.composedPath().includes(this)) this.setOpen(false);
       });
-      document.addEventListener("viraspa:sessionChanged", () => {
-        if (this.getAttribute("source") === "session" && this.isConnected) this.render();
+      this.listen(document, "viraspa:sessionChanged", () => {
+        if (this.getAttribute("source") === "session") this.render();
       });
+      this.listen(document, "viraspa:localeChanged", () => this.render());
     }
 
     isOpen() {

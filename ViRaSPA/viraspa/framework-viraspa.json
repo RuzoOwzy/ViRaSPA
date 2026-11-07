@@ -83,7 +83,7 @@
     },
     {
       "path": "components/vs-menu/vs-menu.js",
-      "checksum": "sha256-c1ab7e5749d1141a6db73033c90cb49e0ad38b243ee4e7dc36a57f000d707b5e"
+      "checksum": "sha256-e72b03ff4e5fc106cffe703467134d081872aee25eaae7e0952895d00c643549"
     },
     {
       "path": "components/vs-menu/vs-menu.model.json",
@@ -99,7 +99,7 @@
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.js",
-      "checksum": "sha256-d095e3fd694cf3f283f12310b3cab38c55c9ee6486d5cade9d72eefca04aea1c"
+      "checksum": "sha256-983c7ab4de88d2edaafeb380ed9986da82ee9bde623ba45510bd1a50b9597dd9"
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.model.json",
@@ -127,7 +127,7 @@
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.js",
-      "checksum": "sha256-2eda5a6fa303a876be1af496c43ffbd50d4b2277880953970631fac81f379d2c"
+      "checksum": "sha256-0103cb9311e08943b0fb44346c34b4580cae8101683023b7327b778c3e779e4c"
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.model.json",
@@ -135,7 +135,7 @@
     },
     {
       "path": "core/bootstrap.js",
-      "checksum": "sha256-cfe30ce9a4975ddd260d43af1d884b665886b16d7be77e1b69b8570b55ccfb17"
+      "checksum": "sha256-4eb33ffcaf2cfe67e016c3dd6f3fc061144b5eee453ecc3829a1feadbb7476a1"
     },
     {
       "path": "core/busy.js",
@@ -147,15 +147,27 @@
     },
     {
       "path": "core/component.js",
-      "checksum": "sha256-318e305dbe455e5e953fa8f3047d84e116011b35e720dbecc79f7318cdb1e27e"
+      "checksum": "sha256-3fe1008f5c23556d920f4751e38467dbf3958285c36f64cf47dfbadd800e3197"
     },
     {
       "path": "core/events.js",
       "checksum": "sha256-598ef965bf93bdb43c8db725f42ede5b9f5c8e8872593b5429534efdc4336c95"
     },
     {
+      "path": "core/expressions.js",
+      "checksum": "sha256-918cd46cde94e75603b93bddb79600cceb33e97935566c73ac5c729c32241b56"
+    },
+    {
+      "path": "core/format.js",
+      "checksum": "sha256-b60d1ff2c99a19bb9750cb0dae85eb8b2a041a2e40388fd6d431b4e61802e68d"
+    },
+    {
       "path": "core/head.js",
       "checksum": "sha256-e80d98213fe9091d975372eda78c53eb088dc5ea53fef375f4f9694d4f12a3ba"
+    },
+    {
+      "path": "core/i18n.js",
+      "checksum": "sha256-50005c1b1378d41cac2e759bed878870cae1dfcadfa0f43cfd16838920b9b7e8"
     },
     {
       "path": "core/icons.js",
@@ -163,7 +175,7 @@
     },
     {
       "path": "core/layout.js",
-      "checksum": "sha256-50b28d73c9b9570696aa4361c3c08e2a7e2b2eef9570c6411de540911c39caa9"
+      "checksum": "sha256-cff32d00f4b01d82664f7116dfaa2f2b10d7b26f3a43a47e921eff456e3323e6"
     },
     {
       "path": "core/manifest-rules.js",
@@ -175,19 +187,27 @@
     },
     {
       "path": "core/page.js",
-      "checksum": "sha256-37846e2de353510737119ab2e8b9a59fadc2f17548bec9bf493d5d9e1a729deb"
+      "checksum": "sha256-9bf153ec26ede1df19d650999b79ae8162818a86293a92c20fb86000afc9200f"
     },
     {
       "path": "core/router.js",
-      "checksum": "sha256-0792dfe72ebdbddfe292d4fc6e76abaa8e408b91c76b8b05fdc272e0a97b986b"
+      "checksum": "sha256-64b825bcb362e2c0bcdfadc3451bdaebb00ae909972f8b1c316d27817aefddfc"
     },
     {
       "path": "core/session.js",
       "checksum": "sha256-61ad016dbe67137e937956c41200fb5e329058944173d9a1a3885e695d77088b"
     },
     {
+      "path": "core/state.js",
+      "checksum": "sha256-38288559c6e17d307af122215acb46072f72fd94064e46bb92368c85a8928479"
+    },
+    {
       "path": "core/style-isolation.js",
       "checksum": "sha256-4ef2ca86b19b6020b90e75b8a2e2d3a0df1c03b78a72363917d1e987b51158d6"
+    },
+    {
+      "path": "core/testing.js",
+      "checksum": "sha256-da8b91d4724719f3e6e58f84b0251f460d182e4b1478a5c5efbadb6f2a611b85"
     },
     {
       "path": "core/toast.js",
@@ -199,7 +219,7 @@
     },
     {
       "path": "services/databinding/data-binding-service.js",
-      "checksum": "sha256-4899435524a514385e5ed7e1b92c868ed8498a9aeef2f33da61a7af25ede7af5"
+      "checksum": "sha256-0b86b1138ccc070fe81c226a8384d416c3eb80cfd3ff7415e509a9fbd7a69770"
     },
     {
       "path": "styles/base.css",
@@ -215,7 +235,7 @@
     },
     {
       "path": "viraspa.js",
-      "checksum": "sha256-08b0537cd4bac2d344d30507e113f98729f227031b98bf269154555c86cc907b"
+      "checksum": "sha256-4eacb319df534cac40fc9703b9f320544e0a904f2ebe5decf416bfedb4528721"
     }
   ]
 }

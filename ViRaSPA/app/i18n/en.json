@@ -1,0 +1,4 @@
+{
+  "{count} item": { "one": "{count} item", "other": "{count} items" },
+  "{count} user": { "one": "{count} user", "other": "{count} users" }
+}

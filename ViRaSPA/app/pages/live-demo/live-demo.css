@@ -1,0 +1,46 @@
+.page-live-demo {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.page-live-demo section {
+  margin-top: 1.5rem;
+}
+
+.page-live-demo .add-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.page-live-demo .add-item input {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--vs-color-border);
+  border-radius: var(--vs-radius);
+}
+
+.page-live-demo .add-item input[type="number"] {
+  width: 8rem;
+}
+
+.page-live-demo .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.page-live-demo .formats {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1.25rem;
+}
+
+.page-live-demo .formats dt {
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--vs-color-text-muted);
+}
+
+.page-live-demo .formats dd {
+  margin: 0;
+}

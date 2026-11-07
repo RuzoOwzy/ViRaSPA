@@ -18,13 +18,14 @@
   // Viraspa.core.setGuard.)
   function deepFreeze(value, seen = new Set()) {
     if (!value || typeof value !== "object" || seen.has(value) || value instanceof Map || value instanceof Set) return;
+    if (Viraspa.state && Viraspa.state.isSignal(value)) return; // signals must stay writable
     seen.add(value);
     for (const key of Object.keys(value)) deepFreeze(value[key], seen);
     Object.freeze(value);
   }
 
   function lockFrameworkNamespaces() {
-    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules"]) {
+    for (const name of ["core", "services", "utility", "cache", "icons", "toast", "busy", "head", "session", "extensions", "manifestRules", "state", "expressions", "format", "i18n"]) {
       deepFreeze(Viraspa[name]);
       Object.defineProperty(Viraspa, name, { value: Viraspa[name], writable: false, configurable: false });
     }
@@ -55,6 +56,7 @@
     }
 
     await Viraspa.core.runInit();
+    await Viraspa.i18n.start(); // the language (and its translations) before anything renders
     Viraspa.core.emit("appInit");
     await Viraspa.core.baseStyleLoaded;
     await Viraspa.core.loadLayout();
