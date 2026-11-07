@@ -11,6 +11,11 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N5 · GitHub Pages demo
+
+- **Sites in a sub-folder** (`<base href="/shop/">`): routes stay app paths; the router, the private-page redirect, `vs-menu`, `vs-brand` and `vs-user-menu` add the folder; `Viraspa.core.toAppPath()` and `toUrlPath()`. Checked on a test server under `/sub/`: deep links, menu links, clicks, Back, `navigate()`, the login redirect, spelling correction and the not-found page.
+- **ViRaSPA-Extensions demo site** (repository root: `index.html`, `404.html`, `app/`): an overview and a page per component with live examples, the framework from jsDelivr (pinned to a commit), icons from the CDN. Published once GitHub Pages is turned on for the repository.
+
 ### Milestone N4 · Browsers and phones
 
 - **`test.js --engine firefox,webkit|chromium` and `--device "iPhone 15,Pixel 7"`:** the browser tests through Playwright, installed outside the project (`--playwright-folder`); Chromium uses the installed Edge or Chrome. Combines with `--bundled`.

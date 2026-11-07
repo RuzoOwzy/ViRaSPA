@@ -14,7 +14,8 @@
 //              in a vs-menu (menus defaults to ["main"]), or a list of such entries
 //   keepAlive  true keeps the page (its DOM and state) when the user leaves
 //   native     true for a plain page: .html, .css and a plain .js
-//   i18n       true: the page has its own translations (<name>.i18n.<language>.json)
+//   i18n       true: the page has its own translations (<name>.i18n.<language>.json),
+//              one per language except the default; or a list, e.g. ["en", "sw"]
 //
 // Backend endpoints don't belong here - see app/config/endpoints.js.
 window.Viraspa.routes = [

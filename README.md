@@ -632,6 +632,18 @@ const users = await Viraspa.busy.run(
 
 The framework's files are found relative to `viraspa.js`, so the framework can be served from a CDN instead of being installed, e.g. `<script src="https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v0.1.0/ViRaSPA/viraspa/viraspa.js"></script>`. CDN files carry no token, since the URL already names the version. This works once version tags are published.
 
+### Serving from a sub-folder
+
+A site can live in a sub-folder, e.g. `https://example.com/shop/` (an IIS virtual directory, GitHub Pages). Set `<base href="/shop/">` in `index.html`; nothing else changes:
+
+- **Routes stay app paths:** `path: "/about"` matches `https://example.com/shop/about`, and `Viraspa.core.navigate("/about")` goes there.
+- **Framework links follow:** `vs-menu`, `vs-brand` and `vs-user-menu` write `/shop/about` for a route `/about`; the private-page redirect and `?returnTo=` use app paths.
+- **Your own links:** write them relative (`href="about"`), so they also work when opened in a new tab. A root link (`href="/about"`) still works on a plain click.
+- **Converting:** `Viraspa.core.toAppPath("/shop/about")` gives `/about`, and `Viraspa.core.toUrlPath("/about")` gives `/shop/about`.
+- **Server rules and prerendering** (deploy.js, prerender.js) still assume the site root.
+
+The [ViRaSPA-Extensions demo](https://ruzoowzy.github.io/ViRaSPA-Extensions/) runs this way on GitHub Pages.
+
 ### Cache strategies
 
 Every URL the framework loads carries a token, so browsers never use a stale copy after a release.

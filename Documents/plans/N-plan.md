@@ -10,7 +10,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | **N2** | Bundle tool (classic files only) | done, see [N2 report](N2-report.md) |
 | **N3** | Real servers: IIS (with URL Rewrite), Apache, nginx | nginx and Apache done; IIS waits for an administrator run, see [N3 report](N3-report.md) |
 | **N4** | Browsers and phones: Playwright with Chromium, Firefox, WebKit and phone profiles; a DevTools phone-mode checklist | done, see [N4 report](N4-report.md) |
-| **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | planned |
+| **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | built and pushed; Pages and the rename wait for the owner, see [N5 report](N5-report.md) |
 | **N6** | Dynamic page previews: the optional Node helper | planned |
 | **N7** | Study and foundations | planned |
 | **N8** | Basic components (13) | planned |
