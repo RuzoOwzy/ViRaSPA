@@ -27,6 +27,7 @@ node-tools/           <- command-line tools (Node.js), outside the served folder
   prerender.js        <- ready-made public pages for search engines and link previews
   deploy.js           <- copies a release to a server folder or .zip, with environments and rollback
   bundle.js           <- optional faster copy: bundles, packed templates, compaction, preloads
+  check-server.js     <- checks that a real web server serves a deployed site correctly
   create-project.js   <- starts a new project
   clean-sample.js     <- removes the sample app from a copy of this repository
   stamp.js            <- for publishers: writes file lists and checksums into manifests
@@ -810,7 +811,7 @@ node node-tools/deploy.js --target production --prerender
 2. **Prerenders** public pages, with `--prerender`.
 3. **Copies the site,** leaving out `app/project-viraspa.json`, `*.md`, `*.d.ts`, `*.map`, `tests/` and your `exclude` list.
 4. **Writes `app/config/environment.js`** from the chosen environment's settings, e.g. the API address. The sample's `init.js` points the endpoints at `apiBaseAddress`. With `--bundle`, the release is then bundled (see [Bundling](#bundling-optional-bundlejs)).
-5. **Writes `release.json`** (the `auto` cache strategy uses it) **and the server rules:** `web.config` for IIS, `.htaccess` for Apache, or `<destination>-nginx.conf` beside it for nginx. The rules give you prerendered pages, the `index.html` fallback, real 404s, `no-cache` for `index.html`, and they hide the tool settings.
+5. **Writes `release.json`** (the `auto` cache strategy uses it) **and the server rules:** `web.config` for IIS (needs the URL Rewrite module), `.htaccess` for Apache (needs `mod_rewrite`, `mod_headers` and `AllowOverride All`), or two files beside the destination for nginx: `<destination>-nginx-http.conf` (include it in `http { }`) and `<destination>-nginx-server.conf` (include it in the site's `server { }`). The rules give you prerendered pages, the `index.html` fallback for routes (any letter case, with or without a trailing slash), real 404s, `no-cache` for every HTML answer and `release.json`, and they hide the tool settings.
 6. **Copies into `<destination>.new`, then swaps it in at once.** The old release becomes `<destination>.previous-<its token>`; the newest `keepPrevious` are kept. If Windows or IIS holds the folder open, it copies over it in place instead.
 
 `--rollback` puts the newest previous release back, `--zip <file>` writes the release as one file, and `--dry-run` shows the steps without doing them.
@@ -829,6 +830,8 @@ node node-tools/deploy.js --target production --prerender
 
 - **Remote uploads:** FTP, SSH and cloud uploads are not built in. Use `--zip` and your provider's own tools.
 - **Checking a release:** `node node-tools/serve.js --site-folder <release folder> --port 8030` serves a deployed release.
+- **Checking a real server:** `node node-tools/check-server.js --url https://staging.example.com` sends read-only requests and checks routes, prerendered pages, 404s, caching headers, the hidden settings file and file types (61 checks on the sample).
+- **Tested with:** nginx 1.30.6 and Apache 2.4.70 (Apache Lounge) on Windows, all checks passing, with and without `--bundle`.
 
 ### Bundling (optional): bundle.js
 

@@ -11,6 +11,13 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N3 · Real web servers
+
+- **Tested on real servers:** nginx 1.30.6 and Apache 2.4.70 on Windows, with deployed releases (prerendered pages; with and without `--bundle`): every check passes and the app works in the browser. IIS is prepared (`setup-iis.ps1` for an administrator) but not yet run.
+- **`node-tools/check-server.js`:** read-only checks of a running server against what the server rules promise (routes in any letter case and with a trailing slash, prerendered pages, real 404s, `no-cache` for HTML, the hidden settings file, file types).
+- **Fixed:** prerendered pages and `/` were served without `no-cache` on nginx and IIS, so a browser could keep an old entry page after a release. Every HTML answer is now `no-cache` (nginx: a map on the content type; IIS: an outbound rule).
+- **nginx rules** are now two files beside the destination, `-nginx-http.conf` (for `http { }`) and `-nginx-server.conf` (for `server { }`), instead of one file to split by hand.
+
 ### Milestone N2 · Bundle tool (optional)
 
 - **`node-tools/bundle.js`** writes a faster copy of the site, and **`deploy.js --bundle`** bundles a release. Steps, each optional: `framework` (`viraspa/viraspa.bundle.js`, with the core components), `app` (`app/app.bundle.js` + `.css` from `startup.js`, with the official components), `pack` (templates, models, component CSS and manifests in `app/viraspa-pack.js`), `compact` (comments and indentation removed; nothing renamed) and `preload`.

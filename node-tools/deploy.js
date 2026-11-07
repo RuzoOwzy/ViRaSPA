@@ -27,7 +27,7 @@ const tool = defineTool({
     "  4. Writes app/config/environment.js from the chosen environment's settings (e.g. the API address);",
     "     with --bundle, then bundles the release (bundle.js: fewer requests, smaller files; the site is unchanged).",
     '  5. Writes release.json (the cache strategy "auto" uses it) and the server rules: web.config (IIS),',
-    "     .htaccess (Apache) or <destination>-nginx.conf beside it (nginx).",
+    "     .htaccess (Apache), or <destination>-nginx-http.conf and -nginx-server.conf beside it (nginx).",
     "  6. Copies into <destination>.new, then swaps: the old release becomes <destination>.previous-<time>.",
     "     --rollback swaps the newest previous release back in.",
     "Targets and environments live in app/project-viraspa.json, \"deploy\" section:",
@@ -238,10 +238,11 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
   const { routes } = routesLib.loadRoutes(siteFolder);
   const knownPaths = routes.filter((r) => r.path).map((r) => routesLib.normalizePath(r.path));
   const rules = serverRules.generate(target.serverType, knownPaths);
-  let besideFile = null;
+  let besideFiles = [];
   if (rules && rules.inSite) release[rules.fileName] = Buffer.from(rules.content, "utf8");
-  if (rules && !rules.inSite && target.destination) besideFile = { file: `${target.destination}-nginx.conf`, content: rules.content };
-  log(`5. release.json (token ${releaseInfo.token})${rules ? ` and ${rules.inSite ? rules.fileName : path.basename(besideFile ? besideFile.file : rules.fileName)}` : ", no server rules (serverType none)"}.`);
+  if (rules && !rules.inSite && target.destination) besideFiles = rules.files.map((f) => ({ file: `${target.destination}-${f.fileName}`, content: f.content }));
+  const rulesNames = rules ? (rules.inSite ? rules.fileName : (besideFiles.length ? besideFiles.map((b) => path.basename(b.file)) : rules.files.map((f) => f.fileName)).join(" and ")) : "";
+  log(`5. release.json (token ${releaseInfo.token})${rules ? ` and ${rulesNames}` : ", no server rules (serverType none)"}.`);
 
   // 6. Write.
   if (options.zip) {
@@ -250,7 +251,7 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
     if (!dry) {
       fs.mkdirSync(path.dirname(zipFile), { recursive: true });
       const entries = { ...release };
-      if (rules && !rules.inSite) entries[rules.fileName] = Buffer.from(rules.content, "utf8");
+      if (rules && !rules.inSite) for (const f of rules.files) entries[f.fileName] = Buffer.from(f.content, "utf8");
       fs.writeFileSync(zipFile, files.writeZip(entries));
     }
     log(`6. ${dry ? "Would write" : "Wrote"} ${zipFile}`);
@@ -286,14 +287,14 @@ async function deploy({ options, siteFolder, project, sources: optionSources }) 
         files.overwriteFolder(dest, release);
         fs.rmSync(staging, { recursive: true, force: true });
       }
-      if (besideFile) fs.writeFileSync(besideFile.file, besideFile.content, "utf8");
+      for (const b of besideFiles) fs.writeFileSync(b.file, b.content, "utf8");
       // Keep only the newest `keepPrevious` previous releases.
       const previous = previousReleases(dest);
       for (const old of previous.slice(0, Math.max(0, previous.length - Math.max(0, target.keepPrevious)))) {
         fs.rmSync(old, { recursive: true, force: true });
       }
     }
-    if (besideFile) log(`   nginx: include ${besideFile.file} in your server configuration (see its comments).`);
+    if (besideFiles.length) log(`   nginx: include ${besideFiles[0].file} in the http { } block and ${besideFiles[1].file} in the server { } block.`);
   }
 
   log(dry ? "Dry run: nothing was changed." : `Done: release ${releaseInfo.token}.`);

@@ -8,7 +8,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | --- | --- | --- |
 | **N1** | Housekeeping: version 0.1.0 in development; repository renamed to ViRaSPA-Extensions; the `helper` kind; manifest `dependencies` | done, see [N1 report](N1-report.md) |
 | **N2** | Bundle tool (classic files only) | done, see [N2 report](N2-report.md) |
-| **N3** | Real servers: IIS (with URL Rewrite), Apache, nginx | planned |
+| **N3** | Real servers: IIS (with URL Rewrite), Apache, nginx | nginx and Apache done; IIS waits for an administrator run, see [N3 report](N3-report.md) |
 | **N4** | Browsers and phones: Playwright with Chromium, Firefox, WebKit and phone profiles; a DevTools phone-mode checklist | planned |
 | **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | planned |
 | **N6** | Dynamic page previews: the optional Node helper | planned |

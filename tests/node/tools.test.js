@@ -52,9 +52,12 @@ test("routes: the sample's routes load in Node", () => {
 test("server rules: every server type mentions the known routes", () => {
   for (const type of ["iis", "apache", "nginx"]) {
     const rules = serverRules.generate(type, ["/", "/about"]);
-    assert.match(rules.content, /about/);
-    assert.match(rules.content, /prerendered/);
+    const all = rules.files.map((f) => f.content).join("\n");
+    assert.match(all, /about/);
+    assert.match(all, /prerendered/);
+    assert.match(all, /no-cache/);
   }
+  assert.deepEqual(serverRules.generate("nginx", ["/"]).files.map((f) => f.fileName), ["nginx-http.conf", "nginx-server.conf"]);
   assert.equal(serverRules.generate("none", []), null);
 });
 
