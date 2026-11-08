@@ -22,6 +22,7 @@ The benchmark turned up three framework problems and one bundle-tool problem:
 The review against the plan turned up these:
 
 - **Tables on phones:** the plan asked for "scroll with the first column fixed" and "columns hidden on small screens". The first column is now fixed while a phone scrolls the table sideways, and a column can say `phone="hide"` (read by table-core). Checked at 375 px on `/showcase`: Company is hidden and Name stays in place after scrolling 200 px.
+- **`vs-login-form` had failed to load since N7.** Form-associated support gave every component read-only `form`, `name`, `validity` and `validationMessage` properties, and `vs-login-form` assigns `this.form` to its own `<form>`. So the sign-in form (the sample's `/login` and the demo's page) stayed empty, with an error in the console. Earlier sweeps only checked that each tag was defined, so they missed it. These names now have setters that make the value the component's own property, and a test mounts `vs-login-form`. Every demo page's console is now checked for errors, not just its tags.
 - **The demo's search hints were wrong:** they said "elodie dar", but in the demo data Élodie is in Arusha. The hints now say "elodie aru", and that search was checked on the Tables and Helpers pages.
 
 **Result:** the geometric mean of the DOM benchmark went from **3.51× to 1.50×** vanilla in Chromium, with 1.49× in Firefox and 1.38× in WebKit.

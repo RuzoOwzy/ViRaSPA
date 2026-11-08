@@ -18,6 +18,7 @@ was never released and is folded into 0.1.0.)
 - **DOM benchmark:** `tests/benchmark.html` and `node node-tools/test.js --benchmark [--engine chromium,firefox,webkit]` time js-framework-benchmark's keyed operations against hand-written vanilla JS. The geometric mean is 1.50× (Chromium), 1.49× (Firefox) and 1.38× (WebKit), down from 3.51× before these changes. See [the benchmark](benchmark.md).
 - **Bundle tool:** new `components` setting. `"startup"` (default) bundles only the official components needed at startup; the others load when first used. `"all"` bundles every installed one. On the sample this cut the startup download from 649 KB to 395 KB.
 - **Sample:** `/showcase` now has every official component (data table, pagination, card, stat tile).
+- **Fixed:** components couldn't assign `this.form`, `this.name`, `this.validity` or `this.validationMessage` (read-only since form-associated support), which stopped `vs-login-form` from loading. Assigning one now gives the component its own property.
 - **ViRaSPA-Extensions:** `vs-table` keeps its first column fixed when a phone scrolls it sideways, and columns can be `phone="hide"`. The demo site has pages for all 24 components and 5 helpers.
 
 ### Milestone N10 · Media and editor

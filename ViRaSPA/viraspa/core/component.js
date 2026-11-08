@@ -2,6 +2,11 @@
   const ISOLATION_MODES = ["full", "scoped", "none"];
   const RESERVED_PREFIXES = ["vs-", "viraspa-"];
 
+  // Gives `element` its own writable `key`, hiding the base class's getter.
+  function ownProperty(element, key, value) {
+    Object.defineProperty(element, key, { value, writable: true, configurable: true, enumerable: true });
+  }
+
   // Base class for framework components. A component is a custom element:
   //
   //   class Card extends Viraspa.core.Component {
@@ -66,17 +71,32 @@
     }
 
     // ---- form fields (static formAssociated = true) ---------------------
+    // These read-only names are free for a component's own use: assigning
+    // one (e.g. this.form = this.querySelector("form")) makes it the
+    // component's own property instead of failing.
     get form() {
       return this.internals ? this.internals.form : null;
+    }
+    set form(value) {
+      ownProperty(this, "form", value);
     }
     get name() {
       return this.getAttribute("name") || "";
     }
+    set name(value) {
+      ownProperty(this, "name", value);
+    }
     get validity() {
       return this.internals ? this.internals.validity : null;
     }
+    set validity(value) {
+      ownProperty(this, "validity", value);
+    }
     get validationMessage() {
       return this.internals ? this.internals.validationMessage : "";
+    }
+    set validationMessage(value) {
+      ownProperty(this, "validationMessage", value);
     }
     checkValidity() {
       return this.internals ? this.internals.checkValidity() : true;

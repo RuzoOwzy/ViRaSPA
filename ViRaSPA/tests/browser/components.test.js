@@ -57,4 +57,13 @@
     n.value = 1;
     assert.equal(runs, 1);
   });
+
+  test("vs-login-form loads (a component may use this.form for its own <form>)", async () => {
+    const login = await mount("vs-login-form", {});
+    assert.ok(login.form && login.form.localName === "form", "its own form element");
+    const card = await mount("vs-card", { heading: "x" });
+    card.name = "mine";
+    assert.equal(card.name, "mine", "read-only base names can be reused");
+    assert.equal(card.form, null, "a component that isn't a form field has no form");
+  });
 })();
