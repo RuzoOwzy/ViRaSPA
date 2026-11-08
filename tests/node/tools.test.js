@@ -129,6 +129,19 @@ test("bundle: framework, app, pack and preload on an in-memory site", () => {
   for (const name of ["viraspa/viraspa.bundle.js", "app/app.bundle.js", "app/viraspa-pack.js"]) new vm.Script(out[name].toString(), { filename: name });
   assert.equal(site["viraspa/viraspa.js"].toString().includes("viraspa.bundle.js"), false, "the input is not changed");
   assert.ok(!report.some((line) => /not isolated/.test(line)), report.join("\n"));
+
+  // Official components: only those needed at startup (vs-popup, from
+  // startup.js components) are bundled and packed; the others load when used.
+  const app = out["app/app.bundle.js"].toString();
+  const pack = out["app/viraspa-pack.js"].toString();
+  assert.match(app, /components\.provide\("vs-popup"/);
+  assert.doesNotMatch(app, /components\.provide\("vs-table"/);
+  assert.match(pack, /components\/vs-popup\/vs-popup\.css/);
+  assert.doesNotMatch(pack, /components\/vs-table\/vs-table\.css/);
+  assert.match(pack, /components\/vs-table\/component-viraspa\.json/, "manifests stay in the pack");
+  const all = bundleSite(site, { components: "all" }).site["app/app.bundle.js"].toString();
+  assert.match(all, /components\.provide\("vs-table"/);
+  assert.throws(() => bundleSite(site, { components: "some" }), /startup" or "all/);
 });
 
 test("routes: parameters match the same way in the tools and in the browser", () => {

@@ -11,6 +11,15 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N11 · Showcase, benchmark and review
+
+- **Faster keyed lists:** `data-bind-repeat` with a key now moves only the rows that are out of order (a swap moves two rows, a removal none) and inserts new rows in one batch. Template texts are split once, not once per row.
+- **`Viraspa.state.selector(source)`:** `isSelected(key)` for "the chosen row" in long lists; when the choice changes, only the old and the new row update.
+- **DOM benchmark:** `tests/benchmark.html` and `node node-tools/test.js --benchmark [--engine chromium,firefox,webkit]` time js-framework-benchmark's keyed operations against hand-written vanilla JS. The geometric mean is 1.50× (Chromium), 1.49× (Firefox) and 1.38× (WebKit), down from 3.51× before these changes. See [the benchmark](benchmark.md).
+- **Bundle tool:** new `components` setting. `"startup"` (default) bundles only the official components needed at startup; the others load when first used. `"all"` bundles every installed one. On the sample this cut the startup download from 649 KB to 395 KB.
+- **Sample:** `/showcase` now has every official component (data table, pagination, card, stat tile).
+- **ViRaSPA-Extensions:** `vs-table` keeps its first column fixed when a phone scrolls it sideways, and columns can be `phone="hide"`. The demo site has pages for all 24 components and 5 helpers.
+
 ### Milestone N10 · Media and editor
 
 - **ViRaSPA-Extensions:** `vs-media-viewer` (images and SVG with zoom by wheel, pinch, buttons and keys, pan, rotate, fit, a swipe for next/previous; PDF and video with the browser's own viewers; other documents as a link, or the Google viewer only when allowed with `allow-external-viewer`; gallery mode), `vs-image-cropper` (fixed or free shape, drag and 8 handles, zoom, rotate, keyboard move and resize, output size, type and quality, a form file, `toBlob` / `toDataURL` / `save`) and `vs-rich-text-editor` (version 1 in our own code: headings, formatting, lists with Tab indent, quote, alignment, safe links, images by address or upload, clean or plain paste, a count and a limit, required and read-only, toolbar presets, overridable shortcuts, Alt+F10 to the toolbar, and an allow-list sanitizer for every value).

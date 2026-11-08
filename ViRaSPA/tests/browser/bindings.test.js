@@ -63,6 +63,60 @@
     assert.equal(element.querySelectorAll("li")[0], second, "the row for id 2 is reused");
   });
 
+  test("keyed repeat: any reordering ends in the right order, reusing rows", () => {
+    const list = signal([1, 2, 3, 4, 5, 6, 7, 8].map((id) => ({ id })));
+    const { element } = render('<ul><template data-bind-repeat="{{ list }}" data-bind-item="r" data-bind-key="{{ r.id }}"><li>{{ r.id }}</li></template><li class="end">end</li></ul>', { list });
+    const ids = () => [...element.querySelectorAll("li:not(.end)")].map((li) => Number(li.textContent));
+    const byId = () => new Map([...element.querySelectorAll("li:not(.end)")].map((li) => [Number(li.textContent), li]));
+    const before = byId();
+    const orders = [
+      [1, 7, 3, 4, 5, 6, 2, 8], // swap
+      [8, 7, 6, 5, 4, 3, 2, 1], // reverse
+      [8, 7, 9, 6, 5, 10, 4, 3, 2, 1], // insert in the middle
+      [7, 9, 5, 10, 3, 1], // remove some
+      [3, 10, 1, 7, 9, 5, 11], // shuffle + new at the end
+      [11, 3, 10, 1, 7, 9, 5], // last to first
+      [],
+      [2, 1],
+    ];
+    for (const order of orders) {
+      list.value = order.map((id) => ({ id }));
+      assert.deepEqual(ids(), order);
+      assert.equal(element.querySelector("ul, div > ul").lastElementChild.className, "end", "rows stay before what follows the template");
+    }
+    list.value = [5, 3].map((id) => ({ id }));
+    assert.deepEqual(ids(), [5, 3]);
+    list.value = [1, 2, 3, 4, 5, 6, 7, 8].map((id) => ({ id }));
+    const again = byId();
+    list.value = [1, 7, 3, 4, 5, 6, 2, 8].map((id) => ({ id }));
+    assert.equal(byId().get(4), again.get(4), "rows that didn't move are the same nodes");
+    assert.ok(before.size === 8);
+  });
+
+  test("state.selector updates only the old and the new chosen row", () => {
+    const selected = signal(2);
+    const isSelected = Viraspa.state.selector(selected);
+    const runs = { 1: 0, 2: 0, 3: 0 };
+    const stops = [1, 2, 3].map((id) => Viraspa.state.effect(() => {
+      isSelected(id);
+      runs[id]++;
+    }));
+    assert.deepEqual(runs, { 1: 1, 2: 1, 3: 1 });
+    selected.value = 3;
+    assert.deepEqual(runs, { 1: 1, 2: 2, 3: 2 }, "row 1 didn't run again");
+    assert.equal(isSelected(3), true);
+    assert.equal(isSelected(2), false);
+    const rows = signal([{ id: 1 }, { id: 2 }, { id: 3 }]);
+    const { element } = render('<ul><template data-bind-repeat="{{ rows }}" data-bind-item="r" data-bind-key="{{ r.id }}"><li class="{{ isSelected(r.id) ? \'on\' : \'\' }}">{{ r.id }}</li></template></ul>', { rows, isSelected });
+    assert.equal(element.querySelector("li.on").textContent, "3");
+    selected.value = 1;
+    assert.equal(element.querySelector("li.on").textContent, "1");
+    stops.forEach((s) => s());
+    isSelected.dispose();
+    selected.value = 2;
+    assert.equal(element.querySelector("li.on").textContent, "1", "a disposed selector stops following");
+  });
+
   test("data-bind-two-way connects inputs and signals", () => {
     const text = signal("hi");
     const agreed = signal(false);

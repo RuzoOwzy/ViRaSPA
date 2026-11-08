@@ -361,6 +361,8 @@ batch(() => { count.value = 5; count.value = 6; }); // the screen updates once
 
 - **In pages and components:** fields that are signals are visible to the template. `this.effect(fn)` and `this.listen(target, type, fn)` are cleaned up automatically when the page is removed or the component leaves the page.
 - **Other helpers:** `untracked(fn)` reads without subscribing; `signal.peek()` reads the current value; `signal.update(fn)` changes it.
+- **Long lists with one chosen row:** `const isSelected = selector(selectedId)` and `class="{{ isSelected(row.id) ? 'active' : '' }}"`. When the choice changes, only the old and the new row update, not every row. If the signal lives longer than the page (a shared store), call `isSelected.dispose()` when the page goes, in its `dispose()` after `super.dispose()`.
+- **Keyed lists** (`data-bind-repeat` with `data-bind-key`) move as few rows as possible when the order changes: a swap moves two rows, and a removal moves none.
 - **Size:** about 2 KB of plain JavaScript.
 - **Example:** see `app/pages/live-demo/` (`/live-demo`), a cart with a computed total, a keyed list, two-way inputs and events.
 
@@ -506,6 +508,7 @@ node node-tools/test.js
 - **Node tests:** `tests/node/*.test.js` run with `node --test`. They cover signals, expressions, formats, translations, manifest rules and the tools.
 - **Browser tests:** `ViRaSPA/tests/browser/*.test.js` run in `ViRaSPA/tests/run.html`, in the installed Edge or Chrome in headless mode. You can also open `/tests/run.html` while `serve.js` runs.
 - **Other engines and phones:** `--engine firefox,webkit` and `--device "iPhone 15,Pixel 7"` run the browser tests through Playwright, installed once outside the project (`--playwright-folder`). `--bundled` runs them on a bundled copy. See [Documents/mobile-testing.md](Documents/mobile-testing.md), which also has a DevTools device-mode checklist and how to test on a real phone.
+- **DOM benchmark:** `--benchmark` (with `--engine chromium,firefox,webkit`) runs `tests/benchmark.html`. It times js-framework-benchmark's operations with ViRaSPA bindings and with hand-written vanilla JavaScript, and prints each factor and the geometric mean. You can also open `/tests/benchmark.html` while `serve.js` runs. Results are in [the benchmark](Documents/benchmark.md).
 - **CI:** a GitHub Actions workflow (`.github/workflows/tests.yml`) runs them on every push: Node tests, headless Chrome (plain and bundled), Firefox, WebKit, iPhone 15 and Pixel 7.
 
 **Browser test helpers** (`Viraspa.testing`):
@@ -973,14 +976,15 @@ The first writes the copy to `bundled/` (`--output-folder`); the second bundles 
 | Step | What it does |
 | --- | --- |
 | `framework` | `viraspa/viraspa.bundle.js`: the framework's files in the loader's order, plus the core components (handed to the component registry, so they still start only when first used). |
-| `app` | `app/app.bundle.js` and `app/app.bundle.css`: the files listed in `app/config/startup.js`, in their order, plus the installed official components; `startup.js` is rewritten to load them. A remote (CDN) file keeps its place in the order. |
+| `app` | `app/app.bundle.js` and `app/app.bundle.css`: the files listed in `app/config/startup.js`, in their order, plus the official components needed at startup; `startup.js` is rewritten to load them. A remote (CDN) file keeps its place in the order. |
 | `pack` | `app/viraspa-pack.js`: page and component templates, models, component CSS and manifests, served from memory (`assetLoader.addPack`) instead of one request each. Pages' own `.js` and `.css` still load when the page is opened. |
+| `components` | Which official components go into the app bundle and the pack. `"startup"` (default) takes those in `startup.js` `components`, those used in `index.html`, and the components they depend on; the others load on their own the first time a page uses them, as without a bundle. `"all"` bundles every installed one, so the first visit downloads more but later pages need no extra requests. |
 | `compact` | Comments, indentation and blank lines removed from `.js` and `.css`. Nothing is renamed or rewritten, line breaks stay, and strings, template literals and regular expressions are untouched. |
 | `preload` | `<link rel="preload">` tags in `index.html`, so the bundles download while the loader starts. |
 
 - **Same behaviour:** each file in a bundle runs in its own error boundary, so an error in one file doesn't stop the others (as with separate files). A file that declares names at its top level (`var`, `const`, `function`… outside any function) can't be wrapped; the report lists it. A syntax error stops the bundle with a clear message.
 - **Checked:** `node node-tools/test.js --bundled` runs the browser tests against a bundled copy, and CI does it on every push.
-- **Measured on the sample** (local server, About page): 88 requests become 22, and the first page shows in about 0.2–0.4 s instead of 0.9–1.2 s. The framework bundle is 32 KB gzip (28 KB brotli). Details in [the benchmark](Documents/benchmark.md).
+- **Measured on the sample** (local server, About page, 24 official components installed): 76 requests become 33, and the first page shows in about 0.31 s instead of 0.45 s (medians). The framework bundle is 40 KB gzip (34 KB brotli). Details in [the benchmark](Documents/benchmark.md).
 
 **Secrets:** anything the frontend fetches is public, including `environment.js`, so never put secrets there. One frontend can also read a settings file an admin edits on each server: use `Viraspa.utility.assetLoader.fetchJson(path, { fresh: true })` in `init.js`.
 

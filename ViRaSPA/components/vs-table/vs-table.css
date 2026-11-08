@@ -324,9 +324,27 @@ vs-pagination {
     border: 0;
   }
 
-  /* phone-layout="scroll" (default): the table keeps its columns and scrolls sideways. */
+  /* phone-layout="scroll" (default): the table keeps its columns and scrolls
+     sideways, with its first column fixed. */
   :host(:not([phone-layout="cards"])) table {
     min-width: 36rem;
+  }
+
+  :host(:not([phone-layout="cards"])) td.c-first,
+  :host(:not([phone-layout="cards"])) th.c-first {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--vs-table-sticky-background, var(--vs-color-surface, #fff));
+  }
+
+  :host(:not([phone-layout="cards"])) thead th.c-first {
+    z-index: 3;
+  }
+
+  /* Columns marked phone="hide". */
+  .phone-hide {
+    display: none;
   }
 }
 

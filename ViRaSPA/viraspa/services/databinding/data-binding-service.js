@@ -251,6 +251,30 @@
     scope.add(() => child && child.dispose());
   }
 
+  // The positions (indexes into `previous`) that form the longest increasing
+  // run of previous positions (-1 = new): those blocks are already in order
+  // and needn't move. O(n log n).
+  function keptInOrder(previous) {
+    const tails = []; // indexes into previous
+    const parent = new Array(previous.length);
+    for (let i = 0; i < previous.length; i++) {
+      const v = previous[i];
+      if (v < 0) continue;
+      let lo = 0;
+      let hi = tails.length;
+      while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (previous[tails[mid]] < v) lo = mid + 1;
+        else hi = mid;
+      }
+      parent[i] = lo > 0 ? tails[lo - 1] : -1;
+      tails[lo] = i;
+    }
+    const keep = new Set();
+    for (let k = tails.length ? tails[tails.length - 1] : -1; k >= 0; k = parent[k]) keep.add(k);
+    return keep;
+  }
+
   function bindRepeat(template, scopes, scope, owner) {
     const listExpr = attrExpr(template.getAttribute("data-bind-repeat"));
     const itemName = template.getAttribute("data-bind-item") || "item";
@@ -291,18 +315,38 @@
           old.scope.dispose();
           old.nodes.forEach((n) => n.remove());
         }
-        // Put blocks in order before the anchor.
+        // Put blocks in order before the anchor, moving as few as possible:
+        // blocks in the longest run that kept its order stay where they are,
+        // the others move, and new blocks go in (consecutive ones together).
+        const order = Array.from(next.values());
+        const stay = keptInOrder(order.map((b) => (b.fresh ? -1 : b.position)));
         const inserted = [];
-        for (const block of next.values()) {
+        let ref = anchor;
+        let pending = null;
+        let pendingFirst = null;
+        const flush = () => {
+          if (!pending) return;
+          ref.before(pending);
+          if (pendingFirst) ref = pendingFirst;
+          pending = pendingFirst = null;
+        };
+        for (let i = order.length - 1; i >= 0; i--) {
+          const block = order[i];
           if (block.fresh) {
-            anchor.before(block.fragment);
+            pending = pending || document.createDocumentFragment();
+            pending.insertBefore(block.fragment, pending.firstChild);
+            if (block.nodes.length) pendingFirst = block.nodes[0];
+            inserted.push(...block.nodes);
             delete block.fragment;
             delete block.fresh;
-            inserted.push(...block.nodes);
           } else {
-            for (const n of block.nodes) anchor.before(n);
+            flush();
+            if (!stay.has(i)) for (const n of block.nodes) ref.before(n);
+            if (block.nodes.length) ref = block.nodes[0];
           }
+          block.position = i;
         }
+        flush();
         blocks = next;
         if (inserted.length) afterInsert(inserted);
       });

@@ -172,6 +172,46 @@
     }
   }
 
+  // ---- selector -------------------------------------------------------
+  // For "is this the chosen one?" in long lists: isSelected(key) is true for
+  // the key equal to source's value. When the value changes, only the two
+  // places that read the old and the new key update - not every row.
+  //
+  //   const isSelected = Viraspa.state.selector(selectedId);
+  //   <tr class="{{ isSelected(row.id) ? 'active' : '' }}">
+  //
+  // It watches `source` for as long as it lives; isSelected.dispose() stops it.
+  function selector(source) {
+    const readers = new Map(); // key -> Set of observers
+    let current = untracked(() => unwrap(source));
+    const wake = (key) => {
+      const set = readers.get(key);
+      if (!set) return;
+      if (!set.size) readers.delete(key);
+      for (const observer of [...set]) observer.markDirty();
+    };
+    const stop = effect(() => {
+      const next = unwrap(source);
+      if (Object.is(next, current)) return;
+      const previous = current;
+      current = next;
+      wake(previous);
+      wake(next);
+    });
+    function isSelected(key) {
+      if (currentObserver) {
+        let set = readers.get(key);
+        if (!set) readers.set(key, (set = new Set()));
+        set.add(currentObserver);
+        // Seen as a source by the observer, so its next run (or dispose) unsubscribes it.
+        currentObserver.sources.add({ observers: set });
+      }
+      return Object.is(key, current);
+    }
+    isSelected.dispose = stop;
+    return isSelected;
+  }
+
   const isSignal = (value) => Boolean(value && value[SIGNAL]);
 
   // The value of a signal, or the value itself.
@@ -206,5 +246,5 @@
     };
   }
 
-  Viraspa.state = { signal, computed, effect, batch, untracked, isSignal, unwrap, createScope };
+  Viraspa.state = { signal, computed, effect, batch, untracked, selector, isSignal, unwrap, createScope };
 })(typeof window !== "undefined" ? window.Viraspa : globalThis.Viraspa);

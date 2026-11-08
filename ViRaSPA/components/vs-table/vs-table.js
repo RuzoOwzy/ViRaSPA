@@ -314,10 +314,17 @@
       return this.cols.filter((c) => !c.hidden);
     }
 
+    // Classes every cell of a column shares: "phone-hide" (phone="hide": not
+    // shown on narrow screens) and "c-first" (the first column, fixed while a
+    // phone scrolls the table sideways).
+    colClass(c, i) {
+      return `${c.phone === "hide" ? " phone-hide" : ""}${i === 0 ? " c-first" : ""}`;
+    }
+
     renderHead() {
       const cols = this.visibleCols();
       const selectable = this.getAttribute("selectable");
-      this.colgroup.innerHTML = (selectable === "multiple" || selectable === "single" ? '<col class="select-col">' : "") + cols.map(() => "<col>").join("");
+      this.colgroup.innerHTML = (selectable === "multiple" || selectable === "single" ? '<col class="select-col">' : "") + cols.map((c, i) => `<col class="${this.colClass(c, i).trim()}">`).join("");
       const colEls = [...this.colgroup.children].slice(selectable ? 1 : 0);
       cols.forEach((c, i) => {
         const w = this.state.widths[c.key] || c.width;
@@ -328,20 +335,20 @@
       let html = "<tr>";
       if (selectable === "multiple") html += `<th class="select" scope="col"><input type="checkbox" class="select-all" aria-label="${esc(t("Select all rows on this page"))}"></th>`;
       else if (selectable === "single") html += `<th class="select" scope="col"><span class="vs-hidden">${esc(t("Select"))}</span></th>`;
-      for (const c of cols) {
+      for (const [ci, c] of cols.entries()) {
         const si = sortOf(c.key);
         const dir = si >= 0 ? this.state.sort[si].direction : null;
         const aria = dir ? (dir === "asc" ? "ascending" : "descending") : "none";
         const label = esc(t(c.label));
         const order = si >= 0 && this.state.sort.length > 1 ? `<sup>${si + 1}</sup>` : "";
-        html += `<th scope="col" class="${c.sticky === "start" ? "sticky " : ""}align-${c.align}" data-key="${esc(c.key)}" aria-sort="${aria}" part="header">`;
+        html += `<th scope="col" class="${c.sticky === "start" ? "sticky " : ""}align-${c.align}${this.colClass(c, ci)}" data-key="${esc(c.key)}" aria-sort="${aria}" part="header">`;
         html += c.sortable ? `<button type="button" class="sort" data-sort="${esc(c.key)}">${label}<span class="arrow" aria-hidden="true">${dir === "asc" ? "▲" : dir === "desc" ? "▼" : ""}</span>${order}</button>` : `<span class="label">${label}</span>`;
         html += `<span class="resize" role="separator" aria-orientation="vertical" tabindex="0" data-resize="${esc(c.key)}" aria-label="${esc(t("Resize {column}").replace("{column}", t(c.label)))}"></span></th>`;
       }
       html += "</tr>";
       if (cols.some((c) => c.filterable)) {
         html += `<tr class="filters">${selectable ? "<th></th>" : ""}${cols
-          .map((c) => `<th class="${c.sticky === "start" ? "sticky" : ""}">${c.filterable ? `<input type="search" data-filter="${esc(c.key)}" value="${esc(this.state.filters[c.key] || "")}" aria-label="${esc(t("Filter {column}").replace("{column}", t(c.label)))}" placeholder="${esc(t("Filter"))}">` : ""}</th>`)
+          .map((c, i) => `<th class="${c.sticky === "start" ? "sticky" : ""}${this.colClass(c, i)}">${c.filterable ? `<input type="search" data-filter="${esc(c.key)}" value="${esc(this.state.filters[c.key] || "")}" aria-label="${esc(t("Filter {column}").replace("{column}", t(c.label)))}" placeholder="${esc(t("Filter"))}">` : ""}</th>`)
           .join("")}</tr>`;
       }
       this.head.innerHTML = html;
@@ -369,7 +376,7 @@
           if (selectable === "multiple") tr += `<td class="select" role="gridcell"><input type="checkbox" class="row-check" tabindex="-1" aria-label="${esc(t("Select row"))}"${selected ? " checked" : ""}></td>`;
           else if (selectable === "single") tr += `<td class="select" role="gridcell"><input type="radio" class="row-check" tabindex="-1" name="vs-table-single" aria-label="${esc(t("Select row"))}"${selected ? " checked" : ""}></td>`;
           cols.forEach((c, ci) => {
-            tr += `<td role="gridcell" class="${c.sticky === "start" ? "sticky " : ""}align-${c.align}${c.wrap ? " wrap" : ""}${c.className ? ` ${esc(c.className)}` : ""}" data-label="${esc(t(c.label))}" data-c="${ci}" tabindex="-1" part="cell"><div class="cell">${this.cellHtml(row, c)}</div></td>`;
+            tr += `<td role="gridcell" class="${c.sticky === "start" ? "sticky " : ""}align-${c.align}${c.wrap ? " wrap" : ""}${c.className ? ` ${esc(c.className)}` : ""}${this.colClass(c, ci)}" data-label="${esc(t(c.label))}" data-c="${ci}" tabindex="-1" part="cell"><div class="cell">${this.cellHtml(row, c)}</div></td>`;
           });
           return tr + "</tr>";
         })
@@ -407,7 +414,7 @@
         .map((c, i) => {
           const value = c.total ? this.core.total(scope, c) : null;
           const text = value === null ? (i === 0 ? t("Total") : "") : c.total === "count" ? value : this.core.format(value, c, {});
-          return `<td class="align-${c.align}${c.sticky === "start" ? " sticky" : ""}"><div class="cell">${esc(text)}</div></td>`;
+          return `<td class="align-${c.align}${c.sticky === "start" ? " sticky" : ""}${this.colClass(c, i)}"><div class="cell">${esc(text)}</div></td>`;
         })
         .join("")}</tr>`;
     }

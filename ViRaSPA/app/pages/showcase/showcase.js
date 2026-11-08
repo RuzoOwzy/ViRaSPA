@@ -19,6 +19,11 @@
       ];
       $("#sc-due").isDateDisabled = (iso) => new Date(iso).getDay() === 0; // no Sundays
 
+      // vs-table and vs-pagination.
+      // (Not awaited: the rest of the page works even if the demo API is unreachable.)
+      Viraspa.app.services.people.list({ limit: 10 }).then((people) => ($("#sc-people").rows = people), () => ($("#sc-people").rows = []));
+      this.listen($("#sc-pager"), "vs-page-change", (e) => ($("#pager-output").textContent = `page ${e.detail.page}, ${e.detail.pageSize} per page`));
+
       // vs-table-entry: a computed column, defaults for new rows. (Viraspa.tableCore
       // arrives with the table components: wait for them before using it.)
       await Viraspa.core.components.load("vs-table-entry");

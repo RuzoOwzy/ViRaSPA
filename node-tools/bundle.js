@@ -34,6 +34,7 @@ const tool = defineTool({
     { key: "pack", type: "boolean", default: true, description: "Pack templates, models and component CSS (--no-pack to skip)." },
     { key: "compact", type: "boolean", default: true, description: "Remove comments and indentation (--no-compact to skip)." },
     { key: "preload", type: "boolean", default: true, description: "Add preload tags to index.html (--no-preload to skip)." },
+    { key: "components", type: "string", valueName: "startup|all", default: "startup", description: "Which official components go into the app bundle and the pack: \"startup\" (those in startup.js components, those in index.html, and what they need; the others load when first used) or \"all\"." },
     { key: "dryRun", type: "boolean", default: false, configurable: false, description: "Show the result without writing it." },
   ],
   examples: ["node node-tools/bundle.js", "node node-tools/bundle.js --output-folder D:\\out\\site --no-compact", "node node-tools/deploy.js --target production --bundle"],

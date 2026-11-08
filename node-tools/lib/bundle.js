@@ -158,7 +158,41 @@ function bundleFramework(site, report) {
   report.push(`framework: viraspa/viraspa.bundle.js (${list.length} framework files + ${components.length} core components)`);
 }
 
-function bundleApp(site, report, { packFile }) {
+// The official components (components/<tag>/) needed at startup: those in
+// startup.js `components`, those whose tag appears in index.html, and the
+// components they depend on. Returns a Set of tags.
+function startupComponents(site) {
+  const installed = new Set(Object.keys(site).filter((rel) => /^components\/[^/]+\/component-viraspa\.json$/.test(rel)).map((rel) => rel.split("/")[1]));
+  const wanted = new Set();
+  let startup = {};
+  try {
+    startup = site["app/config/startup.js"] ? readStartup(text(site["app/config/startup.js"])) : {};
+  } catch {
+    // an unreadable startup.js: bundleApp reports it
+  }
+  for (const tag of startup.components || []) if (installed.has(tag)) wanted.add(tag);
+  const index = site["index.html"] ? text(site["index.html"]) : "";
+  for (const tag of installed) if (new RegExp(`<${tag}[\\s>/]`).test(index)) wanted.add(tag);
+  const queue = [...wanted];
+  while (queue.length) {
+    const tag = queue.shift();
+    let manifest = {};
+    try {
+      manifest = JSON.parse(text(site[`components/${tag}/component-viraspa.json`]));
+    } catch {
+      continue;
+    }
+    for (const d of manifest.dependencies || []) {
+      if (d && d.kind === "component" && installed.has(d.name) && !wanted.has(d.name)) {
+        wanted.add(d.name);
+        queue.push(d.name);
+      }
+    }
+  }
+  return wanted;
+}
+
+function bundleApp(site, report, { packFile, components }) {
   const startupFile = "app/config/startup.js";
   if (!site[startupFile]) return report.push("app: skipped (no app/config/startup.js)");
   const startup = readStartup(text(site[startupFile]));
@@ -167,9 +201,12 @@ function bundleApp(site, report, { packFile }) {
   // Local scripts are joined in order; a remote script (CDN) ends a chunk and
   // keeps its own group, so the order stays the same.
   const chunks = [];
-  // The pack and the official components (components/<tag>/) come first.
+  // The pack and the official components (components/<tag>/) come first:
+  // all of them, or (components = a Set) only those needed at startup - the
+  // others load on their own the first time they are used, as without a bundle.
   const official = Object.keys(site)
     .filter((rel) => /^components\/[^/]+\/component-viraspa\.json$/.test(rel))
+    .filter((rel) => !components || components.has(rel.split("/")[1]))
     .sort()
     .map((rel) => {
       const tag = rel.split("/")[1];
@@ -241,7 +278,12 @@ function bundleApp(site, report, { packFile }) {
     "utf8"
   );
   const scriptCount = chunks.reduce((sum, c) => sum + (c.files ? c.files.length : 0), 0) - (packFile ? 1 : 0) - official.length;
-  report.push(`app: ${n} bundle file(s) from ${scriptCount} scripts${official.length ? ` and ${official.length} official components` : ""}${styles.length ? ` and app/app.bundle.css from ${styles.length} stylesheets` : ""}`);
+  const names = official.map((o) => o.provide).join(", ");
+  report.push(`app: ${n} bundle file(s) from ${scriptCount} scripts${official.length ? ` and ${official.length} official component(s)${components ? ` needed at startup (${names})` : ""}` : ""}${styles.length ? ` and app/app.bundle.css from ${styles.length} stylesheets` : ""}`);
+  if (components) {
+    const lazy = Object.keys(site).filter((rel) => /^components\/[^/]+\/component-viraspa\.json$/.test(rel) && !components.has(rel.split("/")[1])).length;
+    if (lazy) report.push(`app: ${lazy} other official component(s) load on their own when first used (components: "all" bundles them too)`);
+  }
 }
 
 // Files the framework fetches as text, one request each: templates and models
@@ -254,10 +296,14 @@ function packable(rel) {
   return false;
 }
 
-function buildPack(site, report, { compact }) {
+function buildPack(site, report, { compact, components }) {
   const entries = {};
   for (const rel of Object.keys(site).sort()) {
     if (!packable(rel)) continue;
+    // An official component that isn't bundled fetches its own template and
+    // CSS when first used; its manifest stays in the pack.
+    const official = /^components\/([^/]+)\/[^/]+\.(html|css|model\.json)$/.exec(rel);
+    if (official && components && !components.has(official[1])) continue;
     entries[rel] = compact && rel.endsWith(".css") ? compactCss(text(site[rel])) : text(site[rel]);
   }
   const count = Object.keys(entries).length;
@@ -320,19 +366,23 @@ function addPreloads(site, report, { releaseToken }) {
   report.push(changed ? `preload: added to ${changed} HTML file(s)` : "preload: no HTML file loads viraspa/viraspa.js");
 }
 
-// options: { framework, app, pack, compact, preload, releaseToken }
+// options: { framework, app, pack, compact, preload, components, releaseToken }
+// components: "startup" (default: only the official components needed at
+// startup go into the app bundle and the pack) or "all".
 // Returns { site, report }; `site` is a new object (the input is not changed).
 function bundleSite(input, options = {}) {
-  const o = { framework: true, app: true, pack: true, compact: true, preload: true, ...options };
+  const o = { framework: true, app: true, pack: true, compact: true, preload: true, components: "startup", ...options };
+  if (o.components !== "startup" && o.components !== "all") throw new Error(`components must be "startup" or "all", not "${o.components}".`);
   const site = { ...input };
   const report = [];
+  const components = o.components === "all" ? null : startupComponents(site);
   if (o.framework) bundleFramework(site, report);
-  const packFile = o.pack && o.app ? buildPack(site, report, { compact: o.compact }) : null;
+  const packFile = o.pack && o.app ? buildPack(site, report, { compact: o.compact, components }) : null;
   if (o.pack && !o.app) report.push("pack: skipped (it is loaded with the app bundle; turn app on)");
-  if (o.app) bundleApp(site, report, { packFile });
+  if (o.app) bundleApp(site, report, { packFile, components });
   if (o.compact) compactAll(site, report);
   if (o.preload) addPreloads(site, report, { releaseToken: o.releaseToken });
   return { site, report };
 }
 
-module.exports = { bundleSite, frameworkScripts, readStartup, appToken, rebaseCss, packable };
+module.exports = { bundleSite, frameworkScripts, readStartup, appToken, rebaseCss, packable, startupComponents };

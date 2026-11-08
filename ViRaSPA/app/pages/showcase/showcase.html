@@ -26,6 +26,28 @@
   </section>
 
   <section>
+    <h2>Data table and pagination</h2>
+    <p class="text-muted">People from the demo API, in the browser: sort, search, select, export. The <a href="orders">orders page</a> shows the full list-page example, with server paging.</p>
+    <vs-table id="sc-people" key-field="id" page-size="5" search selectable="multiple" export label="People">
+      <column field="name" label="Name"></column>
+      <column field="email" label="Email"></column>
+      <column field="company.name" label="Company" phone="hide"></column>
+    </vs-table>
+    <p class="text-muted">On its own, for any list of yours:</p>
+    <vs-pagination id="sc-pager" total="135" page-size="20" page-sizes="10,20,50"></vs-pagination>
+    <span class="output" id="pager-output"></span>
+  </section>
+
+  <section>
+    <h2>Cards and figures</h2>
+    <div class="demo">
+      <vs-card heading="Amina Juma" subheading="amina@example.com" icon="lucide:user">Works in sales, Dar es Salaam office.</vs-card>
+      <vs-stat-tile label="Sales today" value="TZS 1,250,000" icon="lucide:banknote" trend="up" trend-text="+12% on yesterday"></vs-stat-tile>
+    </div>
+    <p class="text-muted"><code>vs-login-form</code> is on the <a href="login">sign-in page</a>.</p>
+  </section>
+
+  <section>
     <h2>Entry table</h2>
     <p class="text-muted">Type a sale with the keyboard: Enter moves from cell to cell and adds a row at the end; Ctrl+Delete removes one. Amount is computed; totals follow.</p>
     <vs-table-entry id="sc-lines" name="lines" add-button delete-button label="Sale lines">

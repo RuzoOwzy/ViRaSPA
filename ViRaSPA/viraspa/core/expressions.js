@@ -308,8 +308,21 @@
 
   // Finds {{ ... }} (and {{{ ... }}}) in text, respecting strings and braces
   // inside the expression. Returns [{ text } | { expr, raw }] parts.
-  // "\{{" is a literal "{{".
+  // "\{{" is a literal "{{". Short texts are remembered (a repeated row's
+  // texts and attributes are split once, not once per row); the parts
+  // returned are frozen, so callers can't change the remembered ones.
+  const splitCache = new Map();
   function splitTemplate(text) {
+    if (text.length > 300) return split(text);
+    let parts = splitCache.get(text);
+    if (!parts) {
+      if (splitCache.size > 2000) splitCache.clear();
+      parts = Object.freeze(split(text).map((p) => Object.freeze(p)));
+      splitCache.set(text, parts);
+    }
+    return parts;
+  }
+  function split(text) {
     const parts = [];
     let i = 0;
     let buffer = "";

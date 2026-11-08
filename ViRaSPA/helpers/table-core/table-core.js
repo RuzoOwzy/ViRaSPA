@@ -8,7 +8,8 @@
   // "end" | "center"), format (a pipe text such as "currency:'TZS'" or
   // "date:'short'", or a function (value, row) => text), value (row) => any
   // (a computed column), render (row) => text | Node, sortable (default
-  // true), filterable, hidden, sticky ("start"), wrap, total ("sum" | "avg" |
+  // true), filterable, hidden, sticky ("start"), wrap, phone ("hide": not on
+  // narrow screens), total ("sum" | "avg" |
   // "count" | "min" | "max" | function(rows)), className }.
 
   const plain = (v) =>
@@ -38,6 +39,7 @@
         hidden: el.hasAttribute("hidden"),
         sticky: attr(el, "sticky"),
         wrap: el.hasAttribute("wrap"),
+        phone: attr(el, "phone"),
         total: attr(el, "total"),
         editor: attr(el, "editor"),
         required: el.hasAttribute("required"),

@@ -33,11 +33,11 @@
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-dc511195ec47ffd6a5233823bb731c416e7cb87b9941906b8f359f008f54bb09"
+      "checksum": "sha256-efb2e57aaaadaa27307994436ccc3cb61774aecfc8bd02fe3743e13eedd2e98c"
     },
     {
       "path": "vs-table.css",
-      "checksum": "sha256-b607c4120f9bd0ba6476e19ff819ce5275474972a85a0473c022a92f3f9aa189"
+      "checksum": "sha256-373b9a7eeb59df9803b09d16d40eb7dcebc53dc149be1d847774520726782281"
     },
     {
       "path": "vs-table.html",
@@ -45,7 +45,7 @@
     },
     {
       "path": "vs-table.js",
-      "checksum": "sha256-98fb47f8a58b68a9a205fdf89d3e0d19842796228c5e9308dce0748cc004493d"
+      "checksum": "sha256-185e38a02f0895a441f49add8470b3c7c282f9a89f8f0261eba88db86736eaa6"
     }
   ]
 }

@@ -38,6 +38,8 @@ const tool = defineTool({
     { key: "device", type: "string", valueName: "names", default: "", description: "Playwright device profiles, e.g. \"iPhone 15,Pixel 7\" (comma list)." },
     { key: "playwrightFolder", type: "string", valueName: "folder", default: "", description: "Where Playwright is installed (the folder holding node_modules/playwright)." },
     { key: "bundled", type: "boolean", default: false, description: "Run the browser tests against a bundled copy of the site (bundle.js, all steps) instead." },
+    { key: "benchmark", type: "boolean", default: false, description: "Instead of the tests, run tests/benchmark.html (DOM operations, ViRaSPA against vanilla JS) through Playwright and print the times; --engine picks the browsers (default chromium: Playwright's own, else Edge or Chrome)." },
+    { key: "benchmarkRuns", type: "number", default: 10, description: "Runs per benchmark operation (the median is reported)." },
   ],
   examples: ["node node-tools/test.js", "node node-tools/test.js --bundled", "node node-tools/test.js --no-node --engine firefox,webkit --playwright-folder D:\\tools\\playwright", "node node-tools/test.js --no-node --device \"iPhone 15,Pixel 7\"", "node node-tools/test.js --no-browser", "node node-tools/test.js --browser-path /usr/bin/chromium"],
 });
@@ -160,9 +162,44 @@ async function runPlaywrightTests(siteFolder, options, { engine, device }) {
   }
 }
 
+// ---- the DOM benchmark (tests/benchmark.html) ------------------------------
+async function runBenchmark(siteFolder, options, engine) {
+  const pw = loadPlaywright(options.playwrightFolder);
+  const { createServer } = require("./serve");
+  const server = createServer({ siteFolder, usePrerendered: false });
+  await new Promise((resolve) => server.listen(0, "localhost", resolve));
+  const url = `http://localhost:${server.address().port}/tests/benchmark.html?auto&runs=${options.benchmarkRuns}`;
+  const browser = await launch(pw, engine);
+  console.log(`\nDOM benchmark (${engine} ${browser.version()}, ${options.benchmarkRuns} runs each, median, ms):`);
+  try {
+    const page = await (await browser.newContext()).newPage();
+    await page.goto(url);
+    await page.waitForFunction(() => window.benchmarkResults, null, { timeout: 600000, polling: 500 });
+    const { results, mean } = await page.evaluate(() => window.benchmarkResults);
+    const width = Math.max(...results.map((r) => r.name.length));
+    console.log(`  ${"Operation".padEnd(width)}  Vanilla   ViRaSPA   Factor`);
+    for (const r of results) console.log(`  ${r.name.padEnd(width)}  ${r.vanilla.toFixed(2).padStart(7)}   ${r.viraspa.toFixed(2).padStart(7)}   ${r.factor.toFixed(2)}×`);
+    console.log(`  ${"Geometric mean".padEnd(width)}                      ${mean.toFixed(2)}×`);
+    return true;
+  } catch (err) {
+    console.log(`  The benchmark did not finish: ${err.message.split("\n")[0]}`);
+    return false;
+  } finally {
+    await browser.close();
+    server.close();
+  }
+}
+
 if (require.main === module) {
   tool.run(async ({ options, siteFolder }) => {
     const repoRoot = path.dirname(siteFolder);
+    if (options.benchmark) {
+      const engines = String(options.engine || "chromium").split(",").map((s) => s.trim()).filter(Boolean);
+      let done = true;
+      for (const engine of engines) done = (await runBenchmark(siteFolder, options, engine)) && done;
+      if (!done) process.exitCode = 1;
+      return;
+    }
     let ok = true;
     if (options.node) ok = runNodeTests(repoRoot) && ok;
     if (options.browser) {

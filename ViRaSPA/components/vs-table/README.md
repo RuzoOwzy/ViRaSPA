@@ -59,6 +59,7 @@ As `<column>` children or the `columns` property (`[{ … }]`):
 | `hidden` | Hidden at first (the column chooser can show it). |
 | `sticky="start"` | Stays in view while scrolling sideways. |
 | `wrap` | Long text wraps instead of "…". |
+| `phone` | `phone="hide"`: the column isn't shown when the table is narrower than 600px (in both phone layouts). |
 | `total` | `sum`, `avg`, `count`, `min`, `max` or a function: a totals row. |
 
 ## Attributes
@@ -75,7 +76,7 @@ As `<column>` children or the `columns` property (`[{ … }]`):
 | `column-chooser` | A Columns button to show or hide columns. |
 | `remember` | A key: hidden columns, widths, sorting and page size are kept in this browser. |
 | `height` | A maximum height: the body scrolls under a sticky header. |
-| `phone-layout` | When narrower than 600px: `scroll` (default: sideways) or `cards` (each row as label/value lines). |
+| `phone-layout` | When narrower than 600px: `scroll` (default: sideways, with the first column fixed) or `cards` (each row as label/value lines). Columns with `phone="hide"` are left out in both. |
 | `empty-text`, `label`, `debounce` | Text when there are no rows; the table's accessible name; ms to wait after typing. |
 
 Properties: `rows`, `source`, `columns`, `page`, `selection` (keys), `selectedRows`, `menuRow`, `rowClass` (`(row) => "name"`: a class and a part name, e.g. `vs-table::part(overdue) { color: red }`), `refresh()`, `exportCsv(fileName)`.
