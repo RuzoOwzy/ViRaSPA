@@ -1,0 +1,12 @@
+<div class="vs-rte" part="editor">
+  <div class="vs-rte-toolbar" role="toolbar" part="toolbar"></div>
+  <form class="vs-rte-link" hidden part="link-form">
+    <label>{{ t("Link address") }} <input name="href" type="url" inputmode="url" placeholder="https://" autocomplete="off"></label>
+    <label class="vs-rte-check"><input name="blank" type="checkbox"> {{ t("Open in a new tab") }}</label>
+    <button type="submit">{{ t("Save") }}</button>
+    <button type="button" data-link-remove hidden>{{ t("Remove link") }}</button>
+    <button type="button" data-link-cancel>{{ t("Cancel") }}</button>
+  </form>
+  <div class="vs-rte-area" role="textbox" aria-multiline="true" spellcheck="true" part="area"></div>
+  <div class="vs-rte-status" part="status" aria-live="polite" hidden></div>
+</div>

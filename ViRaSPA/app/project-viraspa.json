@@ -138,6 +138,24 @@
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
       "checksum": "sha256-8f6015940de71da8c2a4a048f79e30da74ed74624b7f5b35fc27e5b9de98636c"
+    },
+    {
+      "name": "vs-media-viewer",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-c50f7bbdfb1307d3209365d83c0aa65d9c8b139ba133c75a94dafb204df66ee7"
+    },
+    {
+      "name": "vs-image-cropper",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-d873b5edc0e3d44a17777b7263567be313de8947bfe22b1c3baef7e510a2e38e"
+    },
+    {
+      "name": "vs-rich-text-editor",
+      "version": "0.1.0",
+      "downloadSource": "extensions-repository",
+      "checksum": "sha256-6ad92293a021eb73540d9a5dfea39de1924dce2b320478b19b76e3be95e2e974"
     }
   ],
   "helpers": [

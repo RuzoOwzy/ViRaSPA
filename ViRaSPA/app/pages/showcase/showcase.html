@@ -51,6 +51,30 @@
   </section>
 
   <section>
+    <h2>Rich text editor</h2>
+    <p class="text-muted">Our own code: headings, formatting, lists (Tab indents), quote, alignment, links (Ctrl+K), images, undo/redo, clean paste, a count and a limit. Alt+F10 goes to the toolbar.</p>
+    <vs-rich-text-editor id="sc-editor" name="message" toolbar="full" show-count maxlength="2000" placeholder="Write your message…" aria-label="Message"></vs-rich-text-editor>
+    <p><button type="button" class="plain" data-demo="html">Show the clean HTML</button></p>
+    <pre class="output" id="editor-output"></pre>
+  </section>
+
+  <section>
+    <h2>Media viewer and image cropper</h2>
+    <div class="demo">
+      <vs-media-viewer gallery download class="wide">
+        <img src="app/assets/icons/apple-touch-icon.png" alt="App icon" width="72" data-caption="Click to open; zoom with the wheel or + and −, R rotates.">
+        <img src="app/assets/icons/favicon.svg" alt="Favicon (SVG)" width="72">
+        <img src="lib/lucide/1.70.0/icons/store.svg" alt="Store icon" width="72">
+        <a href="app/i18n/sw.json">A document (opens as a link)</a>
+      </vs-media-viewer>
+      <div class="field wide"><vs-image-cropper id="sc-cropper" src="app/assets/icons/apple-touch-icon.png" aspect="1" output-width="128" output-type="image/png"></vs-image-cropper></div>
+      <button type="button" class="plain" data-demo="crop">Crop</button>
+      <img id="crop-result" alt="The cropped image" width="64" hidden>
+      <span class="output" id="crop-output"></span>
+    </div>
+  </section>
+
+  <section>
     <h2>Popups</h2>
     <div class="demo">
       <button type="button" class="plain" data-demo="alert">Alert</button>

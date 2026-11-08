@@ -15,7 +15,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | **N7** | Study and foundations | done, see [N7 report](N7-report.md) and the [inventory](N7-migration-inventory.md) |
 | **N8** | Basic components (13) | done, see [N8 report](N8-report.md) |
 | **N9** | Composite components (5) and the list-page example | done, see [N9 report](N9-report.md) |
-| **N10** | Media viewer, image cropper, rich text editor v1 | planned |
+| **N10** | Media viewer, image cropper, rich text editor v1 | done, see [N10 report](N10-report.md) |
 | **N11** | Showcase, benchmark and review | planned |
 
 ## Decisions

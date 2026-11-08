@@ -1,0 +1,34 @@
+{
+  "name": "vs-rich-text-editor",
+  "tag": "vs-rich-text-editor",
+  "version": "0.1.0",
+  "releaseDate": "2026-11-08",
+  "description": "A rich text editor in our own code: headings, formatting, lists, quote, alignment, links, images, undo/redo, clean paste, counts, limits, configurable toolbar.",
+  "script": "vs-rich-text-editor.js",
+  "isolation": "scoped",
+  "author": {
+    "name": "RuzoOwzy",
+    "website": "https://github.com/RuzoOwzy"
+  },
+  "frameworkVersion": {
+    "min": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "checksum": "sha256-6f2e7e03c674742a6938988a7884bc47242fffb7ff21fe67ce39d9c06b9c39b8"
+    },
+    {
+      "path": "vs-rich-text-editor.css",
+      "checksum": "sha256-1c73a5fad4508e546cc93c27cc513ee530adc836cecfc923222ac17db678b56c"
+    },
+    {
+      "path": "vs-rich-text-editor.html",
+      "checksum": "sha256-ed77bbb24496a99d83bd26df1c1b33d0c31a44255581d79d87228d24d04b3f34"
+    },
+    {
+      "path": "vs-rich-text-editor.js",
+      "checksum": "sha256-a6724d447d36c91195464eb22046ebec2ff8d78da45861d5d642c578b110df41"
+    }
+  ]
+}

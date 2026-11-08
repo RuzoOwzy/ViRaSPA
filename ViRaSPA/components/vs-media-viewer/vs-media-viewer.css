@@ -1,0 +1,178 @@
+:host {
+  display: contents;
+}
+
+:host([gallery]) {
+  display: block;
+}
+
+dialog {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--vs-viewer-background, rgba(12, 16, 15, 0.94));
+  color: #fff;
+  overflow: hidden;
+}
+
+dialog[open] {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+dialog::backdrop {
+  background: transparent;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.counter,
+.zoom-level {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+  font-size: 0.9em;
+}
+
+.tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tools[hidden],
+.download[hidden],
+.nav[hidden],
+.caption[hidden] {
+  display: none;
+}
+
+.bar button,
+.bar a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bar button:hover,
+.bar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  touch-action: none;
+  cursor: zoom-in;
+}
+
+.stage.zoomed {
+  cursor: grab;
+}
+
+.media {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.12s ease-out;
+  user-select: none;
+}
+
+.media-video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+.doc {
+  text-align: center;
+}
+
+.doc a {
+  color: #9fe3c6;
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.nav[disabled] {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.prev {
+  left: 0.75rem;
+}
+
+.next {
+  right: 0.75rem;
+}
+
+.caption {
+  margin: 0;
+  padding: 0.6rem 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+dialog[data-kind="pdf"] .nav,
+dialog[data-kind="video"] .nav {
+  top: auto;
+  bottom: 4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media {
+    transition: none;
+  }
+}

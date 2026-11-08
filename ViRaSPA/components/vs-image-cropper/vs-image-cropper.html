@@ -1,0 +1,19 @@
+<div class="cropper" part="cropper">
+  <div class="stage" part="stage">
+    <p class="empty"></p>
+    <div class="canvas">
+      <img alt="" draggable="false" part="image">
+      <div class="crop" tabindex="0" role="group" hidden part="crop">
+        <span data-handle="nw"></span><span data-handle="n"></span><span data-handle="ne"></span>
+        <span data-handle="w"></span><span data-handle="e"></span>
+        <span data-handle="sw"></span><span data-handle="s"></span><span data-handle="se"></span>
+      </div>
+    </div>
+  </div>
+  <div class="controls" part="controls">
+    <button type="button" class="choose" part="choose"></button>
+    <input class="zoom" type="range" min="1" max="5" step="0.05" value="1" part="zoom">
+    <button type="button" class="rotate" part="rotate">&#x21bb;</button>
+    <input type="file" accept="image/*" hidden>
+  </div>
+</div>

@@ -11,6 +11,11 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Milestone N10 · Media and editor
+
+- **ViRaSPA-Extensions:** `vs-media-viewer` (images and SVG with zoom by wheel, pinch, buttons and keys, pan, rotate, fit, a swipe for next/previous; PDF and video with the browser's own viewers; other documents as a link, or the Google viewer only when allowed with `allow-external-viewer`; gallery mode), `vs-image-cropper` (fixed or free shape, drag and 8 handles, zoom, rotate, keyboard move and resize, output size, type and quality, a form file, `toBlob` / `toDataURL` / `save`) and `vs-rich-text-editor` (version 1 in our own code: headings, formatting, lists with Tab indent, quote, alignment, safe links, images by address or upload, clean or plain paste, a count and a limit, required and read-only, toolbar presets, overridable shortcuts, Alt+F10 to the toolbar, and an allow-list sanitizer for every value).
+- **Sample:** the editor, a media gallery and the cropper on `/showcase`; browser tests for all three (`tests/browser/media.test.js`).
+
 ### Milestone N9 · Composite components
 
 - **ViRaSPA-Extensions:** `vs-pagination`, `vs-table` (cell wrappers, sorting incl. several columns, search with plain-language scopes, column filters, client or server paging through the data contract, selection, row open, a row menu slot, column chooser, resizing, remembered settings, CSV export, totals, a keyboard grid, phone "cards" layout, printing), `vs-table-entry` (Enter from cell to cell, a new row on the last cell - switchable -, Ctrl+Delete, computed columns, totals, validation, form value), `vs-tree` (on-demand children, single/multiple/cascading selection, filter, ARIA keyboard, add/rename/delete/move with locked nodes and save handlers) and `vs-select-tree`; the helper `table-core` they share. Their dependencies install automatically.

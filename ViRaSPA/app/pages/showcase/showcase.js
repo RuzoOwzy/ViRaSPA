@@ -77,6 +77,15 @@
         flash: () => Viraspa.popup.flash("Copied"),
         drop: () => Viraspa.popup.drop("Connection restored."),
         custom: async () => (out.textContent = `custom: ${JSON.stringify(await $("#sc-popup").open())}`),
+        html: () => ($("#editor-output").textContent = $("#sc-editor").value || "(empty)"),
+        crop: async () => {
+          const cropper = $("#sc-cropper");
+          const img = $("#crop-result");
+          img.src = cropper.toDataURL();
+          img.hidden = false;
+          const c = cropper.crop;
+          $("#crop-output").textContent = `crop: ${c.x},${c.y} ${c.width}×${c.height}`;
+        },
       };
       this.listen(this.container, "click", (event) => {
         const button = event.target.closest("[data-demo]");
