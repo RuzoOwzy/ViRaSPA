@@ -23,8 +23,8 @@ const tool = defineTool({
   options: [{ key: "dryRun", type: "boolean", default: false, configurable: false, description: "Show the result without writing it." }],
   examples: [
     "node node-tools/stamp.js ViRaSPA/viraspa",
-    "node node-tools/stamp.js ../ViRaSPA-Extensions/components/vs-card",
-    "node node-tools/stamp.js ../ViRaSPA-Extensions/helpers/forms",
+    "node node-tools/stamp.js ../ViRaSPA-Extensions/ViRaSPA-Extensions/components/vs-card",
+    "node node-tools/stamp.js ../ViRaSPA-Extensions/ViRaSPA-Extensions/helpers/forms",
     "node node-tools/stamp.js extensions/owzy --dry-run",
   ],
 });

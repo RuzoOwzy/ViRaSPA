@@ -9,7 +9,7 @@
     {
       "name": "extensions-repository",
       "type": "folder",
-      "location": "../ViRaSPA-Extensions/{kind}/{name}"
+      "location": "../ViRaSPA-Extensions/ViRaSPA-Extensions/{kind}/{name}"
     }
   ],
   "components": [

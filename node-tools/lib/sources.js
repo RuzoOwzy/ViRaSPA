@@ -8,7 +8,7 @@
 // Layout under a location: framework/<version>/, components/<name>/<version>/,
 // helpers/<name>/<version>/, extensions/<name>/<version>/, libraries/<name>/<version>/. A location with
 // placeholders - {kind} {name} {version} - is used as written instead, e.g.
-// "../ViRaSPA-Extensions/{kind}/{name}".
+// "../ViRaSPA-Extensions/ViRaSPA-Extensions/{kind}/{name}".
 //
 // Built in (need no entry in app/project-viraspa.json):
 //   "official"  the ViRaSPA and ViRaSPA-Extensions GitHub repositories through the jsDelivr CDN
@@ -33,8 +33,8 @@ const BUILT_IN = {
     type: "web",
     templates: {
       framework: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA@v{version}/ViRaSPA/viraspa",
-      component: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/components/{name}",
-      helper: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/helpers/{name}",
+      component: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/ViRaSPA-Extensions/components/{name}",
+      helper: "https://cdn.jsdelivr.net/gh/RuzoOwzy/ViRaSPA-Extensions@{name}-v{version}/ViRaSPA-Extensions/helpers/{name}",
     },
   },
   npm: { name: "npm", type: "npm" },

@@ -839,7 +839,7 @@ node node-tools/install.js restore
   "downloadSources": [
     { "name": "company", "type": "folder", "location": "D:\\Shared\\ViRaSPA" },
     { "name": "offline", "type": "zip", "location": "D:\\Downloads\\viraspa-bundle.zip" },
-    { "name": "extensions-repository", "type": "folder", "location": "../ViRaSPA-Extensions/{kind}/{name}" }
+    { "name": "extensions-repository", "type": "folder", "location": "../ViRaSPA-Extensions/ViRaSPA-Extensions/{kind}/{name}" }
   ]
   ```
 - **Layout under a location:**
@@ -849,7 +849,7 @@ node node-tools/install.js restore
   - `extensions/<name>/<version>/`
   - `libraries/<name>/<version>/`
 
-  A location with `{kind}`, `{name}` or `{version}` placeholders is used as written instead.
+  A location with `{kind}`, `{name}` or `{version}` placeholders is used as written instead. The `extensions-repository` example points at a checkout of ViRaSPA-Extensions beside this repository: like this one, it keeps its packages in an inner folder of the same name (`ViRaSPA-Extensions/components/`, `ViRaSPA-Extensions/helpers/`).
 - **Overriding for one run:**
   - `--download-source company`: another source;
   - `--from <url | folder | file.zip>`: straight from one place.

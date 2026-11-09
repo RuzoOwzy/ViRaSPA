@@ -21,6 +21,7 @@ was never released and is folded into 0.1.0.)
 - **Fixed (IIS, checked on a real IIS 10):** the generated `web.config` answered unknown addresses, missing files and the hidden `app/project-viraspa.json` with 200 (its 404 page used `ExecuteURL`), and its known-routes test never matched (`{URL}` starts with "/"). Now `responseMode="File"` and `{R:0}`: 61 of 61 server checks pass. Deploy again to get the new `web.config`.
 - **Fixed:** components couldn't assign `this.form`, `this.name`, `this.validity` or `this.validationMessage` (read-only since form-associated support), which stopped `vs-login-form` from loading. Assigning one now gives the component its own property.
 - **ViRaSPA-Extensions:** `vs-table` keeps its first column fixed when a phone scrolls it sideways, and columns can be `phone="hide"`. The demo site has pages for all 24 components and 5 helpers.
+- **ViRaSPA-Extensions layout like this repository's:** its packages and demo site moved into an inner `ViRaSPA-Extensions/` folder. The `official` download source now reads `…ViRaSPA-Extensions@<name>-v<version>/ViRaSPA-Extensions/<kind>/<name>`, and the sample's `extensions-repository` source `../ViRaSPA-Extensions/ViRaSPA-Extensions/{kind}/{name}`. Nothing was tagged before, so no installed project is affected.
 
 ### Milestone N10 · Media and editor
 
