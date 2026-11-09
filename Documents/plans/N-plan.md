@@ -10,7 +10,7 @@ Each milestone runs the same way: implement, self-verify (tests plus a preview o
 | **N2** | Bundle tool (classic files only) | done, see [N2 report](N2-report.md) |
 | **N3** | Real servers: IIS (with URL Rewrite), Apache, nginx | done (nginx, Apache, and IIS on 2026-11-09), see [N3 report](N3-report.md) |
 | **N4** | Browsers and phones: Playwright with Chromium, Firefox, WebKit and phone profiles; a DevTools phone-mode checklist | done, see [N4 report](N4-report.md) |
-| **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | built and pushed; Pages and the rename wait for the owner, see [N5 report](N5-report.md) |
+| **N5** | GitHub Pages: a demo site for ViRaSPA-Extensions | done, live at <https://ruzoowzy.github.io/ViRaSPA-Extensions/>, see [N5 report](N5-report.md) |
 | **N6** | Dynamic page previews: the optional Node helper (plus route parameters and an ASP.NET Core reference) | done, see [N6 report](N6-report.md) |
 | **N7** | Study and foundations | done, see [N7 report](N7-report.md) and the [inventory](N7-migration-inventory.md) |
 | **N8** | Basic components (13) | done, see [N8 report](N8-report.md) |
