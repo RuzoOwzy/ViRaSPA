@@ -49,7 +49,7 @@ function iis(knownPaths) {
           <conditions>
             <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
             <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-            <add input="{URL}" pattern="${known}" negate="true" ignoreCase="true" />
+            <add input="{R:0}" pattern="${known}" negate="true" ignoreCase="true" />
           </conditions>
           <action type="CustomResponse" statusCode="404" statusReason="Not Found" statusDescription="Not Found" />
         </rule>
@@ -72,10 +72,11 @@ function iis(knownPaths) {
         </rule>
       </outboundRules>
     </rewrite>
-    <!-- 404 answers show the app (its not-found page), keeping the 404 status. -->
+    <!-- 404 answers show the app (its not-found page), keeping the 404 status
+         ("File": "ExecuteURL" would answer with index.html's own 200). -->
     <httpErrors errorMode="Custom" existingResponse="Replace">
       <remove statusCode="404" />
-      <error statusCode="404" path="/index.html" responseMode="ExecuteURL" />
+      <error statusCode="404" path="index.html" responseMode="File" />
     </httpErrors>
     <staticContent>
       <remove fileExtension=".json" />

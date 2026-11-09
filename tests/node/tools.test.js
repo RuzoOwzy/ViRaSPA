@@ -153,6 +153,14 @@ test("routes: parameters match the same way in the tools and in the browser", ()
   }
   const rules = serverRules.generate("apache", ["/", "/people/:id"]).content;
   assert.match(rules, /people\/\[\^\/\]\+/);
+
+  // IIS (checked on a real IIS 10 with URL Rewrite): the known-routes test
+  // reads the matched path {R:0} (no leading "/"), and the 404 page is
+  // served as a file so the status stays 404 ("ExecuteURL" turned it into 200).
+  const webConfig = serverRules.generate("iis", ["/", "/about", "/people/:id"]).content;
+  assert.match(webConfig, /input="\{R:0\}" pattern="\^\(about\|people\/\[\^\/\]\+\)\?\/\?\$"/);
+  assert.doesNotMatch(webConfig, /\{URL\}/);
+  assert.match(webConfig, /<error statusCode="404" path="index\.html" responseMode="File" \/>/);
 });
 
 test("head injector: parameters, lookups, 404 and private pages", async () => {

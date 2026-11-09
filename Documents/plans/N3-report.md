@@ -22,6 +22,21 @@
 - Node tests: 29 pass (the server-rules test now checks both nginx files and no-cache).
 - Both servers were stopped afterwards.
 
-## Not done
+## IIS (done 2026-11-09)
 
-- **IIS:** this session has no administrator rights, which installing the URL Rewrite module and creating a site need. `setup-iis.ps1` does both (and gives IIS read access to the test folder); after it runs, `node node-tools/check-server.js --url http://localhost:8033` checks the bundled IIS release. The IIS rules (including the new outbound rule) are therefore not yet verified on a real IIS.
+The owner ran `setup-iis.ps1` as administrator. It installed URL Rewrite and created the site "ViRaSPA-test" on `http://127.0.0.1:8033` for the bundled release.
+
+The site is bound to 127.0.0.1 only. `localhost` resolves to IPv6 `::1` first, so use `http://127.0.0.1:8033`, or every answer is http.sys's "400 Bad Request". This is a quirk of the test site, not of ViRaSPA.
+
+The first check found **4 of 61 failing**, all in the generated `web.config`:
+- **Every 404 became 200.** The error page used `responseMode="ExecuteURL"`, which answers with `index.html`'s own status. Unknown addresses and missing files answered 200, and so did the hidden `app/project-viraspa.json`: its rule's 404 was replaced by the app with 200. It is now `responseMode="File"`, which keeps the 404.
+- **The known-routes test could never match.** It read `{URL}`, which starts with "/", while the pattern doesn't. The first problem hid this one. It now reads the matched path `{R:0}`, which is also right when the site is in a sub-folder.
+
+After the fix, all **61 of 61 checks pass** on IIS 10 with URL Rewrite. In the browser:
+- `/about` loads from the bundle and deep links work.
+- `/no-such-page` shows the app's not-found page with status 404.
+- A missing `.js` file and `app/project-viraspa.json` answer 404, and the settings file's content is not sent.
+
+A Node test now checks both points of the IIS rules.
+
+Releases deployed before this fix carry the old `web.config`; deploying again writes the new one.

@@ -41,7 +41,7 @@ The review against the plan turned up these:
 | Tables on phones: scroll (first column fixed) or cards, hidden columns | Done (completed in this milestone). |
 | `Viraspa.templates.add`, call and pipe, with `format.addPipe` as an alias; `Viraspa.app` conventions | Done (N7). |
 | Rich text editor v1, all our own code | Done (N10). The "later" list stays later. |
-| Bundle tool, real servers, browsers and phones, GitHub Pages, dynamic previews | Done (N2–N6). IIS waits for an administrator run, and Pages waits for the owner (see below). |
+| Bundle tool, real servers, browsers and phones, GitHub Pages, dynamic previews | Done (N2–N6). IIS checked on 2026-11-09 (61 of 61, after fixing two `web.config` rules, see the [N3 report](N3-report.md)); Pages waits for the owner (see below). |
 
 ## Verified
 
@@ -60,4 +60,3 @@ The review against the plan turned up these:
 
 - Rename the GitHub repository ViRaSPA-Components to ViRaSPA-Extensions. GitHub redirects the old address, and the local remote can then be updated.
 - Turn on GitHub Pages for ViRaSPA-Extensions (branch `main`, root).
-- Run `F:\Development\ViRaSPA\Miscellaneous\test-servers\setup-iis.ps1` as administrator to test IIS on port 8033.

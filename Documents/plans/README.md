@@ -18,7 +18,7 @@ After M5, the implemented and not-implemented items are reviewed, and the leftov
 | M3 · App features | [M3-app-features.md](M3-app-features.md) | Done ([report](M3-verification-report.md)) |
 | M4 · Reactivity, i18n, testing | [M4-reactivity-i18n-testing.md](M4-reactivity-i18n-testing.md) | Done ([report](M4-verification-report.md)) |
 | M5 · Benchmark and review | [M5-benchmark-and-review.md](M5-benchmark-and-review.md) | Done ([benchmark](../benchmark.md), [review](M5-review.md)) |
-| N1–N11 | [N-plan.md](N-plan.md) | Done (see each report; IIS, the repository rename and GitHub Pages wait for the owner) |
+| N1–N11 | [N-plan.md](N-plan.md) | Done (see each report; the repository rename and GitHub Pages wait for the owner) |
 
 ## Decisions that apply to every milestone
 
