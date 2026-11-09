@@ -18,11 +18,14 @@ GitHub Pages serves a project from `/<repository>/`, and the router matched rout
 - The sample under a test server at `/sub/` (Edge through Playwright): deep link, menu and brand links (`/sub/…`), a click, Back, `navigate("/contact")`, `/sub/dashboard` → `/sub/login?returnTo=%2Fdashboard`, `/sub/About/` → `/sub/about`, not-found page; no errors or failed requests.
 - The demo site locally with the real jsDelivr framework (port 8028, stopped afterwards): all four pages and the not-found page render; icons load from the CDN; the sign-in demo shows the error for wrong details and the success message for `demo@example.com` / `demo`.
 
-## Waiting for the owner
+## Published (2026-11-09)
 
-GitHub settings need a signed-in owner (the browser pane is not signed in):
+The owner signed in to GitHub in the browser pane. Then:
+- The repository was renamed `ViRaSPA-Components` → `ViRaSPA-Extensions` (GitHub redirects the old address), and the local remote was updated.
+- Pages was turned on: deploy from a branch, `main`, `/ (root)`.
 
-1. Rename the repository `ViRaSPA-Components` to `ViRaSPA-Extensions` (Settings → General → Repository name). GitHub redirects the old address.
-2. Turn on Pages: Settings → Pages → Source "Deploy from a branch", branch `main`, folder `/ (root)`.
+The demo is live at <https://ruzoowzy.github.io/ViRaSPA-Extensions/>. It was up about 15 seconds after saving and checked there:
+- All 13 pages work under the `/ViRaSPA-Extensions/` sub-folder, from the menu (13 links) and from deep links, with no console errors.
+- The orders table shows 10 rows, the gallery images load, and the cropper crops.
 
-The demo is then at <https://ruzoowzy.github.io/ViRaSPA-Extensions/>.
+GitHub Pages answers a deep link such as `/tables` with `404.html` (a copy of `index.html`) and status 404. The page works, but a crawler sees a 404. This is a limit of Pages, which has no rewrite rules; a real server with the rules from `deploy.js` answers 200.

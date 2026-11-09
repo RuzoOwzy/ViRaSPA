@@ -41,7 +41,7 @@ The review against the plan turned up these:
 | Tables on phones: scroll (first column fixed) or cards, hidden columns | Done (completed in this milestone). |
 | `Viraspa.templates.add`, call and pipe, with `format.addPipe` as an alias; `Viraspa.app` conventions | Done (N7). |
 | Rich text editor v1, all our own code | Done (N10). The "later" list stays later. |
-| Bundle tool, real servers, browsers and phones, GitHub Pages, dynamic previews | Done (N2–N6). IIS checked on 2026-11-09 (61 of 61, after fixing two `web.config` rules, see the [N3 report](N3-report.md)); Pages waits for the owner (see below). |
+| Bundle tool, real servers, browsers and phones, GitHub Pages, dynamic previews | Done (N2–N6). IIS checked on 2026-11-09 (61 of 61, after fixing two `web.config` rules, see the [N3 report](N3-report.md)); the repository renamed and the demo live on GitHub Pages on 2026-11-09 (see the [N5 report](N5-report.md)). |
 
 ## Verified
 
@@ -56,7 +56,9 @@ The review against the plan turned up these:
   - Popups: `Viraspa.popup`.
 - **Phone width:** no page of the demo or the showcase scrolls sideways, and the demo's orders table shows each row as a card.
 
-## Waiting for the owner
+## Owner steps (done 2026-11-09)
 
-- Rename the GitHub repository ViRaSPA-Components to ViRaSPA-Extensions. GitHub redirects the old address, and the local remote can then be updated.
-- Turn on GitHub Pages for ViRaSPA-Extensions (branch `main`, root).
+- **IIS:** set up by the owner; checked (see the [N3 report](N3-report.md)).
+- **GitHub:** the repository is renamed to ViRaSPA-Extensions, and the demo is live on GitHub Pages (see the [N5 report](N5-report.md)).
+
+Nothing from the N plan is left open.
