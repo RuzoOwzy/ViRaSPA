@@ -4,6 +4,8 @@
   // together), runs the project's init code, waits for the shell, then
   // starts the router.
 
+  // Viraspa.settings.startupFile replaces it, e.g. for a page that embeds a
+  // few components (a playground, a widget) with its own startup list.
   const STARTUP_FILE = "app/config/startup.js";
 
   // A script is a path, or { src, type: "module" } for an ES-module library.
@@ -44,7 +46,7 @@
     // app/state files add to it, e.g. Viraspa.app.services.customers.
     Viraspa.app = Viraspa.app || {};
     for (const part of ["utils", "services", "state"]) Viraspa.app[part] = Viraspa.app[part] || {};
-    await Viraspa.utility.assetLoader.loadScript(STARTUP_FILE);
+    await Viraspa.utility.assetLoader.loadScript((Viraspa.settings && Viraspa.settings.startupFile) || STARTUP_FILE);
     const startup = Viraspa.startup || {};
 
     // Official helpers, then extensions, so the app's own files can use them.
@@ -70,6 +72,13 @@
     Viraspa.core.emit("appInit");
     await Viraspa.core.baseStyleLoaded;
     await Viraspa.core.loadLayout();
+    // settings.router === false: no routes and no #page-root - the page only
+    // uses components (an embedded widget, a playground frame).
+    if (Viraspa.settings && Viraspa.settings.router === false) {
+      document.documentElement.setAttribute("data-vs-ready", "");
+      Viraspa.core.emit("appReady");
+      return;
+    }
     revealWhenReady();
     Viraspa.core.initRouter();
   }

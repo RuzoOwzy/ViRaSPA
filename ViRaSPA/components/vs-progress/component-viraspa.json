@@ -13,6 +13,53 @@
   "frameworkVersion": {
     "min": "0.1.0"
   },
+  "api": {
+    "attributes": [
+      {
+        "name": "type",
+        "type": "enum",
+        "values": [
+          "bar",
+          "ring",
+          "dots"
+        ],
+        "description": "The look.",
+        "default": "ring"
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Without a value it runs indeterminately.",
+        "default": 40,
+        "min": 0
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "The value when complete.",
+        "default": 100,
+        "min": 1
+      },
+      {
+        "name": "show-value",
+        "type": "enum",
+        "values": [
+          "",
+          "count"
+        ],
+        "description": "Shows 40% (empty value), or 3 / 8 with count.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Read by screen readers.",
+        "default": "Uploading"
+      }
+    ],
+    "properties": [],
+    "events": []
+  },
   "files": [
     {
       "path": "README.md",

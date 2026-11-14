@@ -136,7 +136,7 @@
     },
     {
       "path": "core/bootstrap.js",
-      "checksum": "sha256-b095bcea3eb7163ee004257713f0806ac4de8de79323b69baad8e1af51427a8b"
+      "checksum": "sha256-816c13f16c3e43dcdbe3cb18673698b7696315141e9b6718d53e0b093c42eed7"
     },
     {
       "path": "core/busy.js",
@@ -184,7 +184,7 @@
     },
     {
       "path": "core/layout.js",
-      "checksum": "sha256-cff32d00f4b01d82664f7116dfaa2f2b10d7b26f3a43a47e921eff456e3323e6"
+      "checksum": "sha256-df400c5c75a9a28ba1af25a2f3cb3503676928c3f60c72c3d15ce0fde581bec7"
     },
     {
       "path": "core/manifest-rules.js",

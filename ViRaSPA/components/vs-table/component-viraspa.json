@@ -30,6 +30,118 @@
       "version": "0.1.0"
     }
   ],
+  "api": {
+    "attributes": [
+      {
+        "name": "key-field",
+        "type": "string",
+        "description": "The field that identifies a row.",
+        "default": "id"
+      },
+      {
+        "name": "page-size",
+        "type": "number",
+        "description": "Rows per page (0: no paging).",
+        "default": 10,
+        "min": 0
+      },
+      {
+        "name": "page-sizes",
+        "type": "string",
+        "description": "Page sizes the user may choose.",
+        "default": "5,10,20"
+      },
+      {
+        "name": "search",
+        "type": "boolean",
+        "description": "A search box: every word somewhere in the shown columns."
+      },
+      {
+        "name": "selectable",
+        "type": "enum",
+        "values": [
+          "single",
+          "multiple"
+        ],
+        "description": "Selecting rows.",
+        "default": "multiple"
+      },
+      {
+        "name": "export",
+        "type": "boolean",
+        "description": "An Export button: CSV of the matching rows."
+      },
+      {
+        "name": "column-chooser",
+        "type": "boolean",
+        "description": "A Columns button to show or hide columns."
+      },
+      {
+        "name": "remember",
+        "type": "string",
+        "description": "Keeps columns, widths, sorting and page size in this browser under this key.",
+        "default": "my-table"
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "description": "A maximum height; the body scrolls under a sticky header.",
+        "default": "260px"
+      },
+      {
+        "name": "phone-layout",
+        "type": "enum",
+        "values": [
+          "scroll",
+          "cards"
+        ],
+        "description": "Under 600px wide: scroll sideways, or each row as a card.",
+        "default": "cards"
+      },
+      {
+        "name": "empty-text",
+        "type": "string",
+        "description": "Shown when there are no rows.",
+        "default": "Nothing here yet"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The table's accessible name.",
+        "default": "Orders"
+      }
+    ],
+    "properties": [
+      {
+        "name": "rows",
+        "description": "The data, in the browser.",
+        "example": "root.querySelector(\"vs-table\").rows = Viraspa.demo.orders.slice(0, 5);"
+      },
+      {
+        "name": "source",
+        "description": "Data from a server: paging, sorting and search there.",
+        "example": "root.querySelector(\"vs-table\").source = async ({ page, pageSize }) => {\n  const all = Viraspa.demo.orders;\n  return { rows: all.slice((page - 1) * pageSize, page * pageSize), total: all.length };\n};"
+      },
+      {
+        "name": "rowClass",
+        "description": "A class (and part name) per row.",
+        "example": "root.querySelector(\"vs-table\").rowClass = (row) => (row.status === \"overdue\" ? \"overdue\" : \"\");"
+      },
+      {
+        "name": "selectedRows",
+        "description": "The selected rows.",
+        "example": "root.querySelector(\"vs-table\").addEventListener(\"vs-selection-change\", (e) => console.log(e.detail.rows));"
+      }
+    ],
+    "events": [
+      "vs-row-click",
+      "vs-row-open",
+      "vs-selection-change",
+      "vs-sort-change",
+      "vs-load",
+      "vs-export"
+    ]
+  },
   "files": [
     {
       "path": "README.md",

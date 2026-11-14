@@ -20,7 +20,7 @@
     const { emit } = Viraspa.core;
     emit("layoutBeforeLoad");
     const pageRoot = document.getElementById("page-root");
-    if (!pageRoot) {
+    if (!pageRoot && !(Viraspa.settings && Viraspa.settings.router === false)) {
       console.error('index.html needs an element with id="page-root", where pages are shown.');
     }
     await Viraspa.core.components.scan(document.body);

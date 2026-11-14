@@ -11,6 +11,11 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Playground and search (after N11)
+
+- **Pages without routes:** `Viraspa.settings.router = false` (components only, no `#page-root`) and `Viraspa.settings.startupFile` (another startup list); the framework then emits `viraspa:appReady` once the page's components have loaded. Used by the Extensions demo's playground frames.
+- **README:** the opening names what the framework is in plain search terms, and links the live demo.
+
 ### Theme, shell and demo (after N11)
 
 - **New default theme "Ink & Amber":** an ink-blue shell (`--vs-color-ink`, header, side panel, footer), indigo for actions and links, an amber brand mark (`--vs-color-accent`); new variables `--vs-color-surface-muted`, `--vs-color-primary-soft`, `--vs-color-warning`, `--vs-color-on-ink`. Success is a real green now. Every text colour meets WCAG AA contrast. The logo keeps its shape, in amber on an ink tile; the sample's favicon and touch icon follow. It no longer follows any one product's colours.

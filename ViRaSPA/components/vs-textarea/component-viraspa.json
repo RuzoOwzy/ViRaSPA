@@ -13,6 +13,109 @@
   "frameworkVersion": {
     "min": "0.1.0"
   },
+  "api": {
+    "attributes": [
+      {
+        "name": "rows",
+        "type": "number",
+        "description": "The smallest height, in lines.",
+        "default": 2,
+        "min": 1
+      },
+      {
+        "name": "max-rows",
+        "type": "number",
+        "description": "The largest height; then it scrolls.",
+        "default": 6,
+        "min": 1
+      },
+      {
+        "name": "overlap",
+        "type": "boolean",
+        "description": "Rests at rest-rows; while focused it opens over the content below."
+      },
+      {
+        "name": "rest-rows",
+        "type": "number",
+        "description": "With overlap: its height while not focused.",
+        "default": 1,
+        "min": 1
+      },
+      {
+        "name": "show-count",
+        "type": "boolean",
+        "description": "Shows the number of characters (\"120 / 500\" with maxlength)."
+      },
+      {
+        "name": "maxlength",
+        "type": "number",
+        "description": "The most characters allowed.",
+        "default": 200,
+        "min": 1
+      },
+      {
+        "name": "minlength",
+        "type": "number",
+        "description": "The fewest characters allowed.",
+        "default": 10,
+        "min": 0
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Shown while empty.",
+        "default": "Write hereâ€¦"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The starting text.",
+        "default": "Hello"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The field name in the form."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "description": "A value is needed."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": "Can't be used; left out of the form."
+      },
+      {
+        "name": "readonly",
+        "type": "boolean",
+        "description": "Shown, can't be changed."
+      }
+    ],
+    "properties": [
+      {
+        "name": "value",
+        "description": "The text.",
+        "example": "root.querySelector(\"vs-textarea\").value = \"Line one\\nLine two\";"
+      },
+      {
+        "name": "keys",
+        "description": "A key that submits the form (off by default).",
+        "example": "root.querySelector(\"vs-textarea\").keys = { submit: \"ctrl+enter\" };"
+      },
+      {
+        "name": "insertText()",
+        "description": "Types text at the caret.",
+        "example": "root.querySelector(\"vs-textarea\").insertText(\" (added)\");"
+      }
+    ],
+    "events": [
+      "input",
+      "change",
+      "vs-submit"
+    ]
+  },
   "files": [
     {
       "path": "README.md",

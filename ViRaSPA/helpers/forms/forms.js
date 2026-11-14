@@ -191,6 +191,10 @@
   document.addEventListener("viraspa:pageShown", (event) => {
     if (settings.markRequired) markRequired(event.target);
   });
+  // A page without routes (settings.router = false, e.g. a playground frame).
+  document.addEventListener("viraspa:appReady", () => {
+    if (settings.markRequired) markRequired(document.body);
+  });
 
   Viraspa.forms = { configure, fields, markRequired, validate, clearMessage, setReadOnly, values, fill, snapshot, restore, isDirty };
 })(window.Viraspa);

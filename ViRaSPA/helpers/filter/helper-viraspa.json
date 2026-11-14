@@ -17,6 +17,56 @@
   "frameworkVersion": {
     "min": "0.1.0"
   },
+  "api": {
+    "selector": "[data-filter-for]",
+    "attributes": [
+      {
+        "name": "data-filter-for",
+        "type": "string",
+        "description": "The list, table, select or container to filter (a selector).",
+        "default": "#people"
+      },
+      {
+        "name": "data-filter-columns",
+        "type": "string",
+        "description": "Table columns to search (0-based), e.g. 0,2.",
+        "default": "0"
+      },
+      {
+        "name": "data-filter-empty",
+        "type": "string",
+        "description": "Shown when nothing matches.",
+        "default": "No match"
+      },
+      {
+        "name": "data-filter-max",
+        "type": "number",
+        "description": "Shows at most this many matches.",
+        "default": 5,
+        "min": 1
+      },
+      {
+        "name": "data-filter-exact",
+        "type": "boolean",
+        "description": "Match the whole text instead of every word."
+      }
+    ],
+    "properties": [
+      {
+        "name": "Viraspa.filter.bind()",
+        "description": "Binds an input to a list from code.",
+        "example": "const input = root.querySelector(\"input\");\nconst filter = Viraspa.filter.bind(input, root.querySelector(\"ul\"), { empty: \"Nobody\" });\nfilter.apply(\"aru\");"
+      },
+      {
+        "name": "Viraspa.filter.plain()",
+        "description": "Text without case and accents, for your own matching.",
+        "example": "console.log(Viraspa.filter.plain(\"Ã‰lodie\"));"
+      }
+    ],
+    "events": [
+      "vs-filter"
+    ]
+  },
   "files": [
     {
       "path": "README.md",
@@ -28,7 +78,7 @@
     },
     {
       "path": "filter.js",
-      "checksum": "sha256-88a91035f2d9cbc5173430964c830e31d43bdcd2d938c0bcf822e74bbba94729"
+      "checksum": "sha256-29b51f85a4e95b4bcb9246c3d92c646629df3b96fff1fabecf3190bc9f2ce598"
     }
   ]
 }

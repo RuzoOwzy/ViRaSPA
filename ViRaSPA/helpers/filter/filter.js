@@ -160,6 +160,8 @@
   }
 
   document.addEventListener("viraspa:pageShown", (event) => scan(event.target));
+  // A page without routes (settings.router = false, e.g. a playground frame).
+  document.addEventListener("viraspa:appReady", () => scan(document.body));
 
   Viraspa.filter = { bind, scan, plain };
 })(window.Viraspa);

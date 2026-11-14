@@ -1,6 +1,8 @@
 # ViRaSPA
 
-**ViRaSPA** is a no-build frontend framework for single-page applications (SPAs), written in plain HTML, CSS and JavaScript.
+**ViRaSPA** is a no-build frontend framework for single-page applications (SPAs), written in plain HTML, CSS and vanilla JavaScript: web components (custom elements with Shadow DOM, scoped or no isolation), routing, signals and bindings, i18n and checksum-pinned installs, with no bundler, no transpiler and no npm dependencies at runtime.
+
+**Live demo of its official components:** <https://ruzoowzy.github.io/ViRaSPA-Extensions/>, every example editable in the browser ("Try it").
 
 It keeps the structure that makes frameworks like Angular pleasant to work in (pages, components, lifecycle events, services, routing) but drops the build step. There is no TypeScript to transpile and no bundler: what you write is exactly what the browser runs, served by a small static dev server.
 
@@ -646,6 +648,7 @@ const user = await Viraspa.services.communication.call(Viraspa.endpoints.users.g
 
 1. `index.html` holds the project settings (`Viraspa.settings`) and one framework script, `viraspa/viraspa.js?v=<framework version>`.
 2. The loader checks the browser, loads `base.css` and the framework files, then `app/config/startup.js`, which lists the official helpers (`helpers`), extensions and the app's own files in groups. A group script is a path, or `{ src, type: "module" }` for a library that ships only as an ES module (the framework and app code stay classic scripts).
+   - **Components only, no routes:** a page that just uses components (an embedded widget, a playground frame) sets `Viraspa.settings.router = false`, and may point `Viraspa.settings.startupFile` at its own startup list. It needs no `#page-root`; the framework loads the components on the page, then emits `viraspa:appReady` (helpers that act on pages, such as `filter` and `forms`, act on the whole page then).
 3. The shell is plain markup in `index.html`. It's built once; only `#page-root` changes per route:
    ```html
    <vs-header sticky>

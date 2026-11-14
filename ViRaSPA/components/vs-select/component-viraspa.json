@@ -13,6 +13,84 @@
   "frameworkVersion": {
     "min": "0.1.0"
   },
+  "api": {
+    "attributes": [
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "description": "Several choices, shown as chips."
+      },
+      {
+        "name": "filter",
+        "type": "enum",
+        "values": [
+          "auto",
+          "on",
+          "off"
+        ],
+        "description": "A filter box: auto shows it from 8 options on.",
+        "default": "on"
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "description": "A Ã— button clears the choice."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Shown while nothing is chosen.",
+        "default": "Chooseâ€¦"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The chosen value (comma-separated with multiple).",
+        "default": "dar"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The field name in the form."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "description": "A value is needed."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": "Can't be used; left out of the form."
+      },
+      {
+        "name": "readonly",
+        "type": "boolean",
+        "description": "Shown, can't be changed."
+      }
+    ],
+    "properties": [
+      {
+        "name": "options",
+        "description": "The choices instead of <option> children.",
+        "example": "root.querySelector(\"vs-select\").options = [{ value: \"a\", label: \"Option A\" }, { value: \"b\", label: \"Option B\", disabled: true }];"
+      },
+      {
+        "name": "value",
+        "description": "The chosen value (an array with multiple).",
+        "example": "console.log(root.querySelector(\"vs-select\").value);"
+      },
+      {
+        "name": "selectedOptions",
+        "description": "The chosen options, with their labels.",
+        "example": "console.log(root.querySelector(\"vs-select\").selectedOptions);"
+      }
+    ],
+    "events": [
+      "input",
+      "change"
+    ]
+  },
   "files": [
     {
       "path": "README.md",
