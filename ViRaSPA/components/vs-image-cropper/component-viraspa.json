@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-image-cropper.css",
-      "checksum": "sha256-a548f9e8d5b46611f8538fa9671168f82e96b56730107900a844593738f653ba"
+      "checksum": "sha256-1cbece1642df2a042c37e12d04f35b358fbfcc784e48925adb3a8660d8d7c29e"
     },
     {
       "path": "vs-image-cropper.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-image-cropper.js",
-      "checksum": "sha256-517635690ddb732667daa7aee7a129d96a14bd3cd14d47b07ae392c5fa49e021"
+      "checksum": "sha256-4a650e2a7bae8578b8395a38b02e1def79a9d77e8c96de2e3f1383582438a7d1"
     }
   ]
 }

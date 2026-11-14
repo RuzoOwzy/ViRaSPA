@@ -5,6 +5,6 @@
 }
 
 .vs-filter-empty {
-  color: var(--vs-color-text-muted, #5b6b66);
+  color: var(--vs-color-text-muted, #5a6377);
   font-style: italic;
 }

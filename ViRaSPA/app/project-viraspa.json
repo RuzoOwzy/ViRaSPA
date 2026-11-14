@@ -23,25 +23,25 @@
       "name": "vs-stat-tile",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-492f91b97a965fcc480d6ccd6f582e0423265d954e25b19df870665e19a2d68e"
+      "checksum": "sha256-72b438551ed2bb3edc7490c650ebec227957161e6194b2b261d581d61a41028a"
     },
     {
       "name": "vs-login-form",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-5d0cbc7d47a1e1e66fa520acd08da91fc08d970c536f77521af6045e4776e964"
+      "checksum": "sha256-93aa150d4b52f6c476a9f984eb66f8a66fa783eb79c1fb1a0a9e9cc49a5a804e"
     },
     {
       "name": "vs-input-password",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-19ce9bf191966a0e99e607788e90afb0e77d0692eeae3922ded3ecbe55b36829"
+      "checksum": "sha256-3bfa796d4889f98e600ad2339420d2198c82f7a7b58a4e18898740ee6e04a2d1"
     },
     {
       "name": "vs-countdown",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-5fba186a939273514817684d74bae66f5a800705731e755d40fcbcb8898b2455"
+      "checksum": "sha256-c3c16463d640a7fc4bd061201c9b9ae6d06d53c1253b11bd05163dace43aac55"
     },
     {
       "name": "vs-tooltip",
@@ -53,31 +53,31 @@
       "name": "vs-popup",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-d01deb0c5de5022afa62ca6bd4b427f3305ce35ef6cabe0cf59d54879c1b0252"
+      "checksum": "sha256-44c7ea5c538b9b550e35ecd5751c036fc47ea0c5604d1d1b4b8fc6ec88cc9ed7"
     },
     {
       "name": "vs-input-number",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-3233fa4d441bad2f26ac22cbd1150bf051224b5f519074d548ebcef548c232db"
+      "checksum": "sha256-8dc631af97e430f7c9115659dd52477ef7220163c9063314d700fb7c6f885770"
     },
     {
       "name": "vs-progress",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-6384ea564852bd53ddffa6274520fd8c78553e7df659c171271042722cb45771"
+      "checksum": "sha256-7c4b33bff7f9bc35a999f7c880985c57376636c2c9ec5a168982ff63fd82e875"
     },
     {
       "name": "vs-textarea",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-b01d2bb71b903b3943f7fa24f41da250196e96430ae271cd61f512903fd2f6fe"
+      "checksum": "sha256-7d9f9dfe52f4c68c3f41dc964863b9a4931d2bca0809f454a932bf7327901ce6"
     },
     {
       "name": "vs-context-menu",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-4499acf91746073b228ef687e6d39aaa4ab7ad08b409628b8836f0354b6a94ee"
+      "checksum": "sha256-045b895a270ef64ac06be02fd188aba69f7128961ec2d93ced2b865d5f4c7c40"
     },
     {
       "name": "vs-tabs",
@@ -89,73 +89,73 @@
       "name": "vs-input-color",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-eca81e8814a9d900e337c350dca316c754fccdacd8c440eabcbce19028ada36b"
+      "checksum": "sha256-bb10c5bac227c2bef5d76b9ebcc4267be52f7160a4934b0905df2763bbf72ef7"
     },
     {
       "name": "vs-input-date",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-ed650662c93fc5212af9fcda76549a82312a36db9bfd095fa15312b62004c512"
+      "checksum": "sha256-0d44bb7c7de65aaa847e02086030f47680bc6f32f6bc3282c65c3476238293c6"
     },
     {
       "name": "vs-select-search",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-3ccd9cb8664d17206c981969018108a0b3fe997a3287a83e0c9a25424abc5fa8"
+      "checksum": "sha256-a52a1e1a785a6fa27345e432d8505f18165d2f5a6803dc741de869cd833a43df"
     },
     {
       "name": "vs-select",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-9cb5eea3726908cd0f8a8919b64c58ebef3347e7264f8c75d6d9ac3f5bf7fbd8"
+      "checksum": "sha256-0d5aee5e16d2a7c43fee898088c3f70911164599652f80e625d2638af89afb1f"
     },
     {
       "name": "vs-table",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-cd23c106c9494228f9d85cd9bf06ca5f588650a99f934b8d6883a9bb7f816eac"
+      "checksum": "sha256-5e1a296cdb0dbb4834dfed05d67b48f0ee77c9fd40057b5588ac39d1cb8877c9"
     },
     {
       "name": "vs-pagination",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-ff301e2ebcdf3a7e9201d8fd6403d3c26e78273c795d88ffb4bd61cd34bf0d18"
+      "checksum": "sha256-a9c6e736f39821fdbb10bd1b3cb03024cdee67d936037721a1536ed58a34b223"
     },
     {
       "name": "vs-table-entry",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-867a1af8b1aaddf37f2601ef811db06f230327e15d4096c330058c3afceb0fa8"
+      "checksum": "sha256-dff03166e8aeeaef33ed0b04b2e1d0ecd029cf4d1f988c24a8097f7ff03cda4a"
     },
     {
       "name": "vs-select-tree",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-6ae5cfe51c0528c0e415434de23179b4526171fbe7f1aa3c2d476d54a76f9b7c"
+      "checksum": "sha256-c59277fd13bed3955fea22d7a5a52f9fefb0b2eac814e6f66d7ad5e91b14695f"
     },
     {
       "name": "vs-tree",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-8f6015940de71da8c2a4a048f79e30da74ed74624b7f5b35fc27e5b9de98636c"
+      "checksum": "sha256-7a6beab989008aec4f4928a4bb573f1c21d76734b316ffaac6ce1a0c7023b3e4"
     },
     {
       "name": "vs-media-viewer",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-c50f7bbdfb1307d3209365d83c0aa65d9c8b139ba133c75a94dafb204df66ee7"
+      "checksum": "sha256-21095ff1dec740ae1688fcc847cb8fa2ce7b44e794acd1526101f287d8081c01"
     },
     {
       "name": "vs-image-cropper",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-d873b5edc0e3d44a17777b7263567be313de8947bfe22b1c3baef7e510a2e38e"
+      "checksum": "sha256-fe4f741f67a4a0387141e5b212f388806774eb9951d038423e9215347accb8cc"
     },
     {
       "name": "vs-rich-text-editor",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-6ad92293a021eb73540d9a5dfea39de1924dce2b320478b19b76e3be95e2e974"
+      "checksum": "sha256-61955f3d4caa85f4b16527cd0d7787b8b490b15c67b489588d5830751530e8a2"
     }
   ],
   "helpers": [
@@ -163,7 +163,7 @@
       "name": "forms",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-5ccf01828d2c6fb439e447e21ae1f9fc634e2b978bbd3e3c340b387bc10edcee"
+      "checksum": "sha256-62ac376fd726b0942a03e0d6f24b902eca616fe7b853d53ba098a7ef496d1d56"
     },
     {
       "name": "data-entry",
@@ -175,13 +175,13 @@
       "name": "filter",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-a123443fa996c1444d4ff33e127cd4b4e736b26edf63e8d9e23c9118b7e8c554"
+      "checksum": "sha256-1862e3a73ea86257f5abf0360a4db8764bf0163920c4f1965ba30a1854883cf5"
     },
     {
       "name": "tooltip",
       "version": "0.1.0",
       "downloadSource": "extensions-repository",
-      "checksum": "sha256-18483a9b9c982dc9ab1078858015b703d1ea1a4fec3abffc9e8a4020f4becece"
+      "checksum": "sha256-f850beeba4b5d8376c390ac0e4263b00f7080cf62e81243abf8cbafbf3e8ac3c"
     },
     {
       "name": "table-core",

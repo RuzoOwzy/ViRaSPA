@@ -2,8 +2,8 @@
   display: block;
   position: relative;
   z-index: 20;
-  background: var(--vs-header-background, var(--vs-color-primary-strong));
-  color: var(--vs-header-color, var(--vs-color-on-primary));
+  background: var(--vs-header-background, var(--vs-color-ink, #16203a));
+  color: var(--vs-header-color, var(--vs-color-on-ink, #e6e9f5));
 }
 
 :host([sticky]) {
@@ -17,6 +17,16 @@
   gap: var(--vs-space-4);
   min-height: 3.25rem;
   padding: var(--vs-space-2) 1.25rem;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  margin-right: calc(-1 * var(--vs-space-2));
+}
+
+.start[hidden] {
+  display: none;
 }
 
 .middle {

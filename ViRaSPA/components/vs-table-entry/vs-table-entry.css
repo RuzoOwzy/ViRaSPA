@@ -25,7 +25,7 @@ td {
 
 thead th {
   padding: 0.5rem 0.55rem;
-  background: var(--vs-color-surface-muted, #f2f5f4);
+  background: var(--vs-color-surface-muted, #f3f4f9);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -64,6 +64,20 @@ th + th {
   background: transparent;
   color: inherit;
   font: inherit;
+}
+
+vs-textarea.edit {
+  min-height: 0;
+  padding: 0;
+  --vs-input-padding: 0.4rem 0.55rem;
+  --vs-input-border: transparent;
+  --vs-input-background: transparent;
+  --vs-radius: 0;
+}
+
+vs-textarea.edit:focus {
+  outline: none;
+  background: transparent;
 }
 
 .edit:focus,
@@ -114,12 +128,12 @@ input[type="checkbox"].edit {
 }
 
 .delete:hover {
-  background: var(--vs-color-surface-muted, #eef2f0);
+  background: var(--vs-color-surface-muted, #eef0f6);
   color: var(--vs-color-danger, #c0392b);
 }
 
 tfoot td {
-  background: var(--vs-color-surface-muted, #f2f5f4);
+  background: var(--vs-color-surface-muted, #f3f4f9);
   font-weight: 600;
 }
 

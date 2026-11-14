@@ -20,8 +20,10 @@
   //   up / down (Alt+Up / Alt+Down)   the same column in the row above / below
   //   deleteRow (Ctrl+Delete) removes the row (asks first with confirm-delete)
   // Editors: text (default), number (decimals, min, max), select (options:
-  // "a,b" or [{ value, label }]), date, check; editor="none" or a computed
-  // `value` column is read-only.
+  // "a,b" or [{ value, label }]), date, check, textarea (a vs-textarea that
+  // rests at one line and opens over the rows below while you type, up to
+  // max-rows, default 8; Alt+Enter starts a new line); editor="none" or a
+  // computed `value` column is read-only.
   // value: the rows; in a form, a JSON text under `name`. Validity: required
   // cells and number limits. Events: "vs-cell-change" (detail: { row, field,
   // value, index }), "vs-row-add", "vs-row-remove" (cancelable), input, change.
@@ -151,6 +153,8 @@
           return `<input class="edit" type="date" value="${esc(value || "")}" ${common}>`;
         case "check":
           return `<input class="edit" type="checkbox"${value ? " checked" : ""} ${common}>`;
+        case "textarea":
+          return `<vs-textarea class="edit text-edit" overlap rest-rows="1" max-rows="${esc(col.maxRows || 8)}" value="${esc(value ?? "")}" ${common}></vs-textarea>`;
         default:
           return `<input class="edit" type="text" autocomplete="off" value="${esc(value ?? "")}" ${common}>`;
       }
@@ -166,6 +170,8 @@
               .join("")}${withDelete ? `<td class="del"><button type="button" class="delete" tabindex="-1" aria-label="${esc(t("Remove row {n}").replace("{n}", r + 1))}">&times;</button></td>` : ""}</tr>`
         )
         .join("");
+      // Components in cells (vs-textarea) load like anywhere else.
+      if (this.cols.some((c) => c.editor === "textarea")) Viraspa.core.components.scan(this.body);
       this.renderFoot();
       this.validate();
     }
@@ -296,6 +302,12 @@
     onKey(event) {
       const el = event.target.closest("[data-r]");
       if (!el || event.defaultPrevented) return;
+      // A textarea cell: Enter moves on like everywhere else; Alt+Enter is its new line.
+      if (el.localName === "vs-textarea" && Viraspa.keyboard.matches(event, "alt+enter")) {
+        event.preventDefault();
+        el.insertText("\n");
+        return;
+      }
       const r = Number(el.dataset.r);
       const c = Number(el.dataset.c);
       const keys = this.keymap(KEYS);

@@ -81,7 +81,7 @@ input:focus {
 }
 
 .option.active {
-  background: var(--vs-select-active, var(--vs-color-surface-muted, #e8efec));
+  background: var(--vs-select-active, var(--vs-color-surface-muted, #e8eaf4));
 }
 
 .label {

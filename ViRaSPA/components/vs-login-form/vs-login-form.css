@@ -69,7 +69,7 @@
 }
 
 .message.success {
-  background: #e8f5ee;
+  background: #eef0fd;
   color: var(--vs-color-success);
 }
 

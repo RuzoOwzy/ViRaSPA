@@ -55,6 +55,74 @@
     assert.equal(submitted, 1);
   });
 
+  // focus()/blur() don't fire events in a background window: fire them then.
+  const focusIn = (host, area) => {
+    area.focus();
+    if (!host.hasAttribute("data-focused")) area.dispatchEvent(new FocusEvent("focus"));
+  };
+  const focusOut = (host, area) => {
+    area.blur();
+    if (host.hasAttribute("data-focused")) area.dispatchEvent(new FocusEvent("blur"));
+  };
+  const height = (el) => Math.round(el.getBoundingClientRect().height);
+
+  test("vs-textarea: rows is the minimum; one line ahead while focused; max-rows caps", async () => {
+    const { element } = render('<vs-textarea rows="2" max-rows="4"></vs-textarea>');
+    const ta = await ready(element, "vs-textarea");
+    const area = ta.shadowRoot.querySelector("textarea");
+    const m = ta.metrics();
+    const lines = (n) => Math.round(m.height(n));
+    assert.equal(height(area), lines(2), "two rows when empty");
+    ta.value = "a\nb\nc";
+    assert.equal(height(area), lines(3));
+    focusIn(ta, area);
+    assert.equal(height(area), lines(4), "an empty line ready below the text");
+    ta.value = "1\n2\n3\n4\n5\n6";
+    assert.equal(height(area), lines(4), "capped at max-rows");
+    assert.equal(area.style.overflowY, "auto");
+    focusOut(ta, area);
+  });
+
+  test("vs-textarea: overlap rests at rest-rows and opens over what is below", async () => {
+    const { element } = render('<div><vs-textarea overlap rest-rows="1" max-rows="6" value="one\ntwo\nthree"></vs-textarea><p>below</p></div>');
+    const ta = await ready(element, "vs-textarea");
+    const area = ta.shadowRoot.querySelector("textarea");
+    const below = element.querySelector("p");
+    const rest = Math.round(ta.metrics().height(1));
+    assert.equal(height(area), rest, "one line at rest, however long the text");
+    const top = below.getBoundingClientRect().top;
+    focusIn(ta, area);
+    assert.ok(ta.hasAttribute("data-open"));
+    assert.equal(getComputedStyle(area).position, "fixed");
+    assert.equal(height(area), Math.round(ta.metrics().height(4)), "three lines and one ahead");
+    assert.equal(below.getBoundingClientRect().top, top, "what is below doesn't move");
+    focusOut(ta, area);
+    assert.ok(!ta.hasAttribute("data-open"));
+    assert.equal(height(area), rest);
+  });
+
+  test("vs-table-entry: textarea cells stay one line and open over the rows below; Alt+Enter is a new line", async () => {
+    const { element } = render('<vs-table-entry><column field="note" label="Note" editor="textarea"></column></vs-table-entry>');
+    const te = element.querySelector("vs-table-entry");
+    await Viraspa.core.components.load("vs-table-entry");
+    await te.ready;
+    te.rows = [{ note: "a long note\nwith\nthree lines" }, { note: "" }];
+    await Viraspa.core.components.load("vs-textarea");
+    const cells = [...te.shadowRoot.querySelectorAll("vs-textarea")];
+    await Promise.all(cells.map((c) => c.ready));
+    const rows = [...te.shadowRoot.querySelectorAll("tbody tr")];
+    const rowHeight = height(rows[0]);
+    assert.ok(Math.abs(rowHeight - height(rows[1])) <= 1, "both rows one line high");
+    const area = cells[0].shadowRoot.querySelector("textarea");
+    focusIn(cells[0], area);
+    assert.ok(height(area) > rowHeight, "it opens taller than its row");
+    assert.equal(height(rows[0]), rowHeight, "the row keeps its height");
+    area.setSelectionRange(area.value.length, area.value.length);
+    key(area, { key: "Enter", altKey: true });
+    assert.equal(te.rows[0].note, "a long note\nwith\nthree lines\n");
+    focusOut(cells[0], area);
+  });
+
   test("vs-input-password: show/hide, strength, a real input for password managers", async () => {
     const { element } = render('<form><label for="pw1">Password</label><vs-input-password id="pw1" name="pw" strength></vs-input-password></form>');
     const pw = await ready(element, "vs-input-password");

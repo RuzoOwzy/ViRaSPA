@@ -2,8 +2,8 @@
   display: block;
   flex: none;
   width: var(--vs-sidebar-width, 15rem);
-  background: var(--vs-sidebar-background, #12352a);
-  color: var(--vs-sidebar-color, #e3f5ec);
+  background: var(--vs-sidebar-background, var(--vs-color-ink, #16203a));
+  color: var(--vs-sidebar-color, var(--vs-color-on-ink, #e6e9f5));
   transition: width 0.15s ease;
 }
 
@@ -11,12 +11,19 @@
   width: var(--vs-sidebar-collapsed-width, 3.75rem);
 }
 
+/* collapse="hide": out of sight, the page gets the full width. */
+:host([collapse="hide"][collapsed]) {
+  display: none;
+}
+
 .sidebar {
   position: sticky;
-  top: 0;
+  top: var(--vs-sidebar-top, 0);
   display: flex;
   flex-direction: column;
   gap: var(--vs-space-2);
+  max-height: calc(100vh - var(--vs-sidebar-top, 0px));
+  overflow-y: auto;
   padding: var(--vs-space-2);
 }
 
@@ -58,4 +65,39 @@
 
 :host([collapsed]) .collapse svg {
   transform: rotate(180deg);
+}
+
+.backdrop {
+  display: none;
+}
+
+/* Phones: an open "hide" sidebar floats over the page, below the header. */
+@media (max-width: 767px) {
+  :host([data-drawer]) {
+    position: fixed;
+    top: var(--vs-sidebar-top, 0);
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    width: min(var(--vs-sidebar-width, 15rem), 85vw);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  :host([data-drawer]) .sidebar {
+    height: 100%;
+  }
+
+  :host([data-drawer]) .backdrop {
+    display: block;
+    position: fixed;
+    inset: var(--vs-sidebar-top, 0) 0 0 min(var(--vs-sidebar-width, 15rem), 85vw);
+    background: rgba(14, 21, 40, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  .collapse svg {
+    transition: none;
+  }
 }

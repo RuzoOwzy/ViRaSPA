@@ -11,18 +11,29 @@
   --vs-font-size: 15px;
   --vs-line-height: 1.5;
 
-  --vs-color-text: #152420;
-  --vs-color-text-muted: #58685f;
-  --vs-color-background: #f4f7f5;
+  /* "Ink & Amber": an ink-blue shell (header, side panel, footer), indigo
+     for actions and links, amber for the brand mark. Every text colour
+     meets WCAG AA contrast on the surfaces it is used on. */
+  --vs-color-text: #182032;
+  --vs-color-text-muted: #5a6377;
+  --vs-color-background: #f5f6fa;
   --vs-color-surface: #ffffff;
-  --vs-color-border: #d3ddd8;
-  --vs-color-primary: #1a9c6b;
-  --vs-color-primary-strong: #0f6e48;
+  --vs-color-surface-muted: #eef0f6;
+  --vs-color-border: #dce0ea;
+  --vs-color-primary: #4f46e5;
+  --vs-color-primary-strong: #4338ca;
+  --vs-color-primary-soft: #eef0fd;
   --vs-color-on-primary: #ffffff;
-  --vs-color-link: #0f6e48;
+  --vs-color-link: #4338ca;
   --vs-color-danger: #c0392b;
-  --vs-color-success: #0f6e48;
-  --vs-color-focus: #1a9c6b;
+  --vs-color-success: #15803d;
+  --vs-color-warning: #b45309;
+  --vs-color-focus: #6366f1;
+  --vs-color-ink: #16203a;
+  --vs-color-ink-strong: #0e1528;
+  --vs-color-on-ink: #e6e9f5;
+  --vs-color-on-ink-muted: #aab2c8;
+  --vs-color-accent: #f5a524;
 
   --vs-radius: 6px;
   --vs-radius-large: 8px;
@@ -102,6 +113,34 @@ button {
 
 .btn:hover {
   background: var(--vs-color-primary-strong);
+}
+
+/* A burger button for a vs-sidebar (data-sidebar-toggle), e.g. in the
+   header's "start" slot. The icon is drawn by CSS: no markup needed. */
+.vs-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--vs-radius);
+  background: transparent;
+  color: inherit;
+}
+
+.vs-menu-button::before {
+  content: "";
+  width: 1.25rem;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+.vs-menu-button:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .form-field {

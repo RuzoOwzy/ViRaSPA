@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-input-number.css",
-      "checksum": "sha256-3c06b9bdf23e373947161b6bd229457898144be55fe9a39282fc6f2a6b1bddeb"
+      "checksum": "sha256-c8e80b82df3a375652d0d96e1079e0a8388bd05d1e34937d4a1296c836b0a039"
     },
     {
       "path": "vs-input-number.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-input-number.js",
-      "checksum": "sha256-97dd6ff5761ec13186d88ea31683680eaba2703b4023c7b4a3f9e6b46db8a484"
+      "checksum": "sha256-5c588130ddc8041a563d32b4e53173684073eb98b657cb386a22b00af1578dc0"
     }
   ]
 }

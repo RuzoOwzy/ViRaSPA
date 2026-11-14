@@ -20,7 +20,7 @@
     },
     {
       "path": "components/vs-brand/vs-brand.js",
-      "checksum": "sha256-71a700268d354edf9710ed18b9f83bc1ea344fce1bd135b2e5b75419fd06b46a"
+      "checksum": "sha256-86fc49539867a93a73c20d2f613c010d4481f663cb4377c77813a6ab8b10790d"
     },
     {
       "path": "components/vs-brand/vs-brand.model.json",
@@ -36,7 +36,7 @@
     },
     {
       "path": "components/vs-busy-indicator/vs-busy-indicator.js",
-      "checksum": "sha256-c99f4dea2e928275df244639d4204456d3bbc032dd3fb1ab0ceecea3cdba4e45"
+      "checksum": "sha256-50a85aea2ff85a3e9b1c30efaf1aa95d1dd90f5088cb204ced0de7007ad90b4c"
     },
     {
       "path": "components/vs-busy-indicator/vs-busy-indicator.model.json",
@@ -44,7 +44,7 @@
     },
     {
       "path": "components/vs-footer/vs-footer.css",
-      "checksum": "sha256-a2f46e8c9a6f379167774fb2b6e0b725cea692b708e8d026224a2d78e85d2608"
+      "checksum": "sha256-7673887442870aa625a20cdae07dfbe9e5e41545573524de0b48c6499793c34d"
     },
     {
       "path": "components/vs-footer/vs-footer.html",
@@ -56,15 +56,15 @@
     },
     {
       "path": "components/vs-header/vs-header.css",
-      "checksum": "sha256-2ddc6b2feacb204fde4e014c1638964640493ea60fe3b784902f49fa6f926bf6"
+      "checksum": "sha256-694180c1882deba517dfc7a27b7cfa268db5daa3b035a4c62e70a266f68126db"
     },
     {
       "path": "components/vs-header/vs-header.html",
-      "checksum": "sha256-5e9b94f07d770c2f02bef0762b8678827271850155f462b2568211b07dbcf92d"
+      "checksum": "sha256-2972ce66599da6bd4ae9a8c086748d808ce5c606a63d7471530321d734bdfdd2"
     },
     {
       "path": "components/vs-header/vs-header.js",
-      "checksum": "sha256-976b379b26fdb4c11aeb5ef6c867c17b892f578ad519d98e60d3b68f5309a42e"
+      "checksum": "sha256-d3e4eb3023f965883656e1597f7435ad3e60d7b356e14f7e222e9fc7a5bb8491"
     },
     {
       "path": "components/vs-icon/vs-icon.css",
@@ -72,19 +72,19 @@
     },
     {
       "path": "components/vs-icon/vs-icon.js",
-      "checksum": "sha256-0dd9ba5fd2dafe046c21b92b593cba83aadbe186ba4c4a3f3cfd9790a850a4ea"
+      "checksum": "sha256-8deecab1d006b18fdf23a43cb3705dcd8f0dfed2d3c0aa50deb237ae18df4ab3"
     },
     {
       "path": "components/vs-menu/vs-menu.css",
-      "checksum": "sha256-e8530cde309d9b88269476ff632f27b41b468c36f39d660289415af2bbe99b47"
+      "checksum": "sha256-096586718307a7b7631c57cd96c9d9adb89d3fbdcd92cda2cbdf5f72ed26d495"
     },
     {
       "path": "components/vs-menu/vs-menu.html",
-      "checksum": "sha256-93620ae21e77ca01b214f50dd253ac138dd8604b8d905722f1d35f1a3ed65886"
+      "checksum": "sha256-32aea504c892716ad8853fe36ec986ebb75b4c7acf4ba49357e25559ff473178"
     },
     {
       "path": "components/vs-menu/vs-menu.js",
-      "checksum": "sha256-6c85857b13f93571b3245b1a95887067fb34f74642fd5adbc6af40beef45ad89"
+      "checksum": "sha256-d8f5ccbde49f158a70e26d981315d3cfe2e6f13841a425f70577e6cdee822954"
     },
     {
       "path": "components/vs-menu/vs-menu.model.json",
@@ -92,15 +92,15 @@
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.css",
-      "checksum": "sha256-13c84982fb3063242c324159bad4bc2901e28eb9073d4daf83df2bcbfb32ec7c"
+      "checksum": "sha256-e340106101bb5fb5a41ee71283b24589726dae58ab11ee67f42b1dadc8e1ceb8"
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.html",
-      "checksum": "sha256-8a13137bc023e6c636802b0152347da824e40c748f4f6deefd937c7b5edc8021"
+      "checksum": "sha256-cc6ff696c6e79467788da05b19ae1dde54d47cb9cf5f91984d1b12987aedb1dd"
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.js",
-      "checksum": "sha256-983c7ab4de88d2edaafeb380ed9986da82ee9bde623ba45510bd1a50b9597dd9"
+      "checksum": "sha256-b89f52794c3f8cc3bf46c04777b2d382228bddb42d78417f2fecb553b985c476"
     },
     {
       "path": "components/vs-sidebar/vs-sidebar.model.json",
@@ -108,7 +108,7 @@
     },
     {
       "path": "components/vs-toast/vs-toast.css",
-      "checksum": "sha256-c1adc2550b1e016121f815dc56bdf391dab19559518be808f7ece991bb48606c"
+      "checksum": "sha256-1eddb2526162ec432724ea67012bddeb9099b101830f8409ae09662dc1902ce4"
     },
     {
       "path": "components/vs-toast/vs-toast.html",
@@ -128,7 +128,7 @@
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.js",
-      "checksum": "sha256-3899436fb53f68466af6c60a9a2b5ed5e87ec87ed142068d53e92500026bbe55"
+      "checksum": "sha256-651038bf9cd7eb4cf1909c0c384489bb546265c387aa2c688ced55e4b3c718bc"
     },
     {
       "path": "components/vs-user-menu/vs-user-menu.model.json",
@@ -136,7 +136,7 @@
     },
     {
       "path": "core/bootstrap.js",
-      "checksum": "sha256-58903bc9fab9efad3969f9a4b23ee55317795aeabb1a0604044db6022b5ed211"
+      "checksum": "sha256-b095bcea3eb7163ee004257713f0806ac4de8de79323b69baad8e1af51427a8b"
     },
     {
       "path": "core/busy.js",
@@ -148,7 +148,7 @@
     },
     {
       "path": "core/component.js",
-      "checksum": "sha256-e54394883937354156ab98f5ab4d24b2601bc51a428ac7b956630d5eece068fc"
+      "checksum": "sha256-ba1e8f1ae141483a7b861d539b19d172591534322b65b4236212debecee846dd"
     },
     {
       "path": "core/data.js",
@@ -192,7 +192,7 @@
     },
     {
       "path": "core/page-loader.js",
-      "checksum": "sha256-bd2b184336a70e21c111a0e720cc5ff2f1f505eecc5b3281d57c0a84d9832c3c"
+      "checksum": "sha256-c9a8fb3c2b0a32ed06e76713e497ce3eec165a619d0ddc516425bd11755d4155"
     },
     {
       "path": "core/page.js",
@@ -240,7 +240,7 @@
     },
     {
       "path": "styles/base.css",
-      "checksum": "sha256-8e3ae24686399a56664eaf073869959fdaf92fe3d1567d6543c38b27a58f0211"
+      "checksum": "sha256-471b8fcddbe785eb92eef40f23e9eb559448f3ce99b0cd98374c63bbca6a94f4"
     },
     {
       "path": "utility/asset-loader.js",

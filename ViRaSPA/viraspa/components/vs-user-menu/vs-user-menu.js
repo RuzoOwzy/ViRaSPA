@@ -16,6 +16,7 @@
     static tag = "vs-user-menu";
     static folder = Viraspa.core.frameworkUrl("components/vs-user-menu");
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
 
     constructor() {
       super();

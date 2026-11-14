@@ -32,6 +32,7 @@
     static tag = "vs-input-password";
     static folder = "components/vs-input-password";
     static isolation = "scoped";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static observedAttributes = ["name", "disabled", "readonly", "required", "minlength", "maxlength", "pattern", "placeholder", "autocomplete", "strength"];
 

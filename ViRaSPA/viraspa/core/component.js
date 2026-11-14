@@ -2,6 +2,8 @@
   const ISOLATION_MODES = ["full", "scoped", "none"];
   const RESERVED_PREFIXES = ["vs-", "viraspa-"];
 
+  const warnedForms = new Set();
+
   // Gives `element` its own writable `key`, hiding the base class's getter.
   function ownProperty(element, key, value) {
     Object.defineProperty(element, key, { value, writable: true, configurable: true, enumerable: true });
@@ -37,6 +39,12 @@
     // "full" mode: focusing the element (or clicking its <label>) focuses
     // the first focusable thing inside - for form fields.
     static delegatesFocus = false;
+    // "none" for a component that never has content of its own (an input, an
+    // icon, a progress bar): it may then be written self-closing in page and
+    // component templates, <vs-icon name="x" />, and the framework warns if
+    // it is given content. Leave it "any" for components that hold content
+    // (cards, popups, tabs): they keep their closing tag.
+    static content = "any";
 
     constructor() {
       super();
@@ -173,6 +181,7 @@
 
     connectedCallback() {
       if (this._started) return;
+      this._checkWrittenForm();
       if (!this._propertiesUpgraded) {
         this._propertiesUpgraded = true;
         this._upgradeProperties();
@@ -183,6 +192,29 @@
       // (once) before rendering so "scoped"/"none" can place them into <slot>s.
       if (!this._lightChildren) this._lightChildren = this.isolation === "full" ? [] : Array.from(this.childNodes);
       this._load();
+    }
+
+    // Self-closing tags (page-loader.js expandSelfClosing) leave a marker:
+    // fine for a component without content, a slip for one that takes
+    // content. A content-free component given content is a slip too. Each
+    // is reported once per tag.
+    _checkWrittenForm() {
+      if (this._formChecked) return; // once: later its own rendering is inside
+      this._formChecked = true;
+      const Class = this.constructor;
+      const short = this.hasAttribute("data-vs-short");
+      if (short) this.removeAttribute("data-vs-short");
+      const once = (kind, text) => {
+        const key = `${Class.tag}:${kind}`;
+        if (warnedForms.has(key)) return;
+        warnedForms.add(key);
+        console.warn(text);
+      };
+      if (short && Class.content !== "none") {
+        once("short", `<${Class.tag} /> was written self-closing, but ${Class.tag} holds content: write <${Class.tag} …></${Class.tag}>.`);
+      } else if (Class.content === "none" && [...this.childNodes].some((n) => n.nodeType === 1 || (n.nodeType === 3 && n.textContent.trim()))) {
+        once("content", `<${Class.tag}> takes no content; what is inside it is ignored. It can be written <${Class.tag} … />.`);
+      }
     }
 
     // Leaving the page disposes effects and listeners. Moving an element

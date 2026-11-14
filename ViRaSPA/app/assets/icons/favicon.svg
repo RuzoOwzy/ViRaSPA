@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>ViRaSPA</title>
-  <!-- A strong "V" whose right arm rises into an arrow, after the Viramol logo. -->
-  <path d="M7 14 L27 55 L41 26" fill="none" stroke="#c8102e" stroke-width="11" stroke-linejoin="miter" stroke-miterlimit="10"/>
-  <path d="M30 20.5 L52 3.5 L52 31.5 Z" fill="#c8102e"/>
+  <!-- A strong "V" whose right arm rises into an arrow, in amber on an ink
+       tile, so it reads on light and dark browser tabs and on the ink header. -->
+  <rect width="64" height="64" rx="14" fill="#16203a"/>
+  <path d="M12 18 L28 50 L39 28" fill="none" stroke="#f5a524" stroke-width="9" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M30 23.5 L49 9 L49 33 Z" fill="#f5a524"/>
 </svg>

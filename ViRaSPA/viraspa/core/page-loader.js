@@ -13,11 +13,26 @@
     return `${trimmed}/${trimmed.split("/").pop()}`;
   }
 
+  // Self-closing custom elements. Browsers ignore "/>" on any element that
+  // isn't void, so <vs-icon name="x" /> would swallow what follows it. In the
+  // templates the framework reads (pages and components), a tag with a
+  // hyphen written <x-y … /> becomes <x-y … data-vs-short></x-y> before the
+  // browser parses it. Comments and the content of <script>, <style> and
+  // <textarea> are left alone, and so are quoted attribute values. (The
+  // marker lets the component warn when it does take content - see
+  // Component "content".) index.html and HTML that app code sets itself are
+  // parsed by the browser directly: write full tags there.
+  const SELF_CLOSING = /<!--[\s\S]*?-->|<(script|style|textarea)\b[\s\S]*?<\/\1\s*>|<([a-z][a-z0-9]*-[a-z0-9-]*)((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*)\s*\/>/gi;
+  function expandSelfClosing(html) {
+    if (typeof html !== "string" || !html.includes("/>")) return html;
+    return html.replace(SELF_CLOSING, (match, skipped, tag, attributes) => (tag ? `<${tag}${attributes} data-vs-short></${tag}>` : match));
+  }
+
   function fetchPair(cache, basePath, { withModel = true } = {}) {
     if (!cache.has(basePath)) {
       const { fetchText, fetchJson } = Viraspa.utility.assetLoader;
       const pending = Promise.all([
-        fetchText(`${basePath}.html`),
+        fetchText(`${basePath}.html`).then(expandSelfClosing),
         withModel ? fetchJson(`${basePath}.model.json`) : Promise.resolve({}),
       ]);
       pending.catch(() => cache.delete(basePath)); // a later load may retry
@@ -37,5 +52,5 @@
   }
 
   Viraspa.core = Viraspa.core || {};
-  Viraspa.core.pageLoader = { basePath, fetchPage, fetchComponent };
+  Viraspa.core.pageLoader = { basePath, fetchPage, fetchComponent, expandSelfClosing };
 })(window.Viraspa);

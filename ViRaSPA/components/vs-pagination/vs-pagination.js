@@ -17,6 +17,7 @@
     static tag = "vs-pagination";
     static folder = "components/vs-pagination";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static observedAttributes = ["page", "page-size", "total", "page-sizes", "compact"];
 

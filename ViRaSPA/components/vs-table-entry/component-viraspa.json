@@ -18,16 +18,21 @@
       "kind": "helper",
       "name": "table-core",
       "version": "0.1.0"
+    },
+    {
+      "kind": "component",
+      "name": "vs-textarea",
+      "version": "0.1.0"
     }
   ],
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-0dad47aac846c8f0be748f797ba2dbd196e2dc31320fce58610d767cb950c5af"
+      "checksum": "sha256-b38ca8f97aa6fcd876a40373c902e6bd2591e75d981e2b7d2fb5ae8ec3a64969"
     },
     {
       "path": "vs-table-entry.css",
-      "checksum": "sha256-f87bf689283420c14219a88ea35792b95c9bcb0b715836e44f201d1905d33ba3"
+      "checksum": "sha256-a52d792245c575f5bc8cb7006cd3bde84f7ea4ec76ae0a5bcd14b1298b6cf875"
     },
     {
       "path": "vs-table-entry.html",
@@ -35,7 +40,7 @@
     },
     {
       "path": "vs-table-entry.js",
-      "checksum": "sha256-5a75768bb6d0e26c3f7cf6c85e0151a5e23ba0842243d60ae96ecc613bbb4be4"
+      "checksum": "sha256-174c7f49763b9c3cc4740180922c0df8e5c73b85e1ba564db58b681d1eb08929"
     }
   ]
 }

@@ -71,6 +71,32 @@ test("sources: built-in and template locations", () => {
   assert.equal(sources.itemBase(own, { kind: "extension", name: "owzy", version: "1.0.0" }), "D:/Shared/extensions/owzy/1.0.0");
 });
 
+test("serve: --mount serves other folders under URL paths, and nothing outside them", async () => {
+  const { createServer, parseMounts } = require("../../node-tools/serve");
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "vs-mount-"));
+  const site = path.join(base, "demo");
+  fs.mkdirSync(path.join(base, "components", "vs-x"), { recursive: true });
+  fs.mkdirSync(site);
+  fs.writeFileSync(path.join(site, "index.html"), "<p>app</p>");
+  fs.writeFileSync(path.join(base, "components", "vs-x", "vs-x.js"), "// x");
+  fs.writeFileSync(path.join(base, "secret.txt"), "no");
+  assert.deepEqual(parseMounts("/components=../components", site), [{ prefix: "/components", folder: path.join(base, "components") }]);
+  assert.throws(() => parseMounts("nothing", site), /url=folder/);
+  const server = createServer({ siteFolder: site, mount: "/components=../components", usePrerendered: false });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const url = (p) => `http://127.0.0.1:${server.address().port}${p}`;
+  try {
+    const js = await fetch(url("/components/vs-x/vs-x.js"));
+    assert.equal(js.status, 200);
+    assert.equal(await js.text(), "// x");
+    assert.equal((await fetch(url("/components/../../secret.txt"))).status, 404, "no way out");
+    assert.equal((await fetch(url("/components/vs-x/missing.js"))).status, 404);
+    assert.match(await (await fetch(url("/vs-x"))).text(), /app/, "routes still get index.html");
+  } finally {
+    server.close();
+  }
+});
+
 test("prerender: head tags are added and escaped", () => {
   const html = withHeadTags('<html><head><title>x</title><meta name="description" content="d"></head></html>', {
     title: 'A "quoted" <title>',

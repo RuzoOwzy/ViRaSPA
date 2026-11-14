@@ -40,5 +40,5 @@
   padding: 1.5rem;
   border: 1px solid var(--vs-color-border);
   border-radius: var(--vs-radius);
-  background: var(--vs-color-surface-muted, #f2f4f3);
+  background: var(--vs-color-surface-muted, #f2f3f8);
 }

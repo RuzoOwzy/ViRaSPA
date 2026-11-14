@@ -35,7 +35,7 @@
 
 .control[data-readonly] {
   cursor: default;
-  background: var(--vs-input-readonly-background, var(--vs-color-surface-muted, #f2f4f3));
+  background: var(--vs-input-readonly-background, var(--vs-color-surface-muted, #f2f3f8));
 }
 
 :host([aria-invalid="true"]) .control {
@@ -89,7 +89,7 @@
   gap: 0.2rem;
   padding: 0.1rem 0.15rem 0.1rem 0.5rem;
   border-radius: 999px;
-  background: var(--vs-select-chip, var(--vs-color-surface-muted, #e8efec));
+  background: var(--vs-select-chip, var(--vs-color-surface-muted, #e8eaf4));
   font-size: 0.875em;
 }
 
@@ -145,7 +145,7 @@
 }
 
 .option.active {
-  background: var(--vs-select-active, var(--vs-color-surface-muted, #e8efec));
+  background: var(--vs-select-active, var(--vs-color-surface-muted, #e8eaf4));
 }
 
 .option[aria-selected="true"] {

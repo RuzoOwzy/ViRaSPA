@@ -7,6 +7,7 @@
     static tag = "vs-brand";
     static folder = Viraspa.core.frameworkUrl("components/vs-brand");
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
 
     prepareModel(model) {
       const escapeHtml = Viraspa.utility.dom.escapeHtml;

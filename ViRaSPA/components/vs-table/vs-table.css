@@ -2,8 +2,8 @@
   display: block;
   container-type: inline-size;
   --vs-table-border: var(--vs-color-border);
-  --vs-table-head-background: var(--vs-color-surface-muted, #f2f5f4);
-  --vs-table-row-hover: var(--vs-color-surface-muted, #f5f8f7);
+  --vs-table-head-background: var(--vs-color-surface-muted, #f3f4f9);
+  --vs-table-row-hover: var(--vs-color-surface-muted, #f5f6fa);
   --vs-table-selected: color-mix(in srgb, var(--vs-color-primary) 12%, transparent);
   --vs-table-cell-padding: 0.5rem 0.65rem;
 }

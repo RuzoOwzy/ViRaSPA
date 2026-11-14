@@ -8,6 +8,7 @@
     static tag = "vs-stat-tile";
     static folder = "components/vs-stat-tile";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
 
     prepareModel(model) {
       const escapeHtml = Viraspa.utility.dom.escapeHtml;

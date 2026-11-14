@@ -27,6 +27,7 @@
     static tag = "vs-select-search";
     static folder = "components/vs-select-search";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static formAssociated = true;
     static delegatesFocus = true;

@@ -7,7 +7,7 @@
   max-width: min(20rem, calc(100vw - 8px));
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
-  background: var(--vs-tooltip-background, #1d2a26);
+  background: var(--vs-tooltip-background, #1b2440);
   color: var(--vs-tooltip-color, #fff);
   font-size: 0.8125rem;
   line-height: 1.4;

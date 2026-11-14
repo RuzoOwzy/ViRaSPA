@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-pagination.css",
-      "checksum": "sha256-db415ec6de3dd166f28a8591e47d311f267c9950d9a9d9745990e5941db1ae5d"
+      "checksum": "sha256-b32ce02a39197b9e1bf5b00d589f62db2395d42aab54328e687f315b8740f62c"
     },
     {
       "path": "vs-pagination.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-pagination.js",
-      "checksum": "sha256-a2a2e7daaa67f7891452ae76f9cf01088e1ac34fab5f63afac1eab9912fc7d4c"
+      "checksum": "sha256-d768c27258eb6453abfda7ffc6257e5ebf5efef535ed55da67227914216118e9"
     }
   ]
 }

@@ -34,7 +34,7 @@
 
 ::slotted(button:hover),
 ::slotted(button:focus) {
-  background: var(--vs-menu-hover, var(--vs-color-surface-muted, #eef2f0)) !important;
+  background: var(--vs-menu-hover, var(--vs-color-surface-muted, #eef0f6)) !important;
   outline: none;
 }
 

@@ -64,7 +64,7 @@ dialog[data-size="full"] {
 }
 
 .x:hover {
-  background: var(--vs-color-surface-muted, #eef2f0);
+  background: var(--vs-color-surface-muted, #eef0f6);
 }
 
 .x[hidden] {

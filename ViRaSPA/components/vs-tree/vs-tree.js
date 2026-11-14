@@ -32,6 +32,7 @@
     static tag = "vs-tree";
     static folder = "components/vs-tree";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static observedAttributes = ["selectable", "filter", "editable", "actions"];
 

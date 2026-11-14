@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-select-search.css",
-      "checksum": "sha256-acb31f19dd86f9fa07091f15cedbe5e0216bb03fdef74c8b52353623647590fa"
+      "checksum": "sha256-428504ed2961d1d14811bf360c7db581ba5e22a5ceac8d8e6d9095977240da47"
     },
     {
       "path": "vs-select-search.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-select-search.js",
-      "checksum": "sha256-9f1c5e1d05daea61a0f82c6b62c4864a61837090740317dd2eae55527b8129ee"
+      "checksum": "sha256-d7a2db4d99ab37cff4ee3dca80a6501f7810f0546a7cef03726cb55b8c0ebbd2"
     }
   ]
 }

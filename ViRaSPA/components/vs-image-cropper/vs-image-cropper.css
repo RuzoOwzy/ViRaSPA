@@ -11,7 +11,7 @@
   overflow: hidden;
   border: 1px dashed var(--vs-color-border);
   border-radius: var(--vs-radius);
-  background: repeating-conic-gradient(#e9eeec 0% 25%, #f6f8f7 0% 50%) 50% / 20px 20px;
+  background: repeating-conic-gradient(#e9ecf4 0% 25%, #f6f7fb 0% 50%) 50% / 20px 20px;
 }
 
 .stage.has-image .empty {

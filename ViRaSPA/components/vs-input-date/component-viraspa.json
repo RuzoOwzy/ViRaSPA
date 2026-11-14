@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-input-date.css",
-      "checksum": "sha256-5115dbc9c7d0157fb69954197c29ed0452d614f716d9cf6efdf7c94187a9b747"
+      "checksum": "sha256-731dd57d6782b1dfd70f9c527e1109cb553fe3aac3053b54737b3c516dc6a4eb"
     },
     {
       "path": "vs-input-date.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-input-date.js",
-      "checksum": "sha256-85ca94376ca442e67bca4b5cdd8b55b48bbcb4d8656a0619a9cf8d74c236d806"
+      "checksum": "sha256-15ea14ec9fa6e7a91e381405a588db2602c17d1cef3379ece73a4588bf2e59c6"
     }
   ]
 }

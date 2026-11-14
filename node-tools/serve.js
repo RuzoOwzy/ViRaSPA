@@ -44,12 +44,20 @@ const tool = defineTool({
       default: "",
       description: "A .js file with head lookups for dynamic pages (README \"Dynamic pages\"): app pages get their title, description and preview image in index.html.",
     },
+    {
+      key: "mount",
+      type: "string",
+      valueName: "url=folder,…",
+      default: "",
+      description: "Also serve other folders under URL paths, e.g. \"/components=../components,/helpers=../helpers\" (folders relative to the site folder). For a site whose packages live beside it, as the ViRaSPA-Extensions demo does.",
+    },
   ],
   examples: [
     "node node-tools/serve.js",
     "node node-tools/serve.js --port 8030",
     "node node-tools/serve.js --port 8030 --save        (remember 8030 in app/project-viraspa.json)",
     "node node-tools/serve.js --site-folder D:\\Projects\\Shop\\site",
+    "node node-tools/serve.js --site-folder ../ViRaSPA-Extensions/ViRaSPA-Extensions/demo --mount /components=../components,/helpers=../helpers",
   ],
 });
 
@@ -87,8 +95,24 @@ const MIME = {
 
 const NEVER_SERVED = [/(^|\/)\./, /^\/app\/project-viraspa\.json$/i];
 
-function createServer({ siteFolder, logRequests, usePrerendered = true, headLookups = "" }) {
+// "/components=../components,/helpers=../helpers" -> [{ prefix, folder }], longest prefix first.
+function parseMounts(value, root) {
+  return String(value || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const at = part.indexOf("=");
+      if (at < 1) throw new Error(`--mount: expected "url=folder", got "${part}"`);
+      const prefix = "/" + part.slice(0, at).trim().replace(/^\/+|\/+$/g, "");
+      return { prefix, folder: path.resolve(root, part.slice(at + 1).trim()) };
+    })
+    .sort((a, b) => b.prefix.length - a.prefix.length);
+}
+
+function createServer({ siteFolder, logRequests, usePrerendered = true, headLookups = "", mount = "" }) {
   const root = path.resolve(siteFolder);
+  const mounts = parseMounts(mount, root);
   // Optional head injection for app pages (node-tools/lib/head-injector.js).
   let injector = null;
   if (headLookups) {
@@ -115,10 +139,15 @@ function createServer({ siteFolder, logRequests, usePrerendered = true, headLook
     return (trimmed || "/").toLowerCase();
   }
 
-  // Resolves a URL path inside the site folder; null if it would escape it.
+  // Resolves a URL path inside the site folder (or a mounted folder); null
+  // if it would escape it.
   function resolveInside(urlPath) {
-    const full = path.resolve(root, "." + urlPath);
-    return full === root || full.startsWith(root + path.sep) ? full : null;
+    const lower = urlPath.toLowerCase();
+    const hit = mounts.find((m) => lower === m.prefix.toLowerCase() || lower.startsWith(m.prefix.toLowerCase() + "/"));
+    const base = hit ? hit.folder : root;
+    const rest = hit ? urlPath.slice(hit.prefix.length) || "/" : urlPath;
+    const full = path.resolve(base, "." + rest);
+    return full === base || full.startsWith(base + path.sep) ? full : null;
   }
 
   function statFile(file) {
@@ -236,8 +265,9 @@ if (require.main === module) {
       const shownHost = options.host === "0.0.0.0" ? "localhost" : options.host;
       console.log(`ViRaSPA dev server: http://${shownHost}:${options.port}/`);
       console.log(`Serving ${options.siteFolder} (site folder ${sources.siteFolder}, port from ${sources.port}). Ctrl+C stops it.`);
+      for (const m of parseMounts(options.mount, path.resolve(options.siteFolder))) console.log(`  ${m.prefix}/ -> ${m.folder}`);
     });
   });
 }
 
-module.exports = { tool, createServer };
+module.exports = { tool, createServer, parseMounts };

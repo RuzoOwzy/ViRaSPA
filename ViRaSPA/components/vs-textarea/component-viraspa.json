@@ -16,11 +16,11 @@
   "files": [
     {
       "path": "README.md",
-      "checksum": "sha256-2980f209f63962c66e46acd90bfe98aafdc912fba0c58bbf5b67185cc46855db"
+      "checksum": "sha256-72b5e6dac58a50f0fd5c0efb552303d8bac5fc7bf230a660e0488bbd76db67f6"
     },
     {
       "path": "vs-textarea.css",
-      "checksum": "sha256-1c2850995d2371a42bb0a553c02199bad388283f0d82438b08d81cb3746ff124"
+      "checksum": "sha256-b8823cdea564b468a50b6008ad4888e8cce9901ccb475e33a7b57b398153e925"
     },
     {
       "path": "vs-textarea.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-textarea.js",
-      "checksum": "sha256-98482cc7c7355bc41c2960b26f9cd729f8f19d59a7ac43ee22712487121490bd"
+      "checksum": "sha256-9fa60cf9205150ab33c4d7cc47bbf83dd0c7284c39d5a25572081e95b002869f"
     }
   ]
 }

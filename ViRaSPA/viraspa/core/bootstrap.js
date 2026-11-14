@@ -70,7 +70,32 @@
     Viraspa.core.emit("appInit");
     await Viraspa.core.baseStyleLoaded;
     await Viraspa.core.loadLayout();
+    revealWhenReady();
     Viraspa.core.initRouter();
+  }
+
+  // Start-up without a flash of unstyled content. index.html hides #app
+  // until <html> has data-vs-ready (see README "Start-up cover"); it is set
+  // once the first page is shown and the shell's components (header, menu,
+  // side panel...) have rendered, or after 4 seconds whatever happens.
+  function revealWhenReady() {
+    const root = document.documentElement;
+    if (root.hasAttribute("data-vs-ready")) return;
+    const reveal = () => root.setAttribute("data-vs-ready", "");
+    const fallback = setTimeout(reveal, 4000);
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    document.addEventListener(
+      "viraspa:pageShown",
+      async () => {
+        const app = document.getElementById("app") || document.body;
+        const shell = [...app.querySelectorAll("*")].filter((el) => el.localName.includes("-") && !el.closest("#page-root"));
+        const rendered = Promise.all(shell.map((el) => customElements.whenDefined(el.localName).then(() => el.ready)));
+        await Promise.race([rendered, delay(2500)]);
+        clearTimeout(fallback);
+        requestAnimationFrame(reveal);
+      },
+      { once: true }
+    );
   }
 
   // Scripts added by viraspa.js may run before or after DOMContentLoaded.

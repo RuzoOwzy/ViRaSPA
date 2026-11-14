@@ -22,6 +22,7 @@
     static tag = "vs-select-tree";
     static folder = "components/vs-select-tree";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static formAssociated = true;
     static delegatesFocus = true;

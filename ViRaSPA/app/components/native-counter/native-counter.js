@@ -11,9 +11,9 @@
       root.innerHTML = `
         <style>
           :host { display: inline-flex; align-items: center; gap: 0.5rem; }
-          button { font: inherit; padding: 0.35rem 0.8rem; border-radius: 6px; border: 1px solid #b9c9c1;
+          button { font: inherit; padding: 0.35rem 0.8rem; border-radius: 6px; border: 1px solid #b9c0d4;
                    background: #fff; cursor: pointer; }
-          button:hover { background: #eef4f1; }
+          button:hover { background: #eef0f6; }
           output { min-width: 2ch; font-weight: 700; }
         </style>
         <button type="button" part="button"></button>

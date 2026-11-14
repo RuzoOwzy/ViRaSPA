@@ -15,25 +15,17 @@ textarea {
   display: block;
   box-sizing: border-box;
   width: 100%;
-  min-height: calc(var(--vs-textarea-line, 1.5em) + 1rem);
+  margin: 0;
   padding: var(--vs-input-padding, 0.45rem 0.6rem);
   border: 1px solid var(--vs-input-border, var(--vs-color-border));
   border-radius: var(--vs-radius);
   background: var(--vs-input-background, var(--vs-color-surface, #fff));
-  color: inherit;
+  color: var(--vs-color-text, inherit);
   font: inherit;
   line-height: var(--vs-textarea-line, 1.5);
-  resize: vertical;
-  field-sizing: content;
-}
-
-/* With field-sizing: the browser grows it; max-rows caps it. */
-:host(:not([max-rows])) textarea {
-  max-height: none;
-}
-
-:host([max-rows]) textarea {
-  max-height: calc(var(--vs-textarea-max-rows) * var(--vs-textarea-line, 1.5) * 1em + 1rem);
+  /* The height follows the text (vs-textarea.js), so no drag handle. */
+  resize: none;
+  overflow-y: hidden;
 }
 
 textarea:focus {
@@ -45,16 +37,27 @@ textarea:focus {
   border-color: var(--vs-color-danger, #c0392b);
 }
 
-/* overlap: while focused, grow over the content below instead of pushing it. */
-:host([overlap][data-focused]) .wrap {
-  height: var(--vs-textarea-rest-height, auto);
+/* overlap: the textarea floats (fixed, in the top layer where the browser has
+   one) at the place it rests, over the content below. */
+:host([data-open]) textarea {
+  position: fixed;
+  inset: auto;
+  z-index: 1000;
+  /* Opaque, even where the resting field is transparent (a table cell). */
+  background: var(--vs-textarea-open-background, var(--vs-color-surface, #fff));
+  border-color: var(--vs-textarea-open-border, var(--vs-color-border, #dce0ea));
+  box-shadow: 0 8px 24px rgba(14, 21, 40, 0.18);
 }
 
-:host([overlap][data-focused]) textarea {
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 20;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+/* The browser's own popover styles, undone (only position and size are ours). */
+textarea[popover] {
+  inset: auto;
+  margin: 0;
+}
+
+/* No dimmed page behind it: it is a field, not a dialog. */
+textarea::backdrop {
+  background: transparent;
 }
 
 .count {

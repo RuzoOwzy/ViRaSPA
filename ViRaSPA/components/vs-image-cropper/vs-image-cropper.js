@@ -24,6 +24,7 @@
     static tag = "vs-image-cropper";
     static folder = "components/vs-image-cropper";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static formAssociated = true;
     static observedAttributes = ["src", "aspect"];

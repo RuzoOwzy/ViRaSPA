@@ -29,8 +29,8 @@
       if (this.signal.aborted || !window.Chart) return;
 
       const css = getComputedStyle(document.documentElement);
-      const primary = css.getPropertyValue("--vs-color-primary").trim() || "#1a9c6b";
-      const muted = css.getPropertyValue("--vs-color-text-muted").trim() || "#58685f";
+      const primary = css.getPropertyValue("--vs-color-primary").trim() || "#4f46e5";
+      const muted = css.getPropertyValue("--vs-color-text-muted").trim() || "#5a6377";
       this.chart = new window.Chart(this.container.querySelector("#sales-chart"), {
         type: "line",
         data: {

@@ -43,7 +43,7 @@ Like `vs-table` (`field`, `label`, `width`, `align`, `format`, `total`, `value`)
 
 | Option | Meaning |
 | --- | --- |
-| `editor` | `text` (default), `number` (`decimals`, `min`, `max`), `select` (`options`: `"a,b"` or `[{ value, label }]`), `date`, `check`, `none` (read-only). A column with `value` is computed and read-only. |
+| `editor` | `text` (default), `number` (`decimals`, `min`, `max`), `select` (`options`: `"a,b"` or `[{ value, label }]`), `date`, `check`, `textarea` (a [vs-textarea](../vs-textarea/README.md) resting at one line that opens over the rows below while you type, up to `max-rows`, default 8; Alt+Enter is a new line), `none` (read-only). A column with `value` is computed and read-only. |
 | `required` | The cell must be filled (in rows that have anything typed). |
 
 ## Keyboard
@@ -68,4 +68,4 @@ Change any of them: `lines.keys = { deleteRow: "alt+delete", addRow: false }`, a
 
 ## Version history
 
-- **0.1.0 (2026-11-08):** first version (from EliteWeb's Sale.aspx entry rows).
+- **0.1.0 (2026-11-08):** first version (from EliteWeb's Sale.aspx entry rows). In development: the `textarea` editor (needs vs-textarea, installed with it), as in EliteWeb's Journal.aspx comments.

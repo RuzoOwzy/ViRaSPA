@@ -1,34 +1,46 @@
 (function (Viraspa) {
   // A text area that grows with its text.
   //
-  //   <vs-textarea name="note" rows="2" max-rows="8" maxlength="500" show-count></vs-textarea>
+  //   <vs-textarea name="note" rows="2" max-rows="8" maxlength="500" show-count />
+  //   <vs-textarea name="comment" overlap rest-rows="1" max-rows="8" />
   //
   // - Grows between `rows` (default 2) and `max-rows` (then it scrolls).
-  // - `overlap`: while focused it grows over the content below instead of
-  //   pushing it down (the old "Overlap" mode); back to its size on blur.
+  //   While it has focus it keeps one empty line ready below the text, so it
+  //   grows before you reach its last line.
+  // - `overlap`: it rests at `rest-rows` lines (default 1), however long its
+  //   text. While focused it opens over the content below - up to `max-rows`
+  //   - instead of pushing it down, and goes back to its rest height on
+  //   blur. It opens in the browser's top layer, so it also escapes a
+  //   scrolling table (vs-table-entry's editor="textarea" uses it this way).
+  //   The space it takes in the page never changes.
   // - `show-count`: "120 / 500" (or just "120") under it.
   // - Enter is a new line, as in every editor. To let a key submit the form,
   //   give it one: keys = { submit: "ctrl+enter" } (off by default); the
   //   "vs-submit" event fires, then the form is submitted unless cancelled.
+  // - insertText(text): types text at the caret (used by vs-table-entry for
+  //   Alt+Enter, where Enter moves to the next cell).
   // - Works in forms: name, required, minlength, maxlength, disabled,
   //   readonly, placeholder, reset. Events: input, change.
+  // It never has content of its own: it may be written <vs-textarea … />.
   const t = (text) => (Viraspa.i18n ? Viraspa.i18n.t(text) : text);
   const KEYS = { submit: false };
-  const nativeSizing = typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
+  const topLayer = typeof HTMLElement !== "undefined" && "showPopover" in HTMLElement.prototype;
 
   class VsTextarea extends Viraspa.core.Component {
     static tag = "vs-textarea";
     static folder = "components/vs-textarea";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static formAssociated = true;
     static delegatesFocus = true;
-    static observedAttributes = ["value", "rows", "max-rows", "maxlength", "minlength", "disabled", "readonly", "required", "placeholder", "show-count"];
+    static observedAttributes = ["value", "rows", "max-rows", "rest-rows", "overlap", "maxlength", "minlength", "disabled", "readonly", "required", "placeholder", "show-count"];
 
     constructor() {
       super();
       this._initial = null;
       this._pending = null;
+      this._focused = false;
     }
 
     get value() {
@@ -41,8 +53,13 @@
       } else this._pending = v ?? "";
     }
 
+    get overlap() {
+      return this.hasAttribute("overlap");
+    }
+
     async afterLoad() {
       this.area = this.componentRoot.querySelector("textarea");
+      this.wrap = this.componentRoot.querySelector(".wrap");
       this.counter = this.componentRoot.querySelector(".count");
       this.area.value = this._pending ?? this.getAttribute("value") ?? "";
       this._initial = this.area.value;
@@ -50,14 +67,23 @@
       this.listen(this.area, "change", () => this.dispatchEvent(new Event("change", { bubbles: true, composed: true })));
       this.listen(this.area, "keydown", (e) => this.onKey(e));
       this.listen(this.area, "focus", () => {
-        // overlap: keep the space it takes now, so the page below doesn't move.
-        this.style.setProperty("--vs-textarea-rest-height", `${this.area.offsetHeight}px`);
+        this._focused = true;
         this.toggleAttribute("data-focused", true);
-      });
-      this.listen(this.area, "blur", () => {
-        this.removeAttribute("data-focused");
+        if (this.overlap) this.openOver();
         this.resize();
       });
+      this.listen(this.area, "blur", () => {
+        this._focused = false;
+        this.removeAttribute("data-focused");
+        this.closeOver();
+        this.resize();
+      });
+      // A new width can change how many lines the text takes.
+      if (typeof ResizeObserver !== "undefined") {
+        const observer = new ResizeObserver(() => !this._open && this.resize());
+        observer.observe(this.wrap);
+        this._scope.add(() => observer.disconnect());
+      }
       this.sync();
     }
 
@@ -69,7 +95,6 @@
 
     sync() {
       const a = this.area;
-      a.rows = Math.max(1, Number(this.getAttribute("rows")) || 2);
       for (const attr of ["maxlength", "minlength", "placeholder"]) {
         if (this.hasAttribute(attr)) a.setAttribute(attr, this.getAttribute(attr));
         else a.removeAttribute(attr);
@@ -77,9 +102,8 @@
       a.required = this.hasAttribute("required");
       a.readOnly = this.hasAttribute("readonly");
       a.disabled = this.hasAttribute("disabled") || this.hasAttribute("data-form-disabled");
-      const label = this.labelText();
+      const label = this.getAttribute("aria-label") || this.labelText();
       if (label) a.setAttribute("aria-label", label);
-      this.style.setProperty("--vs-textarea-max-rows", Number(this.getAttribute("max-rows")) || 0);
       this.refresh();
     }
 
@@ -95,20 +119,95 @@
       this.resize();
     }
 
-    // Height follows the text (the browser's own field-sizing where it has it).
+    metrics() {
+      const s = getComputedStyle(this.area);
+      const line = parseFloat(s.lineHeight) || parseFloat(s.fontSize) * 1.5;
+      const padding = parseFloat(s.paddingTop) + parseFloat(s.paddingBottom);
+      const border = parseFloat(s.borderTopWidth) + parseFloat(s.borderBottomWidth);
+      return { line, padding, border, height: (lines) => lines * line + padding + border };
+    }
+
+    restRows() {
+      return Math.max(1, Number(this.getAttribute("rest-rows")) || 1);
+    }
+
+    // The height follows the text, in whole lines, between the minimum and
+    // max-rows; with focus, one empty line more.
     resize() {
       const a = this.area;
-      if (nativeSizing) return;
-      const style = getComputedStyle(a);
-      const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.4;
-      const extra = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-      const minRows = a.rows;
+      if (!a) return;
+      const m = this.metrics();
       const maxRows = Number(this.getAttribute("max-rows")) || Infinity;
-      a.style.height = "auto";
-      const wanted = a.scrollHeight + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-      const height = Math.min(Math.max(wanted, minRows * line + extra), maxRows * line + extra);
-      a.style.height = `${height}px`;
-      a.style.overflowY = wanted > height ? "auto" : "hidden";
+      if (this.overlap) {
+        const rest = m.height(this.restRows());
+        this.wrap.style.height = `${rest}px`;
+        if (!this._focused) {
+          a.style.height = `${rest}px`;
+          a.style.overflowY = "hidden";
+          a.scrollTop = 0;
+          return;
+        }
+      } else this.wrap.style.height = "";
+      const minRows = this.overlap ? this.restRows() : Math.max(1, Number(this.getAttribute("rows")) || 2);
+      const scroll = a.scrollTop;
+      a.style.height = "0px";
+      const lines = Math.max(1, Math.round((a.scrollHeight - m.padding) / m.line)) + (this._focused ? 1 : 0);
+      const shown = Math.min(Math.max(lines, minRows), maxRows);
+      a.style.height = `${m.height(shown)}px`;
+      a.style.overflowY = lines > maxRows ? "auto" : "hidden";
+      a.scrollTop = scroll;
+    }
+
+    // ---- overlap: open over the content below ---------------------------------
+
+    openOver() {
+      if (this._open) return;
+      this._open = true;
+      const a = this.area;
+      if (topLayer) {
+        a.setAttribute("popover", "manual");
+        try {
+          a.showPopover();
+        } catch {
+          // already open, or not allowed: fixed positioning still works
+        }
+      }
+      this.toggleAttribute("data-open", true);
+      const follow = () => {
+        if (!this._open) return;
+        const r = this.wrap.getBoundingClientRect();
+        a.style.left = `${r.left}px`;
+        a.style.top = `${r.top}px`;
+        a.style.width = `${r.width}px`;
+        this._frame = requestAnimationFrame(follow); // keeps up with any scrolling container
+      };
+      follow();
+      // Moving into the top layer must not lose the caret.
+      if (this.componentRoot.activeElement !== a) a.focus({ preventScroll: true });
+    }
+
+    closeOver() {
+      if (!this._open) return;
+      this._open = false;
+      cancelAnimationFrame(this._frame);
+      const a = this.area;
+      if (topLayer && a.hasAttribute("popover")) {
+        try {
+          a.hidePopover();
+        } catch {
+          // not open
+        }
+        a.removeAttribute("popover");
+      }
+      this.removeAttribute("data-open");
+      a.style.left = a.style.top = a.style.width = "";
+    }
+
+    insertText(text) {
+      const a = this.area;
+      if (!a || a.readOnly || a.disabled) return;
+      a.setRangeText(text, a.selectionStart, a.selectionEnd, "end");
+      a.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
     }
 
     onKey(event) {

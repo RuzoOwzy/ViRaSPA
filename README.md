@@ -178,6 +178,22 @@ Use it as `<app-note heading="Tip">…</app-note>`, or from code with `await Vir
 - **Names the base class uses:** don't reuse `render`, `renderTemplate`, `onLoad`, `beforeLoad`, `afterLoad`, `prepareModel`, `attributeProps`, `dispose`, `effect`, `listen`, `shortcut`, `keymap` or `labelText` for something else (a component that names its own drawing method `render()` replaces the template rendering and stays empty). Built-in element names such as `title`, `hidden` or `id` are taken too.
 - **Properties set early:** a property set on the element before its component has loaded (e.g. `el.source = fn` right after the page renders) is applied through the component's own setter when it starts.
 - **Focus:** `static delegatesFocus = true` (full mode) passes focus, and clicks on the field's `<label>`, to the first focusable thing inside.
+- **Content:** `static content = "none"` marks a component that never has content of its own (an input, an icon, a progress bar). See [Self-closing tags](#self-closing-tags).
+
+#### Self-closing tags
+
+A component without content may be written self-closing in the templates the framework reads (page and component `.html` files):
+
+```html
+<vs-input-number name="amount" decimals="2" />
+<vs-icon icon="lucide:house" />
+<vs-card heading="Report"> … </vs-card>      <!-- a component with content keeps its closing tag -->
+```
+
+- **Your choice:** `<vs-icon … />` and `<vs-icon …></vs-icon>` do the same; use either.
+- **How:** browsers ignore `/>` on custom elements (what follows would end up inside), so the framework turns `<x-y … />` into `<x-y …></x-y>` before the browser reads the template. Comments, `<script>`, `<style>`, `<textarea>` and quoted attribute values are left alone.
+- **Which ones:** components with `static content = "none"`. In the framework: `vs-icon`, `vs-brand`, `vs-menu`, `vs-user-menu`, `vs-busy-indicator`; official components say so in their README. A component that holds content warns in the console when it is written self-closing, and a content-free one warns when it is given content.
+- **Not in `index.html`:** the browser reads `index.html`, and HTML your code sets with `innerHTML`, directly. Write full tags there.
 
 #### Isolation modes
 
@@ -201,10 +217,10 @@ These ship with the framework (`viraspa/components/`) and load by themselves the
 
 | Tag | What it does |
 | --- | --- |
-| `vs-header` | The top bar. Slots: `brand`, (default) the middle, `end`. Attribute `sticky`. |
+| `vs-header` | The top bar. Slots: `start` (e.g. a burger button for a sidebar), `brand`, (default) the middle, `end`. Attribute `sticky`. |
 | `vs-brand` | The logo and name, linking home: `name`, `href`, `logo` (an image) or `icon`. |
-| `vs-menu` | Navigation links, `orientation="horizontal"` (default) or `"vertical"`.<br>• Built from the routes whose `nav.menus` includes its `menu` (default `"main"`), or from `element.items = [{ label, href, icon }, { divider: true }]`.<br>• `collapsed` (vertical): icons only, with the label as a tooltip.<br>• Horizontal menus fold into a toggle button under 768px.<br>• The current page's link gets `aria-current="page"`. |
-| `vs-sidebar` | A side panel for a vertical menu. `collapsible` adds a button that collapses it (and its menus) to icons. The choice is remembered in the browser, and it starts collapsed on small screens. |
+| `vs-menu` | Navigation links, `orientation="horizontal"` (default) or `"vertical"`.<br>• Built from the routes whose `nav.menus` includes its `menu` (default `"main"`), or from `element.items = [{ label, href, icon }, { divider: true }, { group: "Reports", items: […] }, { label, href, items: […] }]`.<br>• **Groups and hierarchy:** `nav.group: "Reports"` puts a route under a group heading, `"Data/Tables"` nests groups, and `nav.parent: "<route name>"` nests an item under another. Vertical menus indent nested items and nested group headings (`--vs-menu-indent`); each group is a list labelled by its heading.<br>• `collapsible-groups` (vertical): headings and parents open and close, remembered in the browser; the current page's group stays open.<br>• `searchable` (vertical): a search box on top filters the items (case and accents ignored, `nav.keywords` searched too), keeps the groups and parents of matches and highlights them.<br>• **Drop-downs (horizontal):** a group or an item with nested items opens a drop-down (click, Enter, Space or ArrowDown; Escape or a click elsewhere closes it).<br>• `collapsed` (vertical): icons only, with the label as a tooltip.<br>• Horizontal menus fold into a toggle button under 768px (`toggle-icon="more"` shows three dots, e.g. beside a sidebar's burger); drop-downs then open in place.<br>• The current page's link gets `aria-current="page"`. |
+| `vs-sidebar` | A side panel for a vertical menu. `collapsible` adds a button that collapses it.<br>• `collapse="rail"` (default): down to icons, the menus showing their labels as tooltips.<br>• `collapse="hide"`: out of sight, so the page gets the full width; on phones it opens over the page and closes on a link, Escape or a click outside.<br>• Any `<button data-sidebar-toggle>` (or `data-sidebar-toggle="<sidebar id>"`) opens and closes it; class `vs-menu-button` draws a burger.<br>• The choice is remembered in the browser; on phones it always starts closed. |
 | `vs-user-menu` | The user's name and avatar or initials, with a dropdown panel below.<br>• `element.items` takes links (`href`) and actions (`action: () => …`).<br>• Keyboard: arrows, Enter and Escape.<br>• Dispatches a `vs-select` event. |
 | `vs-footer` | The bottom bar; shows what you put in it. |
 | `vs-icon` | An icon (see [Icons](#icons)). Decorative unless it has `label`. |
@@ -639,6 +655,16 @@ const user = await Viraspa.services.communication.call(Viraspa.endpoints.users.g
    <main id="page-root"></main>
    <vs-footer>© 2026</vs-footer>
    ```
+4. **Start-up cover:** until the framework has its styles, the shell and the first page, the browser would show the bare markup on a white page for a moment. A small block in `index.html`'s `<head>` paints the theme's colours at once and keeps `#app` hidden until the framework sets `data-vs-ready` on `<html>` (after 4 seconds it is set anyway):
+   ```html
+   <style>
+     html { background: linear-gradient(#16203a 0 3.25rem, #f5f6fa 3.25rem) no-repeat, #f5f6fa; }
+     html:not([data-vs-ready]) #app { opacity: 0; }
+     #app { transition: opacity 0.12s ease-in; }
+   </style>
+   <script>setTimeout(function () { document.documentElement.setAttribute("data-vs-ready", ""); }, 5000);</script>
+   ```
+   Match the colours to your theme (the band is the header's height and colour).
 
 ### Layouts
 
@@ -771,10 +797,10 @@ Every URL the framework loads carries a token, so browsers never use a stale cop
 
 ### Theme
 
-`viraspa/styles/base.css` defines the theme as CSS variables (`--vs-color-primary`, `--vs-radius`, `--vs-space-3`…). Override them in your own stylesheet:
+`viraspa/styles/base.css` defines the theme as CSS variables (`--vs-color-primary`, `--vs-radius`, `--vs-space-3`…). The default theme, "Ink & Amber", has an ink-blue shell (`--vs-color-ink`: header, side panel, footer), indigo for actions and links (`--vs-color-primary`), and amber for the brand mark (`--vs-color-accent`); every text colour meets WCAG AA contrast. Override the variables in your own stylesheet:
 
 ```css
-:root { --vs-color-primary: #b0122b; }
+:root { --vs-color-primary: #b0122b; --vs-color-ink: #2b1d1d; }
 ```
 
 They reach into every component, including shadow roots.

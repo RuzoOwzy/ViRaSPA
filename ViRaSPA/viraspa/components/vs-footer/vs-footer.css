@@ -1,7 +1,7 @@
 :host {
   display: block;
-  background: var(--vs-footer-background, #0b120e);
-  color: var(--vs-footer-color, #a9bdb1);
+  background: var(--vs-footer-background, var(--vs-color-ink-strong, #0e1528));
+  color: var(--vs-footer-color, var(--vs-color-on-ink-muted, #aab2c8));
 }
 
 .footer {

@@ -44,7 +44,7 @@ ul {
 }
 
 .row:hover {
-  background: var(--vs-color-surface-muted, #f2f5f4);
+  background: var(--vs-color-surface-muted, #f3f4f9);
 }
 
 .row.selected,
@@ -171,6 +171,6 @@ ul {
   margin-top: 0.4rem;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background: var(--vs-color-surface-muted, #f2f5f4);
+  background: var(--vs-color-surface-muted, #f3f4f9);
   font-size: 0.9em;
 }

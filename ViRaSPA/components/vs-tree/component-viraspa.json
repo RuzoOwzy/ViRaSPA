@@ -20,7 +20,7 @@
     },
     {
       "path": "vs-tree.css",
-      "checksum": "sha256-adf594a007b7c0a99d85895a35ab6b1f77daf2df5b494118ce8d2f003d1afc13"
+      "checksum": "sha256-4cf4e9bd4b391b32835023b3b03847a2a0bc47ad65694f456d7164391f3774bd"
     },
     {
       "path": "vs-tree.html",
@@ -28,7 +28,7 @@
     },
     {
       "path": "vs-tree.js",
-      "checksum": "sha256-2c5fc55d2192600bbbbe53df28e249114375d0731c10000887247ac29ab344e7"
+      "checksum": "sha256-5a62b13027c3e037ceb6e47a6eb6d8229a93a766a773fd36380e3e99d8793bfa"
     }
   ]
 }

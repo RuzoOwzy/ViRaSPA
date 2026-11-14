@@ -44,7 +44,7 @@
   padding: var(--vs-space-3) var(--vs-space-3) var(--vs-space-3) var(--vs-space-4);
   border-left: 4px solid var(--vs-color-primary);
   border-radius: var(--vs-radius);
-  background: #1d2b25;
+  background: #1b2440;
   color: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   pointer-events: auto;

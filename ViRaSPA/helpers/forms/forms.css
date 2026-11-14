@@ -17,5 +17,5 @@
 
 [data-readonly] input[readonly],
 [data-readonly] textarea[readonly] {
-  background: var(--vs-color-surface-muted, #f2f4f3);
+  background: var(--vs-color-surface-muted, #f2f3f8);
 }

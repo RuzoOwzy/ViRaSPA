@@ -15,6 +15,7 @@
     static tag = "vs-progress";
     static folder = "components/vs-progress";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static observedAttributes = ["value", "max", "type", "label", "show-value"];
 

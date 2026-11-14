@@ -3,14 +3,20 @@
   --vs-menu-link-color: inherit;
   --vs-menu-hover-background: rgba(255, 255, 255, 0.12);
   --vs-menu-active-background: rgba(255, 255, 255, 0.2);
+  --vs-menu-indent: 0.85rem;
+  --vs-menu-heading-color: currentColor;
+}
+
+.list,
+.sub {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .list {
   display: flex;
   gap: var(--vs-space-1);
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .link {
@@ -19,8 +25,12 @@
   align-items: center;
   gap: var(--vs-space-2);
   padding: 0.35rem 0.7rem;
+  border: none;
   border-radius: var(--vs-radius);
+  background: transparent;
   color: var(--vs-menu-link-color);
+  font: inherit;
+  text-align: start;
   white-space: nowrap;
   opacity: 0.9;
 }
@@ -39,6 +49,12 @@
 
 .icon {
   font-size: 1.1em;
+}
+
+.label mark {
+  border-radius: 2px;
+  background: var(--vs-menu-mark-background, rgba(245, 165, 36, 0.45));
+  color: inherit;
 }
 
 .divider {
@@ -67,10 +83,114 @@
   stroke-linecap: round;
 }
 
+.toggle svg path[d^="M12 5"] {
+  stroke-width: 3;
+}
+
+/* ---- Groups, nested items, chevrons ------------------------------------- */
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row > .link {
+  flex: 1;
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-space-2);
+  width: 100%;
+  margin: var(--vs-space-3) 0 var(--vs-space-1);
+  padding: 0.15rem 0.7rem;
+  border: none;
+  background: transparent;
+  color: var(--vs-menu-heading-color);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: start;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.heading-button:hover {
+  opacity: 1;
+}
+
+.group.level-0:first-child > .heading {
+  margin-top: var(--vs-space-1);
+}
+
+.expander {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--vs-radius);
+  background: transparent;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.expander:hover {
+  background: var(--vs-menu-hover-background);
+  opacity: 1;
+}
+
+.chevron {
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-inline-start: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.expander .chevron {
+  margin: 0;
+}
+
+.closed > .heading .chevron,
+.closed > .row .chevron {
+  transform: rotate(-45deg);
+}
+
+.closed > .sub {
+  display: none;
+}
+
 /* ---- Vertical ---------------------------------------------------------- */
 
 .vertical .list {
   flex-direction: column;
+}
+
+.vertical .sub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vs-space-1);
+}
+
+.vertical .closed > .sub {
+  display: none;
+}
+
+/* Nested items, and nested groups (heading and items), step in by
+   --vs-menu-indent per level. */
+.vertical .group .group,
+.vertical .item > .sub {
+  padding-inline-start: var(--vs-menu-indent);
 }
 
 .vertical .divider {
@@ -79,7 +199,68 @@
   border-top: 1px solid currentColor;
 }
 
-/* Collapsed: icons only; the label becomes a tooltip on hover/focus. */
+.search-box {
+  margin: 0 0 var(--vs-space-2);
+}
+
+.search {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--vs-menu-search-border, rgba(255, 255, 255, 0.25));
+  border-radius: var(--vs-radius);
+  background: var(--vs-menu-search-background, rgba(255, 255, 255, 0.08));
+  color: inherit;
+  font: inherit;
+}
+
+.search::placeholder {
+  color: inherit;
+  opacity: 0.65;
+}
+
+.no-match {
+  margin: var(--vs-space-2) 0.7rem;
+  font-size: 0.9em;
+  opacity: 0.75;
+}
+
+.no-match[hidden],
+li[hidden] {
+  display: none;
+}
+
+/* While searching, every group with a match shows open. */
+:host([data-searching]) .closed > .sub {
+  display: flex;
+}
+
+/* Collapsed (rail): icons only; the label becomes a tooltip on hover/focus;
+   group headings become thin lines and nested items stay out of sight. */
+:host([collapsed]) .search-box,
+:host([collapsed]) .vertical .expander,
+:host([collapsed]) .vertical .chevron,
+:host([collapsed]) .vertical .item > .sub {
+  display: none;
+}
+
+:host([collapsed]) .vertical .heading {
+  height: 0;
+  margin: var(--vs-space-2) var(--vs-space-2);
+  padding: 0;
+  overflow: hidden;
+  border-top: 1px solid currentColor;
+  opacity: 0.25;
+}
+
+:host([collapsed]) .vertical .closed > .sub {
+  display: flex;
+}
+
+:host([collapsed]) .vertical .group .group {
+  padding: 0;
+}
+
 :host([collapsed]) .vertical .label {
   position: absolute;
   width: 1px;
@@ -103,13 +284,114 @@
   transform: translateY(-50%);
   padding: 0.25rem 0.55rem;
   border-radius: var(--vs-radius);
-  background: #1d2b25;
+  background: #1b2440;
   color: #fff;
   font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
   pointer-events: none;
   z-index: 30;
+}
+
+/* ---- Horizontal drop-downs ------------------------------------------------ */
+
+.horizontal .list {
+  align-items: center;
+}
+
+.horizontal .dropdown-host {
+  position: relative;
+}
+
+.horizontal .dropdown-host > .heading {
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--vs-radius);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.horizontal .dropdown-host > .heading:hover,
+.horizontal .dropdown-host.open > .heading {
+  background: var(--vs-menu-hover-background);
+  opacity: 1;
+}
+
+.horizontal .dropdown-host.contains-active > .heading,
+.horizontal .dropdown-host.contains-active > .row > .link {
+  font-weight: 600;
+}
+
+.horizontal .dropdown-host > .heading .chevron,
+.horizontal .dropdown-host > .row .chevron {
+  margin-inline-start: 0.1rem;
+}
+
+/* A drop-down's chevron points down while closed, up while open. */
+.horizontal .dropdown-host.closed > .heading .chevron,
+.horizontal .dropdown-host.closed > .row .chevron {
+  transform: translateY(-25%) rotate(45deg);
+}
+
+.horizontal .dropdown-host.open > .heading .chevron,
+.horizontal .dropdown-host.open > .row .chevron {
+  transform: translateY(25%) rotate(225deg);
+}
+
+.horizontal .dropdown {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 12rem;
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+  padding: var(--vs-space-2);
+  border-radius: var(--vs-radius-large);
+  background: var(--vs-menu-panel-background, var(--vs-color-ink, #16203a));
+  color: var(--vs-menu-panel-color, var(--vs-color-on-ink, #e6e9f5));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+.horizontal .dropdown-host.open > .dropdown {
+  display: flex;
+}
+
+.horizontal .dropdown-host.align-end > .dropdown {
+  left: auto;
+  right: 0;
+}
+
+.horizontal .dropdown .sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline-start: var(--vs-menu-indent);
+}
+
+.horizontal .dropdown .group > .sub {
+  padding-inline-start: 0;
+}
+
+.horizontal .dropdown .group .group {
+  padding-inline-start: var(--vs-menu-indent);
+}
+
+.horizontal .dropdown .heading {
+  margin: var(--vs-space-2) 0 2px;
+}
+
+.horizontal .dropdown .divider {
+  margin: var(--vs-space-1) 0;
+  border-left: none;
+  border-top: 1px solid currentColor;
 }
 
 /* ---- Small screens: horizontal menus fold into a toggle --------------- */
@@ -131,10 +413,13 @@
     top: calc(100% + 0.5rem);
     right: 0;
     min-width: 12rem;
+    max-height: 75vh;
+    overflow-y: auto;
     flex-direction: column;
+    align-items: stretch;
     padding: var(--vs-space-2);
     border-radius: var(--vs-radius-large);
-    background: var(--vs-menu-panel-background, var(--vs-color-primary-strong));
+    background: var(--vs-menu-panel-background, var(--vs-color-ink, #16203a));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
 
@@ -142,9 +427,25 @@
     display: flex;
   }
 
+  /* Drop-downs open in place, indented. */
+  .horizontal .dropdown {
+    position: static;
+    min-width: 0;
+    max-height: none;
+    padding: 0 0 0 var(--vs-menu-indent);
+    background: transparent;
+    box-shadow: none;
+  }
+
   .horizontal .divider {
     margin: var(--vs-space-2) 0;
     border-left: none;
     border-top: 1px solid currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
   }
 }

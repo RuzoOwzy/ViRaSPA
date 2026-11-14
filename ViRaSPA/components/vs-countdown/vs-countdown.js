@@ -16,6 +16,7 @@
     static tag = "vs-countdown";
     static folder = "components/vs-countdown";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static observedAttributes = ["to", "seconds", "format"];
 

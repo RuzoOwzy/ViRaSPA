@@ -19,6 +19,7 @@
     static tag = "vs-input-number";
     static folder = "components/vs-input-number";
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static hasModel = false;
     static formAssociated = true;
     static delegatesFocus = true;

@@ -8,6 +8,7 @@
     static tag = "vs-icon";
     static folder = Viraspa.core.frameworkUrl("components/vs-icon");
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static sharedStyles = [];
     static hasModel = false;
     static observedAttributes = ["icon", "label"];

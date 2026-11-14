@@ -10,6 +10,7 @@
     static tag = "vs-busy-indicator";
     static folder = Viraspa.core.frameworkUrl("components/vs-busy-indicator");
     static isolation = "full";
+    static content = "none"; // no content of its own: may be written self-closing
     static observedAttributes = ["active", "message"];
 
     attributeChangedCallback(name) {

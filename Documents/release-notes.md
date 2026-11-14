@@ -11,6 +11,17 @@ still in development. Work is split into milestones, see [plans/](plans/README.m
 (Milestones M1–M5 were planned under the working number "0.2.0"; that number
 was never released and is folded into 0.1.0.)
 
+### Theme, shell and demo (after N11)
+
+- **New default theme "Ink & Amber":** an ink-blue shell (`--vs-color-ink`, header, side panel, footer), indigo for actions and links, an amber brand mark (`--vs-color-accent`); new variables `--vs-color-surface-muted`, `--vs-color-primary-soft`, `--vs-color-warning`, `--vs-color-on-ink`. Success is a real green now. Every text colour meets WCAG AA contrast. The logo keeps its shape, in amber on an ink tile; the sample's favicon and touch icon follow. It no longer follows any one product's colours.
+- **No flash at start-up:** the framework sets `data-vs-ready` on `<html>` once the first page and the shell's components are shown; a small block in `index.html` paints the theme's colours at once and shows `#app` only then (README "Startup and the app shell"). Added to the sample.
+- **`vs-sidebar collapse="hide"`:** hides it completely so the page gets the full width; a `data-sidebar-toggle` button (class `vs-menu-button` draws a burger) opens and closes it; on phones it opens over the page and closes on a link, Escape or a click outside. `collapse="rail"` (icons) stays the default. `vs-header` gets a `start` slot for the burger.
+- **`vs-menu` groups, hierarchy, search and drop-downs:** `nav.group` ("Data/Tables" nests), `nav.parent`, `nav.keywords`; items `{ group, items }` and `{ label, href, items }`. Vertical menus indent nested items and nested group headings; `collapsible-groups` and `searchable` (accents ignored, matches highlighted, parents kept). Horizontal menus open groups and parents as drop-downs (click, Enter, Space, arrows, Escape), in place when folded on phones; `toggle-icon="more"`.
+- **Self-closing tags:** in page and component templates, a component with `static content = "none"` may be written `<vs-icon … />` (or with its closing tag). A component with content warns when written self-closing; a content-free one warns when given content. `index.html` still needs full tags.
+- **`serve.js --mount /components=../components,…`:** serves other folders under URL paths (the Extensions demo uses it).
+- **Fixed:** setting `vs-menu` `items` while it was still loading rendered it twice, replacing its elements.
+- **ViRaSPA-Extensions:** the demo moved into `ViRaSPA-Extensions/demo/`, with one page per package, a side menu by group with search, and a top menu with a drop-down. `vs-textarea` grows a line ahead, has `rest-rows`, and its overlap mode opens in the top layer (also in `vs-table-entry`, new `editor="textarea"`). Components without content are marked for self-closing tags.
+
 ### Milestone N11 · Showcase, benchmark and review
 
 - **Faster keyed lists:** `data-bind-repeat` with a key now moves only the rows that are out of order (a swap moves two rows, a removal none) and inserts new rows in one batch. Template texts are split once, not once per row.

@@ -111,7 +111,7 @@ input {
 }
 
 .panel button:hover:not([disabled]) {
-  background: var(--vs-color-surface-muted, #eef2f0);
+  background: var(--vs-color-surface-muted, #eef0f6);
 }
 
 .panel button:focus-visible {
